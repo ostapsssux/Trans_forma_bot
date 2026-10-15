@@ -142,7 +142,7 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
   box-shadow:var(--raised);
   transition:transform .12s,box-shadow .12s,opacity .15s}
 .primary:active{transform:scale(.995);box-shadow:var(--raised-sm)}
-.primary:disabled{opacity:.55;cursor:default}
+.primary:disabled{opacity:1;cursor:default;background:var(--surface);color:var(--muted);box-shadow:var(--raised-sm)}
 .note{font-size:12px;color:var(--muted);text-align:center;margin:14px 8px 0;line-height:1.5}
 
 .center{text-align:center;padding-top:5vh}
@@ -367,6 +367,54 @@ body.wide .app{max-width:860px}
 .raw{margin-top:4px;font-size:12.5px;color:var(--muted);white-space:pre-line;word-break:break-word}
 details summary{cursor:pointer;color:var(--muted);font-size:12.5px;list-style:none}
 details summary::-webkit-details-marker{display:none}
+
+/* ===================== ФОТООТЧЁТ ===================== */
+.rq .bottom{display:flex;align-items:center;gap:10px;min-width:0}
+.rq .bottom .addr{flex:1}
+.ph{flex:none;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.ph.none{background:var(--danger-soft);color:var(--danger)}
+.ph.arrival,.ph.departure{background:var(--warn-soft);color:var(--warn)}
+.ph.full{background:var(--ok-soft);color:var(--ok)}
+.report-bar{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));z-index:4;display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin-top:22px;padding:12px 12px 12px 20px;border-radius:999px;background:var(--panel);box-shadow:var(--raised-lg)}
+.report-bar small{display:block;font-size:11.5px;color:var(--muted)}
+.report-bar b{font-size:14.5px;font-weight:600}
+.report-bar .primary{width:auto;min-height:48px;padding:0 22px;font-size:15px}
+.rep-list{display:grid;gap:10px;margin-top:12px}
+.rep-item{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;color:var(--ink-2)}
+.rep-item b{display:block;color:var(--ink);font-weight:600}
+.rep-item small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.rep-item>span:last-child{flex:none;font-size:12.5px;color:var(--muted)}
+.rep-list .rep-item+.rep-item{border-top:1px solid var(--hair);padding-top:10px}
+.hint-card{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:center}
+.hint-card .ic{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--primary)}
+.hint-card .ic svg{width:20px;height:20px;stroke-width:1.8}
+.hint-card h3{margin:0 0 3px;font-size:17px;font-weight:650}
+.hint-card p{margin:0;font-size:13px;line-height:1.45;color:var(--ink-2)}
+.types{display:grid;gap:12px;margin-bottom:22px}
+.type{display:grid;grid-template-columns:24px 1fr auto;gap:14px;align-items:center;width:100%;text-align:left;border:0;cursor:pointer;color:var(--ink);
+  background:var(--surface);border-radius:22px;padding:15px 18px;box-shadow:var(--raised)}
+.type i{width:22px;height:22px;border-radius:50%;box-shadow:var(--pressed-sm);display:grid;place-items:center}
+.type.on{box-shadow:var(--pressed)}
+.type.on i:after{content:"";width:12px;height:12px;border-radius:50%;background:var(--primary)}
+.type b{display:block;font-size:15.5px;font-weight:600}
+.type small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.type em{font-style:normal;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--ok-soft);color:var(--ok)}
+.shots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.shot{position:relative;aspect-ratio:1;border-radius:18px;overflow:hidden;background:var(--surface);box-shadow:var(--raised-sm)}
+.shot img{width:100%;height:100%;object-fit:cover;display:block}
+.shot .x{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;
+  background:rgba(30,24,18,.55);color:#fbf3ea;font-size:15px;line-height:1}
+.shot .busy{position:absolute;inset:0;display:grid;place-items:center;background:rgba(var(--hl),.55)}
+.shot .geo{position:absolute;left:6px;bottom:6px;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:rgba(30,24,18,.55);color:#fbf3ea}
+.add{aspect-ratio:1;border:0;cursor:pointer;border-radius:18px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);
+  display:grid;place-items:center;align-content:center;gap:4px;padding:8px;text-align:center}
+.add span{font-size:26px;line-height:1;color:var(--primary)}
+.add b{font-size:12.5px;font-weight:600}
+.add small{font-size:10.5px;color:var(--muted)}
+.progress{height:10px;border-radius:999px;background:var(--surface);box-shadow:var(--pressed-sm);overflow:hidden;margin:14px 0 8px}
+.progress i{display:block;height:100%;border-radius:999px;background:var(--btn);transition:width .3s}
+.big-status{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px}
 </style>
 </head>
 <body>
@@ -415,13 +463,13 @@ details summary::-webkit-details-marker{display:none}
   }
 
   /* ---------- API ---------- */
-  async function api(action, payload = {}) {
+  async function api(action, payload = {}, timeoutMs = 30000) {
     if (demo) return demoApi(action, payload);
     if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(API_URL)) {
       const x = new Error('Не указан адрес сервера. Впишите адрес /exec из Apps Script в файл config.js на GitHub.'); x.code = 'NO_CONFIG'; throw x;
     }
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 30000);
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
       // text/plain — без preflight-запроса, Apps Script его не поддерживает
       const res = await fetch(API_URL, { method:'POST', body: JSON.stringify({ action, initData: tg.initData, ...payload }), signal: ctrl.signal });
@@ -524,21 +572,35 @@ details summary::-webkit-details-marker{display:none}
       return it;
     });
   }
+  const DEMO_REP = {};
+  const demoPhoto = (key, i) => {
+    const r = DEMO_REP[key];
+    if (r) return r.arrival && r.departure ? 'full' : r.arrival ? 'arrival' : 'departure';
+    return ['full', 'arrival', 'none', 'none', 'none', 'none'][i] || 'none';
+  };
   function demoReq(action, p) {
+    if (action === 'reports.upload') return { ok:true, fileId:'demo' + Math.random().toString(16).slice(2) };
+    if (action === 'reports.commit') {
+      const r = DEMO_REP[p.key] = DEMO_REP[p.key] || { arrival:false, departure:false, list:[] };
+      Object.keys(p.counts).forEach(st => { r[st] = true; r.list.push({ stage: st === 'arrival' ? 'Прибытие' : 'Убытие', fio:'Соколов Остап', at:new Date().toISOString(), photos:p.counts[st] }); });
+      return { ok:true, status: demoPhoto(p.key), photos: Object.values(p.counts).reduce((a, b) => a + b, 0) };
+    }
     if (action === 'requests.list') {
       const strip = []; for (let i = -3; i <= 3; i++) strip.push(shiftDay(p.date, i));
       const counts = strip.map(d => { const l = demoRequests(d); return { day:d, all:l.length, mine:l.filter(x => x.mine).length }; });
-      return { ok:true, day:p.date, canSeeAll:true, counts, items: demoRequests(p.date), updated:new Date().toISOString() };
+      return { ok:true, day:p.date, canSeeAll:true, counts, items: demoRequests(p.date).map((x, i) => ({ ...x, photo: demoPhoto(x.key, i) })), updated:new Date().toISOString() };
     }
     if (action === 'requests.get') {
-      const it = demoRequests(p.date).find(x => x.key === p.key);
+      const all = demoRequests(p.date), idx = all.findIndex(x => x.key === p.key), it = all[idx];
+      it.photo = demoPhoto(it.key, idx);
+      it.reports = DEMO_REP[it.key] ? DEMO_REP[it.key].list : it.photo === 'full' ? [{ stage:'Прибытие', fio:'Вялов Никита', at:new Date(Date.now()-5*36e5).toISOString(), photos:2 }, { stage:'Убытие', fio:'Бодян Даниил', at:new Date(Date.now()-3*36e5).toISOString(), photos:1 }] : it.photo === 'arrival' ? [{ stage:'Прибытие', fio:'Вялов Никита', at:new Date(Date.now()-2*36e5).toISOString(), photos:3 }] : [];
       it.stamp = shiftDay(p.date, -1).split('-').reverse().join('.') + ' 19:07:43';
       return { ok:true, item: it };
     }
   }
   function demoApi(action, p) {
     return new Promise((r, j) => setTimeout(() => {
-      if (action.indexOf('requests.') === 0) { r(demoReq(action, p)); return; }
+      if (action.indexOf('requests.') === 0 || action.indexOf('reports.') === 0) { r(demoReq(action, p)); return; }
       if (action.indexOf('admin.') === 0) { try { r(demoAdmin(action, p)); } catch (e) { j(e); } return; }
       if (action === 'me') r(demoStore ? { ok:true, ...demoStore } : { ok:true, status:'new', telegram:{ firstName:'Алина', lastName:'', username:'alina_k' } });
       if (action === 'register') {
@@ -598,6 +660,7 @@ details summary::-webkit-details-marker{display:none}
     map:   svg('<path d="M9 4 3 6.5v13.5l6-2.5 6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/>'),
     copy:  svg('<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'),
     filter:svg('<path d="M4 6h16M7 12h10M10 18h4"/>'),
+    camera:svg('<path d="M4 8.5h3l1.6-2.5h6.8L17 8.5h3v10.5H4z"/><circle cx="12" cy="13.5" r="3.5"/>'),
     cal:   svg('<rect x="4" y="5.5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3.5v4M15 3.5v4"/>'),
     refresh:svg('<path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 20v-4h-4"/>'),
   };
@@ -1119,6 +1182,270 @@ details summary::-webkit-details-marker{display:none}
   };
 
 
+
+  /* =================== ФОТО: метаданные, отпечаток, сжатие =================== */
+  const PH_LABEL = { none:'Без фото', arrival:'Только прибытие', departure:'Только убытие', full:'Фото есть' };
+  const STAGE_LABEL = { arrival:'Прибытие', departure:'Убытие' };
+
+  /** EXIF из JPEG: время съёмки, производитель, модель, программа, GPS. Читаем ДО сжатия — при сжатии всё стирается. */
+  function readExif(buf) {
+    const out = { hasExif: false };
+    const v = new DataView(buf);
+    if (v.byteLength < 4 || v.getUint16(0) !== 0xFFD8) return out;
+    let off = 2;
+    while (off + 10 < v.byteLength) {
+      const marker = v.getUint16(off), len = v.getUint16(off + 2);
+      if (marker === 0xFFE1 && v.getUint32(off + 4) === 0x45786966) { try { parseTiff(v, off + 10, out); } catch (e) {} break; }
+      if ((marker & 0xFF00) !== 0xFF00 || marker === 0xFFDA) break;
+      off += 2 + len;
+    }
+    return out;
+  }
+  function parseTiff(v, t, out) {
+    const le = v.getUint16(t) === 0x4949;
+    const u16 = o => v.getUint16(t + o, le), u32 = o => v.getUint32(t + o, le);
+    const str = (o, n) => { let r = ''; for (let i = 0; i < n && t + o + i < v.byteLength; i++) { const c = v.getUint8(t + o + i); if (!c) break; r += String.fromCharCode(c); } return r.trim(); };
+    const rat = o => u32(o) / (u32(o + 4) || 1);
+    const ifd = o => {
+      const tags = {};
+      if (!o || t + o + 2 > v.byteLength) return tags;
+      const n = u16(o);
+      for (let i = 0; i < n && i < 300; i++) {
+        const e = o + 2 + i * 12;
+        if (t + e + 12 > v.byteLength) break;
+        const type = u16(e + 2), cnt = u32(e + 4);
+        const size = ({ 1:1, 2:1, 3:2, 4:4, 5:8, 7:1, 9:4, 10:8 })[type] || 1;
+        tags[u16(e)] = { type, cnt, at: size * cnt > 4 ? u32(e + 8) : e + 8, raw: e + 8 };
+      }
+      return tags;
+    };
+    const s = (g, tag) => g[tag] && g[tag].type === 2 ? str(g[tag].at, g[tag].cnt) : '';
+    out.hasExif = true;
+    const i0 = ifd(u32(4));
+    out.make = s(i0, 0x010F); out.model = s(i0, 0x0110); out.software = s(i0, 0x0131);
+    let taken = s(i0, 0x0132);
+    if (i0[0x8769]) { const ex = ifd(u32(i0[0x8769].raw)); taken = s(ex, 0x9003) || s(ex, 0x9004) || taken; }
+    if (taken) out.taken = taken.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3');
+    if (i0[0x8825]) {
+      const g = ifd(u32(i0[0x8825].raw));
+      const coord = (tag, ref) => {
+        if (!g[tag] || g[tag].type !== 5 || g[tag].cnt < 3) return null;
+        const o = g[tag].at, d = rat(o) + rat(o + 8) / 60 + rat(o + 16) / 3600;
+        return /[SW]/.test(s(g, ref)) ? -d : d;
+      };
+      const lat = coord(2, 1), lon = coord(4, 3);
+      if (lat !== null && lon !== null && isFinite(lat) && isFinite(lon) && !(lat === 0 && lon === 0)) { out.lat = +lat.toFixed(6); out.lon = +lon.toFixed(6); }
+    }
+  }
+
+  async function loadBitmap(file) {
+    if (window.createImageBitmap) { try { return await createImageBitmap(file, { imageOrientation: 'from-image' }); } catch (e) {} }
+    return new Promise((res, rej) => { const img = new Image(); img.onload = () => res(img); img.onerror = () => rej(new Error('bad image')); img.src = URL.createObjectURL(file); });
+  }
+  const hex = buf => [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+
+  /** «Отпечаток» фото (dHash 64 бита): одинаковые и почти одинаковые снимки дают близкие коды — так ловим повторы. */
+  function dHash(img) {
+    // сначала мягко уменьшаем до 90×80, затем усредняем блоки 10×10 → сетка 9×8 (устойчиво к сжатию и масштабу)
+    const c = document.createElement('canvas'); c.width = 90; c.height = 80;
+    const x = c.getContext('2d', { willReadFrequently: true });
+    x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+    x.drawImage(img, 0, 0, 90, 80);
+    const d = x.getImageData(0, 0, 90, 80).data;
+    const cell = (cx, cy) => { let sum = 0; for (let y = cy * 10; y < cy * 10 + 10; y++) for (let k = cx * 10; k < cx * 10 + 10; k++) { const i = (y * 90 + k) * 4; sum += d[i] * .299 + d[i + 1] * .587 + d[i + 2] * .114; } return sum; };
+    let bits = '';
+    for (let cy = 0; cy < 8; cy++) for (let cx = 0; cx < 8; cx++) bits += cell(cx, cy) < cell(cx + 1, cy) ? '1' : '0';
+    let h = ''; for (let i = 0; i < 64; i += 4) h += parseInt(bits.slice(i, i + 4), 2).toString(16);
+    return h;
+  }
+
+  /** Файл с телефона → { blob (сжатый JPEG), url (превью), meta }. */
+  async function processPhoto(file) {
+    const buf = await file.arrayBuffer();
+    const exif = readExif(buf);
+    let sha = '';
+    try { sha = hex(await crypto.subtle.digest('SHA-256', buf)); } catch (e) {}
+    const img = await loadBitmap(file);
+    const W = img.width || img.naturalWidth, H = img.height || img.naturalHeight;
+    const k = Math.min(1, 1600 / Math.max(W, H));
+    const c = document.createElement('canvas'); c.width = Math.round(W * k); c.height = Math.round(H * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.82));
+    if (!blob) throw new Error('compress failed');
+    const meta = { ...exif, sha, dhash: dHash(img), w: c.width, h: c.height, origBytes: file.size, origType: file.type || '',
+      fileModified: file.lastModified ? new Date(file.lastModified).toISOString() : '' };
+    return { blob, url: URL.createObjectURL(blob), meta };
+  }
+  const blobToB64 = blob => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(blob); });
+
+  /** Геопозиция телефона в момент отправки (Telegram LocationManager, иначе браузер). Не обязательна. */
+  function getLocation() {
+    return new Promise(res => {
+      const done = v => { clearTimeout(t); res(v); };
+      const t = setTimeout(() => res(null), 9000);
+      try {
+        const lm = tg && tg.LocationManager;
+        if (lm && tg.isVersionAtLeast && tg.isVersionAtLeast('8.0')) {
+          const ask = () => lm.getLocation(d => done(d ? { lat: d.latitude, lon: d.longitude, acc: d.horizontal_accuracy || null } : null));
+          return lm.isInited ? ask() : lm.init(() => (lm.isLocationAvailable ? ask() : done(null)));
+        }
+      } catch (e) {}
+      if (!navigator.geolocation) return done(null);
+      navigator.geolocation.getCurrentPosition(p => done({ lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy }), () => done(null), { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
+    });
+  }
+  const newReportId = () => { const a = new Uint8Array(8); crypto.getRandomValues(a); return hex(a.buffer); };
+
+  /* =================== ЭКРАН ФОТООТЧЁТА =================== */
+  const Report = {
+    st: null,
+    picker: null,
+
+    open(item) {
+      const has = item.photo || 'none';
+      this.st = { item, type: has === 'arrival' ? 'departure' : has === 'departure' ? 'arrival' : 'full',
+        shots: { arrival: [], departure: [] }, comment: '', sending: false, done: 0, total: 0, error: '', result: null };
+      window.scrollTo(0, 0);
+      setBack(() => this.close());
+      this.render();
+    },
+    close() {
+      const s = this.st;
+      if (s && !s.result && (s.shots.arrival.length || s.shots.departure.length) && !window.confirm('Выйти без отправки? Выбранные фото не сохранятся.')) return;
+      this.st = null;
+      Req.openDetail(Req.st.detailKey, true);
+    },
+    stages() { return this.st.type === 'full' ? ['arrival', 'departure'] : [this.st.type]; },
+    count() { return this.stages().reduce((n, k) => n + this.st.shots[k].filter(x => x.blob).length, 0); },
+    ready() { return this.stages().every(k => this.st.shots[k].some(x => x.blob)) && !this.stages().some(k => this.st.shots[k].some(x => x.busy)); },
+
+    render() {
+      const s = this.st, it = s.item;
+      if (s.result) return this.renderDone();
+      const has = it.photo || 'none';
+      const type = (id, title, sub, doneTag) => `<button class="type ${s.type === id ? 'on' : ''}" data-p="type" data-v="${id}" ${s.sending ? 'disabled' : ''}><i></i><span><b>${title}</b><small>${sub}</small></span>${doneTag ? '<em>уже есть</em>' : ''}</button>`;
+      const shotsHtml = st => {
+        const list = s.shots[st];
+        return `<div class="shots">${list.map((x, i) => `<div class="shot">${x.url ? `<img src="${x.url}" alt="">` : ''}
+            ${x.busy ? '<div class="busy"><span class="spinner dark" style="width:24px;height:24px;margin:0"></span></div>' : ''}
+            ${x.meta && x.meta.lat != null ? '<span class="geo">GPS</span>' : ''}
+            ${s.sending ? '' : `<button class="x" data-p="rm" data-v="${st}:${i}" aria-label="Удалить фото">×</button>`}</div>`).join('')}
+          ${list.length < 10 && !s.sending ? `<button class="add" data-p="add" data-v="${st}"><span>＋</span><b>${list.length ? 'Ещё фото' : 'Добавить фото'}</b><small>Камера или галерея</small></button>` : ''}</div>`;
+      };
+      const section = st => `<p class="sect">${s.type === 'full' ? 'Фото ' + (st === 'arrival' ? 'прибытия' : 'убытия') : 'Фотографии'}<small>минимум 1</small></p>
+        <div class="card glass">${shotsHtml(st)}</div>`;
+      const n = this.count();
+      app.innerHTML = `<div class="topbar"><button class="round" data-p="back" aria-label="Назад">${ICON.back}</button>
+          <div class="grow"><h2>Фотоотчёт</h2><small>${it.no ? 'Заявка ' + esc(it.no) : 'Заявка'}${it.time ? ' · ' + esc(it.time) : ''} · ${esc(it.vehicle || '')}</small></div></div>
+        <div class="card glass hint-card"><div class="ic">${ICON.camera}</div><div><h3>Что фиксируем?</h3>
+          <p>${s.type === 'full' ? 'Для полного отчёта нужны фото прибытия и фото убытия.' : 'Можно отправить одну фотографию. Прибытие и убытие могут загрузить разные люди.'}</p></div></div>
+        <div class="types">
+          ${type('full', 'Полный отчёт', 'Прибытие и убытие сразу', has === 'full')}
+          ${type('arrival', 'Прибытие', 'Можно дополнить позже', has === 'arrival' || has === 'full')}
+          ${type('departure', 'Убытие', 'Завершит отчёт после прибытия', has === 'departure' || has === 'full')}
+        </div>
+        ${this.stages().map(section).join('')}
+        <p class="sect">Комментарий<small>необязательно</small></p>
+        <div class="card glass"><textarea class="input area" id="pComment" maxlength="1000" placeholder="Например: разгрузка завершена" ${s.sending ? 'disabled' : ''}>${esc(s.comment)}</textarea></div>
+        ${s.sending || s.error ? `<div class="card glass">
+            <div class="big-status"><b>${s.error ? 'Отправка прервалась' : s.done < s.total ? 'Отправляем фото ' + Math.min(s.done + 1, s.total) + ' из ' + s.total : 'Сохраняем отчёт…'}</b><span>${s.done}/${s.total}</span></div>
+            <div class="progress"><i style="width:${s.total ? Math.round(s.done / s.total * 100) : 0}%"></i></div>
+            ${s.error ? `<div class="hint" style="margin:6px 2px 12px">${esc(s.error)}</div><button class="primary small" data-p="send">Повторить — уже отправленные фото не потеряются</button>` : '<p class="note" style="margin:6px 0 0">Не закрывайте приложение до конца отправки</p>'}
+          </div>` : ''}
+        ${s.sending || s.error ? '' : `<div class="sticky"><button class="primary" data-p="send" ${this.ready() ? '' : 'disabled'}>${n ? 'Отправить · ' + n + ' ' + plural(n, 'фото', 'фото', 'фото') : 'Добавьте фото'}</button></div>
+        <p class="note">Фото сохранятся в папку заявки на Google Диске</p>`}`;
+      this.wire();
+    },
+
+    renderDone() {
+      const s = this.st, r = s.result, it = s.item;
+      app.innerHTML = `<div class="center" style="padding-top:4vh"><div class="badge ok glass">${ICON.check}</div>
+          <p class="eyebrow">Готово</p><h1>Фотоотчёт отправлен</h1>
+          <p class="lead">${r.photos} ${plural(r.photos, 'фотография сохранена', 'фотографии сохранены', 'фотографий сохранено')} в папку заявки ${esc(it.no || '')}.</p></div>
+        <div class="card glass"><div class="big-status"><span>Статус фотоотчёта</span><span class="ph ${r.status}">${PH_LABEL[r.status] || '—'}</span></div></div>
+        <button class="primary" data-p="back">Вернуться к заявке</button>
+        <button class="secondary" data-p="more">Добавить ещё фото</button>`;
+      this.wire();
+    },
+
+    wire() {
+      app.onclick = e => { const b = e.target.closest('[data-p]'); if (b && !b.disabled) this.act(b.dataset.p, b.dataset.v); };
+      const c = document.getElementById('pComment'); if (c) c.oninput = e => { this.st.comment = e.target.value; };
+    },
+
+    pick(stage) {
+      if (!this.picker) {
+        this.picker = document.createElement('input');
+        this.picker.type = 'file'; this.picker.accept = 'image/*'; this.picker.multiple = true; this.picker.style.display = 'none';
+        document.body.appendChild(this.picker);
+      }
+      this.picker.value = '';
+      this.picker.onchange = () => this.addFiles(stage, [...this.picker.files]);
+      this.picker.click();
+    },
+
+    async addFiles(stage, files) {
+      const s = this.st, list = s.shots[stage];
+      files = files.slice(0, 10 - list.length);
+      const slots = files.map(() => ({ busy: true }));
+      list.push(...slots); this.render();
+      for (let i = 0; i < files.length; i++) {
+        try { Object.assign(slots[i], await processPhoto(files[i]), { busy: false }); }
+        catch (e) { slots[i].failed = true; toast('Не удалось открыть фото — попробуйте другое'); }
+        if (this.st !== s) return;
+        this.render();
+      }
+      s.shots[stage] = list.filter(x => !x.failed);
+      haptic('success'); this.render();
+    },
+
+    async send() {
+      const s = this.st;
+      if (!this.ready() || s.sending) return;
+      s.sending = true; s.error = '';
+      s.reportId = s.reportId || newReportId();
+      const queue = [];
+      this.stages().forEach(st => s.shots[st].forEach((x, i) => queue.push({ st, i: i + 1, x })));
+      s.total = queue.length; s.done = queue.filter(q => q.x.fileId).length;
+      this.render();
+      try {
+        if (!s.location) s.location = await getLocation();
+        for (const q of queue) {
+          if (q.x.fileId) continue;
+          const data = await blobToB64(q.x.blob);
+          let lastErr;
+          for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+              const r = await api('reports.upload', { key: s.item.key, day: s.item.day, reportId: s.reportId, stage: q.st, index: q.i, data, meta: q.x.meta }, 120000);
+              q.x.fileId = r.fileId; lastErr = null; break;
+            } catch (e) { lastErr = e; if (e.code && !['TIMEOUT', 'NETWORK', 'SERVER_ERROR', 'BAD_RESPONSE'].includes(e.code)) break; await new Promise(r => setTimeout(r, attempt * 1500)); }
+          }
+          if (lastErr) throw lastErr;
+          s.done++; this.render();
+        }
+        const counts = {}; this.stages().forEach(st => { counts[st] = s.shots[st].length; });
+        const r = await api('reports.commit', { key: s.item.key, day: s.item.day, reportId: s.reportId, type: s.type, counts, comment: s.comment, location: s.location }, 90000);
+        s.sending = false; s.result = { status: r.status, photos: r.photos || s.total };
+        const li = Req.st.data && Req.st.data.items.find(x => x.key === s.item.key); if (li) li.photo = r.status;
+        haptic('success'); this.render();
+      } catch (e) {
+        s.sending = false; s.error = e.message || 'Нет связи'; haptic('error'); this.render();
+      }
+    },
+
+    act(a, v) {
+      const s = this.st;
+      switch (a) {
+        case 'back': return s.result ? (this.st = null, Req.openDetail(Req.st.detailKey, true)) : this.close();
+        case 'type': s.type = v; return this.render();
+        case 'add': return this.pick(v);
+        case 'rm': { const [st, i] = v.split(':'); const x = s.shots[st][+i]; if (x && x.url) URL.revokeObjectURL(x.url); s.shots[st].splice(+i, 1); return this.render(); }
+        case 'send': return this.send();
+        case 'more': { const item = { ...s.item, photo: s.result.status }; return this.open(item); }
+      }
+    },
+  };
+
   /* =================== ЗАЯВКИ =================== */
   const WD = ['вс','пн','вт','ср','чт','пт','сб'];
   const WD_FULL = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
@@ -1191,7 +1518,7 @@ details summary::-webkit-details-marker{display:none}
   }
 
   const Req = {
-    st: { day: todayIso(), scope: store.get('t26-scope') || 'mine', q: '', fp: new Set(), fu: new Set(), data: null, loading: false,
+    st: { day: todayIso(), scope: store.get('t26-scope') || 'mine', q: '', fp: new Set(), fu: new Set(), fph: new Set(), data: null, loading: false,
           sheet: false, view: 'list', detail: null, detailKey: '', err: null },
 
     open(day) {
@@ -1223,7 +1550,7 @@ details summary::-webkit-details-marker{display:none}
 
     setDay(day) {
       if (day === this.st.day) return;
-      this.st.day = day; this.st.fp.clear(); this.st.fu.clear();
+      this.st.day = day; this.st.fp.clear(); this.st.fu.clear(); this.st.fph.clear();
       haptic('success'); this.load(false);
     },
 
@@ -1233,6 +1560,7 @@ details summary::-webkit-details-marker{display:none}
       // сначала самые поздние по времени подачи, дальше по убыванию; заявки без времени — в конце
       return items.slice().sort((a, b) => (b.time || '').localeCompare(a.time || '')).filter(it => (s.scope === 'all' || it.mine)
         && (!s.fp.size || s.fp.has(it.project)) && (!s.fu.size || s.fu.has(it.purpose))
+        && (!s.fph.size || s.fph.has(it.photo === 'arrival' || it.photo === 'departure' ? 'partial' : it.photo || 'none'))
         && (!q || [it.no, it.vehicle, it.from, it.to, it.project, it.purpose, it.cargo, it.transport].join(' ').toLowerCase().includes(q)));
     },
 
@@ -1267,7 +1595,7 @@ details summary::-webkit-details-marker{display:none}
         <div class="top"><b>${esc(it.time || '—')}</b><span class="no">${esc(it.no || 'без номера')}</span>
           <span class="right">${markMine && it.mine ? '<i>ваша</i>' : ''}${plate ? `<span class="plate sm">${esc(plate)}</span>` : ''}</span></div>
         <h3>${esc(it.vehicle || 'Транспорт не указан')}</h3>
-        <div class="addr"><span>${esc(it.from || 'Адрес не указан')}</span></div>
+        <div class="bottom"><div class="addr"><span>${esc(it.from || 'Адрес не указан')}</span></div>${it.day <= todayIso() && it.photo ? `<span class="ph ${it.photo}">${PH_LABEL[it.photo]}</span>` : ''}</div>
       </button>`;
     },
 
@@ -1282,9 +1610,9 @@ details summary::-webkit-details-marker{display:none}
       if (s.err && !data) body = `<div class="empty">${esc(s.err.message)}<br><br><button class="secondary small" data-r="reload">Повторить</button></div>`;
       else if (!data) body = `<div class="list"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>`;
       else if (!list.length) {
-        const why = s.q || s.fp.size || s.fu.size ? 'По этим условиям заявок нет.'
+        const why = s.q || s.fp.size || s.fu.size || s.fph.size ? 'По этим условиям заявок нет.'
           : s.scope === 'mine' ? 'В этот день вас нет в заявках.' : 'На этот день заявок нет.';
-        const act = s.q || s.fp.size || s.fu.size ? `<button class="secondary small" data-r="clear">Сбросить поиск и фильтры</button>`
+        const act = s.q || s.fp.size || s.fu.size || s.fph.size ? `<button class="secondary small" data-r="clear">Сбросить поиск и фильтры</button>`
           : s.scope === 'mine' && canAll && items.length ? `<button class="secondary small" data-r="scope" data-v="all">Показать все заявки дня · ${items.length}</button>` : '';
         body = `<div class="empty">${why}${act ? '<br><br>' + act : ''}</div>`;
       } else {
@@ -1296,11 +1624,12 @@ details summary::-webkit-details-marker{display:none}
         });
         body = `<div class="list">${html}</div>`;
       }
-      const filt = [...s.fp].map(v => `<button data-r="unfp" data-v="${esc(v)}">${esc(v)} ✕</button>`).concat([...s.fu].map(v => `<button data-r="unfu" data-v="${esc(v)}">${esc(v)} ✕</button>`)).join('');
+      const PHF = { none:'Без фото', partial:'Частично', full:'Фото есть' };
+      const filt = [...s.fp].map(v => `<button data-r="unfp" data-v="${esc(v)}">${esc(v)} ✕</button>`).concat([...s.fu].map(v => `<button data-r="unfu" data-v="${esc(v)}">${esc(v)} ✕</button>`)).concat([...s.fph].map(v => `<button data-r="unfph" data-v="${v}">${PHF[v]} ✕</button>`)).join('');
       app.innerHTML = this.head() + this.strip()
         + (canAll ? `<div class="seg"><button class="${s.scope === 'mine' ? 'on' : ''}" data-r="scope" data-v="mine">Мои${data ? ` <span class="n">${nMine}</span>` : ''}</button><button class="${s.scope === 'all' ? 'on' : ''}" data-r="scope" data-v="all">Все${data ? ` · ${items.length}` : ''}</button></div>` : '')
         + `<div class="tools"><div class="search compact">${ICON.search}<input class="input" id="rq" placeholder="Номер, адрес, машина" value="${esc(s.q)}"></div>
-           <button class="round" data-r="filters" aria-label="Фильтры">${ICON.filter}${s.fp.size + s.fu.size ? `<span class="dot">${s.fp.size + s.fu.size}</span>` : ''}</button></div>`
+           <button class="round" data-r="filters" aria-label="Фильтры">${ICON.filter}${s.fp.size + s.fu.size + s.fph.size ? `<span class="dot">${s.fp.size + s.fu.size + s.fph.size}</span>` : ''}</button></div>`
         + (filt ? `<div class="active-filters">${filt}</div>` : '')
         + `<div style="height:16px"></div>`
         + body
@@ -1317,10 +1646,11 @@ details summary::-webkit-details-marker{display:none}
         <h3>Фильтры</h3>
         <p class="sect">Проект</p><div class="chips">${chips('project', s.fp, 'fp')}</div>
         <p class="sect">Назначение</p><div class="chips">${chips('purpose', s.fu, 'fu')}</div>
+        <p class="sect">Фотоотчёт</p><div class="chips">${[['none','Без фото'],['partial','Частично'],['full','Фото есть']].map(([v, l]) => `<button class="chip ${s.fph.has(v) ? 'on' : ''}" data-r="fph" data-v="${v}">${l} <span class="c">${items.filter(i => (i.photo === 'arrival' || i.photo === 'departure' ? 'partial' : i.photo || 'none') === v).length}</span></button>`).join('')}</div>
         <div class="btn-row two" style="margin-top:8px"><button class="secondary small" data-r="clear">Сбросить</button><button class="primary small" data-r="closeSheet">Показать · ${this.visible().length}</button></div></div>`;
     },
 
-    async openDetail(key) {
+    async openDetail(key, fresh) {
       const s = this.st, base = ((s.data && s.data.items) || []).find(i => i.key === key);
       s.view = 'detail'; s.detailKey = key; s.detail = base ? { ...base, partial: true } : null;
       window.scrollTo(0, 0);
@@ -1348,6 +1678,7 @@ details summary::-webkit-details-marker{display:none}
           <div class="sub">${esc([it.project, it.purpose].filter(Boolean).join(' — '))}${it.cargo ? `<br>${/работа по месту/i.test(it.cargo) ? 'Работа по месту' : 'Что везём: ' + esc(it.cargo)}` : ''}</div>
           ${it.roles && it.roles.length ? `<div class="tags">${it.roles.map(r => `<i class="me">вы ${esc(r.replace(/^указан/, 'указаны'))}</i>`).join('')}</div>` : ''}
         </div>
+        ${full && it.reports && it.reports.length ? `<p class="sect">Фотоотчёты<small>${it.reports.length}</small></p><div class="card glass"><div class="rep-list">${it.reports.map(r => `<div class="rep-item"><span><b>${esc(r.stage)} · ${r.photos} фото</b><small>${esc(r.fio)}</small></span><span>${fmtDate(r.at)}</span></div>`).join('')}</div></div>` : ''}
         <p class="sect">Маршрут</p>
         <div class="card glass">
           <div class="stops ${it.to || (full && it.mid) ? '' : 'one'}">
@@ -1369,7 +1700,9 @@ details summary::-webkit-details-marker{display:none}
           ${it.extra ? `<div><div class="k">Дополнительные адреса и контакты</div><div class="v">${esc(it.extra)}</div>${parseContacts(it.extra).some(c => c.href) ? `<div class="contacts">${parseContacts(it.extra).filter(c => c.href).map(c => `<div class="contact"><span>${esc(c.name)}</span><a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a></div>`).join('')}</div>` : ''}</div>` : ''}
         </div>` : ''}
         ${full && it.initiator ? `<p class="sect">Инициатор заявки</p><div class="card glass"><div class="contacts" style="margin:0">${contactRows(it.initiator, 'оформил заявку')}</div></div>` : ''}
-        ${full && it.stamp ? `<p class="note">Заявка подана ${esc(it.stamp)}</p>` : ''}`;
+        ${full && it.stamp ? `<p class="note">Заявка подана ${esc(it.stamp)}</p>` : ''}
+        <div class="report-bar"><span><small>Фотоотчёт</small><b>${PH_LABEL[it.photo || 'none']}</b></span>
+          <button class="primary" data-r="report" ${full ? '' : 'disabled'}>${it.photo === 'full' ? 'Добавить фото' : 'Отчитаться'}</button></div>`;
       this.wire();
     },
 
@@ -1393,9 +1726,12 @@ details summary::-webkit-details-marker{display:none}
         case 'closeSheet': s.sheet = false; return this.render();
         case 'fp': s.fp.has(v) ? s.fp.delete(v) : s.fp.add(v); return this.render();
         case 'fu': s.fu.has(v) ? s.fu.delete(v) : s.fu.add(v); return this.render();
+        case 'fph': s.fph.has(v) ? s.fph.delete(v) : s.fph.add(v); return this.render();
+        case 'unfph': s.fph.delete(v); return this.render();
+        case 'report': return Report.open(s.detail);
         case 'unfp': s.fp.delete(v); return this.render();
         case 'unfu': s.fu.delete(v); return this.render();
-        case 'clear': s.q = ''; s.fp.clear(); s.fu.clear(); s.sheet = false; return this.render();
+        case 'clear': s.q = ''; s.fp.clear(); s.fu.clear(); s.fph.clear(); s.sheet = false; return this.render();
         case 'admin': return Admin.open();
         case 'profile': return renderProfile();
         case 'map': return openExternal(yandexRoute(s.detail.from, s.detail.to));
