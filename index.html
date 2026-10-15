@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>Транспорт</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Палитра (из таблицы цветов) =====
+   лён #e5dbcf · камень #d9d2ca · шалфей #a8b29f · шалфей-2 #8ca086
+   мох #48694a · лес #344531 · глина #b3715c · терракота #9d4939
+   охра #cb8d3f · сланец #627b95 · графит #3a3c39 · умбра #322e29 */
+:root{
+  --bg-top:#ede5db; --bg:#e7dfd4; --bg-2:#dfd5ca;
+  --glass:linear-gradient(155deg,rgba(255,252,246,.58) 0%,rgba(255,250,243,.30) 55%,rgba(255,248,240,.22) 100%);
+  --glass-solid:#f3ede4;
+  --glass-edge:rgba(var(--hl),.55);
+  --glass-hi:inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 1px rgba(255,255,255,.18);
+  --lift:0 1px 2px rgba(50,46,41,.06),0 14px 34px -12px rgba(50,46,41,.22);
+  /* неоморфизм: тёмная тень снизу-справа + светлая сверху-слева, поверхность одного цвета */
+  --surface:#ebe4da; --surface-focus:#f3ede5; --neu-d:#cbbcaa; --neu-l:#fbf5ec; --hl:250,241,231;
+  --panel:#ebe4da;
+  --glow-a:rgba(214,138,80,.056); --glow-b:rgba(168,178,159,.072);
+  --ink:#322e29; --ink-2:#5a534b; --muted:#857c71; --hair:rgba(50,46,41,.09);
+  --primary:#c0622b; --primary-hi:#d47a3f; --primary-lo:#a8521f; --on-primary:#fbf3ea;
+  --primary-glow:rgba(141,56,41,.42); --primary-soft:rgba(157,73,57,.12);
+  /* лицо главной кнопки — бледная глина, текст — глубокая терракота */
+  --btn-hi:#f5caa6; --btn:#efb88f; --btn-lo:#e5a57c; --on-btn:#843d12;
+  --accent:#c0622b; --danger:#91273b; --danger-soft:rgba(145,39,59,.10);
+  --warn:#cb8d3f; --warn-soft:rgba(203,141,63,.16); --ok:#5f7458; --ok-soft:rgba(140,160,134,.28); --info:#627b95;
+    --raised-sm:4px 4px 9px var(--neu-d),-4px -4px 9px var(--neu-l);
+  --raised:8px 8px 18px var(--neu-d),-8px -8px 18px var(--neu-l);
+  --raised-lg:12px 12px 30px var(--neu-d),-12px -12px 30px var(--neu-l);
+  --pressed:inset 5px 5px 10px var(--neu-d),inset -5px -5px 10px var(--neu-l);
+  --pressed-sm:inset 3px 3px 6px var(--neu-d),inset -3px -3px 6px var(--neu-l);
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg-top:#433e38; --bg:#3c3833; --bg-2:#35312d;
+  --glass:linear-gradient(155deg,rgba(255,250,240,.11) 0%,rgba(255,250,240,.05) 60%,rgba(255,250,240,.035) 100%);
+  --glass-solid:#363230;
+  --glass-edge:rgba(255,255,255,.10);
+  --glass-hi:inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 1px rgba(255,255,255,.03);
+  --lift:0 1px 2px rgba(0,0,0,.25),0 18px 40px -14px rgba(0,0,0,.55);
+  --surface:#443f3a; --surface-focus:#4a453f; --neu-d:rgba(20,16,12,.5); --neu-l:rgba(255,236,215,.09); --hl:226,196,176;
+  --panel:#443f3a;
+  --glow-a:rgba(214,138,80,.056); --glow-b:rgba(140,160,134,.04);
+  --ink:#f1e9de; --ink-2:#d3c9bc; --muted:#a99f93; --hair:rgba(255,236,215,.10);
+  --primary:#d9874a; --primary-hi:#e09035; --primary-lo:#b86a3c; --on-primary:#fbf3ea;
+  --primary-glow:rgba(0,0,0,.45); --primary-soft:rgba(198,134,117,.16);
+  --btn-hi:#c47a48; --btn:#b86c3c; --btn-lo:#a85f32; --on-btn:#fff4ea;
+  --accent:#e8a066; --danger:#e07a8a; --danger-soft:rgba(224,122,138,.13);
+  --warn:#d6a35a; --warn-soft:rgba(214,163,90,.14); --ok:#a8b29f; --ok-soft:rgba(140,160,134,.18); --info:#8ea3bd;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:"Onest",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background:linear-gradient(170deg,var(--bg-top) 0%,var(--bg) 45%,var(--bg-2) 100%) fixed}
+/* лёгкое зерно — «материал», а не пластик */
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+:root[data-theme="dark"] body:before{mix-blend-mode:overlay;opacity:.07}
+button,input{font:inherit;color:inherit}
+.app{position:relative;z-index:1;max-width:520px;margin:0 auto;min-height:100vh;padding:18px 16px calc(28px + env(safe-area-inset-bottom))}
+
+/* стекло: один слой размытия на блок — бережём слабые Android */
+/* панель: спокойная неоморфная поверхность, цвет — только по краям */
+.glass{position:relative;border:0;box-shadow:var(--raised-lg);
+  background:
+    radial-gradient(70% 45% at 0% 0%,var(--glow-a),transparent 62%),
+    radial-gradient(70% 45% at 100% 100%,var(--glow-b),transparent 62%),
+    linear-gradient(var(--panel),var(--panel));
+}
+
+.brand{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 2px 28px}
+.brand strong{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em}
+.brand small{color:var(--muted);font-size:12px}
+.brand-r{display:flex;align-items:center;gap:8px}
+.theme-btn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink-2);padding:0;border:0;background:var(--surface);box-shadow:var(--raised-sm);-webkit-backdrop-filter:none;backdrop-filter:none}
+.theme-btn svg{width:19px;height:19px;stroke-width:1.7}
+.theme-btn:active{box-shadow:var(--pressed-sm)}
+.demo{font-size:11px;font-weight:600;color:var(--warn);padding:6px 11px;border-radius:999px;background:var(--warn-soft);border:1px solid var(--glass-edge);white-space:nowrap}
+
+h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin:0 2px 10px}
+.lead{color:var(--ink-2);font-size:15px;line-height:1.5;margin:0 2px 22px}
+.card{border-radius:30px;padding:20px;margin-bottom:22px}
+.field{display:block;margin-bottom:16px}
+.field:last-child{margin-bottom:0}
+.field>span{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;font-weight:600;color:var(--ink-2);margin:0 10px 8px}
+.field>span small{font-weight:400;color:var(--muted)}
+
+/* поле — «вдавленная» лунка */
+.input{width:100%;min-height:54px;border:0;background:var(--surface);box-shadow:var(--pressed);
+  border-radius:999px;padding:0 22px;font-size:16px;outline:0;color:var(--ink);transition:background .2s,box-shadow .2s}
+.input::placeholder{color:var(--muted);opacity:.75}
+.input:focus{background:var(--surface-focus);box-shadow:var(--pressed),0 0 0 2px color-mix(in srgb,var(--primary) 55%,transparent)}
+.input.err{box-shadow:var(--pressed),0 0 0 2px color-mix(in srgb,var(--danger) 60%,transparent)}
+.input[readonly]{color:var(--ok);box-shadow:var(--pressed-sm),0 0 0 2px color-mix(in srgb,var(--ok) 40%,transparent)}
+.hint{font-size:12px;color:var(--danger);margin:7px 4px 0}
+.phone-row{display:grid;gap:16px}
+
+/* второстепенная кнопка — выпуклая, светлая */
+.tg-btn,.secondary{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:54px;border-radius:999px;cursor:pointer;
+  font-weight:600;font-size:15px;color:var(--ink);background:var(--surface);border:0;box-shadow:var(--raised);transition:box-shadow .18s,transform .18s}
+.tg-btn{color:var(--primary);font-size:14px}
+.tg-btn svg{width:18px;height:18px}
+.tg-btn:active,.secondary:active{box-shadow:var(--pressed);transform:scale(.995)}
+.secondary{margin-top:16px}
+
+.verified{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--ok);margin:2px 4px 0}
+.verified b{display:inline-flex;align-items:center;gap:7px;font-weight:600}
+.verified b:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
+.link{background:none;border:0;padding:0;color:var(--muted);text-decoration:underline;text-underline-offset:3px;font-size:12.5px;cursor:pointer}
+
+/* чекбоксы — мягкие лунки */
+.checks{border-radius:30px;padding:6px 20px;margin:0 0 26px}
+.consent{display:grid;grid-template-columns:50px 1fr;gap:14px;align-items:center;font-size:13.5px;line-height:1.42;color:var(--ink-2);padding:12px 0;cursor:pointer}
+.consent+.hint{margin:-6px 0 10px 64px}
+.checks>.consent:not(:first-child){border-top:1px solid var(--hair)}
+/* переключатель: вдавленная дорожка + выпуклая ручка */
+.consent input{appearance:none;-webkit-appearance:none;position:relative;width:50px;height:30px;margin:0;border-radius:999px;cursor:pointer;
+  background:var(--surface);box-shadow:var(--pressed-sm);border:0;transition:background .25s}
+.consent input:after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;
+  background:var(--surface);box-shadow:3px 3px 6px var(--neu-d),-2px -2px 5px var(--neu-l);transition:transform .25s cubic-bezier(.3,.7,.3,1)}
+.consent input:checked{background:linear-gradient(90deg,var(--btn-lo),var(--btn-hi));box-shadow:inset 2px 2px 5px rgba(132,61,18,.22),inset -2px -2px 5px rgba(var(--hl),.3)}
+.consent input:checked:after{transform:translateX(20px)}
+.req{color:var(--accent);font-weight:700}
+
+/* главная кнопка — объём светом, не глянцем */
+.primary{width:100%;min-height:56px;border:0;border-radius:999px;cursor:pointer;color:var(--on-btn);font-weight:600;font-size:16px;letter-spacing:.005em;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:var(--btn);
+  box-shadow:var(--raised);
+  transition:transform .12s,box-shadow .12s,opacity .15s}
+.primary:active{transform:scale(.995);box-shadow:var(--raised-sm)}
+.primary:disabled{opacity:.55;cursor:default}
+.note{font-size:12px;color:var(--muted);text-align:center;margin:14px 8px 0;line-height:1.5}
+
+.center{text-align:center;padding-top:5vh}
+.center h1,.center .lead{margin-left:auto;margin-right:auto;max-width:400px}
+/* бейдж статуса — выпуклая «таблетка» с тонкой иконкой */
+.badge{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;margin:0 auto 24px}
+.badge svg{width:34px;height:34px;stroke-width:1.7}
+.badge.ok{color:var(--ok)}.badge.wait{color:var(--warn)}.badge.bad{color:var(--danger)}
+.badge:after{content:"";position:absolute;inset:16px;border-radius:50%;box-shadow:var(--pressed-sm);pointer-events:none}
+
+.rows div{display:flex;justify-content:space-between;gap:12px;padding:12px 2px;border-bottom:1px solid var(--hair);font-size:14px}
+.rows div:last-child{border-bottom:0}
+.rows span{color:var(--muted)}.rows strong{text-align:right;font-weight:600}
+.steps{list-style:none;margin:0 0 22px;padding:10px 20px}
+.steps li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;font-size:14px;line-height:1.4;padding:9px 0;color:var(--ink-2)}
+.steps li i{width:24px;height:24px;border-radius:50%;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--muted);font-style:normal;font-size:12px;font-weight:600;display:grid;place-items:center}
+.steps li.done{color:var(--ink)}
+.steps li.done i{background:linear-gradient(180deg,var(--btn-hi),var(--btn));color:var(--on-btn);box-shadow:var(--raised-sm)}
+.spinner{width:20px;height:20px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--on-btn) 30%,transparent);border-top-color:var(--on-btn);animation:spin .8s linear infinite}
+.spinner.dark{border-color:var(--hair);border-top-color:var(--primary);width:34px;height:34px;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,16px);color:var(--ink);padding:12px 20px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:all .22s;max-width:90vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.fade{animation:fade .35s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="toast glass" id="toast"></div>
+
+<script>
+(() => {
+  /* ===== НАСТРОЙКА: адрес веб-приложения Apps Script (Deploy → Web app → URL) ===== */
+  const API_URL = 'https://script.google.com/macros/s/ВСТАВЬТЕ_ID_РАЗВЁРТЫВАНИЯ/exec';
+
+  const tg = window.Telegram && window.Telegram.WebApp;
+  const inTelegram = !!(tg && tg.initData);
+  const params = new URLSearchParams(location.search);
+  let demo = params.has('demo');
+  const app = document.getElementById('app');
+
+  const state = { form: { lastName:'', firstName:'', middleName:'', phone:'', consent:false, writeAccess:false }, contactResponse:'', phoneVerified:false, profile:null, sending:false };
+
+  // Тема: как в Telegram у пользователя (или как в системе, если открыто в браузере)
+  const THEME_KEY = 't26-theme';
+  const savedTheme = () => { try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; } };
+  function applyTheme() {
+    const manual = params.get('theme') || savedTheme();   // выбор кнопкой важнее темы Telegram
+    const dark = manual ? manual === 'dark'
+      : tg && tg.colorScheme ? tg.colorScheme === 'dark'
+      : window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    try { const c = dark ? '#433e38' : '#ede5db'; tg.setHeaderColor(c); tg.setBackgroundColor(c); } catch (e) {}
+    const btn = document.querySelector('[data-theme-toggle]');
+    if (btn) btn.innerHTML = dark ? ICON.sun : ICON.moon;
+  }
+  // кнопка темы живёт в шапке каждого экрана — ловим клик делегированием
+  document.addEventListener('click', e => {
+    if (!e.target.closest('[data-theme-toggle]')) return;
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem(THEME_KEY, next); } catch (err) {}
+    params.delete('theme');
+    haptic('success');
+    applyTheme();
+  });
+  applyTheme();
+  if (tg) {
+    tg.ready(); tg.expand();
+    try { tg.onEvent('themeChanged', applyTheme); } catch (e) {}
+  }
+
+  /* ---------- API ---------- */
+  async function api(action, payload = {}) {
+    if (demo) return demoApi(action, payload);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 30000);
+    try {
+      // text/plain — без preflight-запроса, Apps Script его не поддерживает
+      const res = await fetch(API_URL, { method:'POST', body: JSON.stringify({ action, initData: tg.initData, ...payload }), signal: ctrl.signal });
+      const data = await res.json();
+      if (!data.ok) { const e = new Error(data.message || 'Ошибка'); e.code = data.error; throw e; }
+      return data;
+    } catch (e) {
+      if (e.name === 'AbortError') { const x = new Error('Сервер долго не отвечает. Проверьте интернет и попробуйте ещё раз.'); x.code='TIMEOUT'; throw x; }
+      if (!e.code) { const x = new Error('Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.'); x.code='NETWORK'; throw x; }
+      throw e;
+    } finally { clearTimeout(timer); }
+  }
+
+  // Демо-режим: тот же сценарий без сервера (для просмотра в браузере)
+  let demoStore = null;
+  function demoApi(action, p) {
+    return new Promise(r => setTimeout(() => {
+      if (action === 'me') r(demoStore ? { ok:true, ...demoStore } : { ok:true, status:'new', telegram:{ firstName:'Алина', lastName:'', username:'alina_k' } });
+      if (action === 'register') {
+        const cap = x => String(x||'').replace(/(^|[\s-])([а-яёa-z])/g,(m,a,b)=>a+b.toUpperCase());
+        demoStore = { status:'pending', profile:{ lastName:cap(p.lastName), firstName:cap(p.firstName), middleName:p.middleName, fio:[cap(p.lastName),cap(p.firstName),cap(p.middleName)].filter(Boolean).join(' '), phone:normPhone(p.phone), phoneVerified:false, role:'Сотрудник' } };
+        r({ ok:true, ...demoStore });
+      }
+    }, 700));
+  }
+
+  /* ---------- helpers ---------- */
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const haptic = t => { try { tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred(t); } catch (e) {} };
+  function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600); }
+  function digits(s) { return String(s || '').replace(/\D/g, ''); }
+  function normPhone(s) {
+    let d = digits(s);
+    if (d.length === 11 && (d[0] === '8' || d[0] === '7')) d = '7' + d.slice(1);
+    else if (d.length === 10 && d[0] === '9') d = '7' + d;
+    return d.length === 11 && d[0] === '7' ? '+' + d : '';
+  }
+  function fmtPhone(s) {
+    let d = digits(s);
+    if (!d) return '';
+    if (d[0] === '8') d = '7' + d.slice(1);
+    if (d[0] === '9') d = '7' + d;
+    d = d.slice(0, 11);
+    const p = [d.slice(1,4), d.slice(4,7), d.slice(7,9), d.slice(9,11)];
+    let out = '+7';
+    if (p[0]) out += ' (' + p[0];
+    if (p[1]) out += ') ' + p[1];
+    if (p[2]) out += '-' + p[2];
+    if (p[3]) out += '-' + p[3];
+    return out;
+  }
+  const nameOk = s => /^[А-ЯЁа-яёA-Za-z][А-ЯЁа-яёA-Za-z\s'\-]{0,39}$/.test(String(s).trim());
+  const header = () => `<div class="brand"><div><strong>Транспорт</strong><small>Заявки и фотоотчёты</small></div>
+    <div class="brand-r">${demo ? '<span class="demo">Демо</span>' : ''}<button class="theme-btn glass" data-theme-toggle aria-label="Сменить тему">${document.documentElement.dataset.theme === 'dark' ? ICON.sun : ICON.moon}</button></div></div>`;
+  const svg = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const ICON = {
+    send:  svg('<path d="M21 3 10 14"/><path d="M21 3 14.5 21l-4.5-7-7-4.5z"/>'),
+    clock: svg('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
+    check: svg('<path d="m5 12.5 4.5 4.5L19 7.5"/>'),
+    alert: svg('<path d="M12 8v5"/><path d="M12 16.5h.01"/><circle cx="12" cy="12" r="8.5"/>'),
+    lock:  svg('<rect x="5" y="10.5" width="14" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>'),
+    phone: svg('<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 17.5h2"/>'),
+    sun:   svg('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/>'),
+    moon:  svg('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>'),
+  };
+
+  /* ---------- screens ---------- */
+  function renderLoading(text = 'Проверяем доступ…') {
+    app.innerHTML = header() + `<div class="center"><div class="spinner dark"></div><p class="lead">${esc(text)}</p></div>`;
+  }
+
+  function renderOutside() {
+    app.innerHTML = header() + `<div class="center">
+      <div class="badge wait glass">${ICON.send}</div>
+      <h1>Откройте через Telegram</h1>
+      <p class="lead">Приложение работает внутри бота компании — так оно узнаёт вас без пароля.</p>
+      <button class="secondary" id="demoBtn">Посмотреть демо</button></div>`;
+    document.getElementById('demoBtn').onclick = () => { demo = true; start(); };
+  }
+
+  function renderError(err) {
+    app.innerHTML = header() + `<div class="center">
+      <div class="badge bad glass">${ICON.alert}</div>
+      <h1>Не получилось</h1>
+      <p class="lead">${esc(err.message)}</p>
+      <button class="primary" id="retry">Попробовать снова</button></div>`;
+    document.getElementById('retry').onclick = start;
+  }
+
+  function renderForm(errors = {}) {
+    const f = state.form;
+    const canContact = !demo && tg && tg.isVersionAtLeast && tg.isVersionAtLeast('6.9') && typeof tg.requestContact === 'function';
+    app.innerHTML = header() + `
+      <h1>Регистрация</h1>
+      <p class="lead">Укажите ФИО и телефон так, как вас записывают в заявках. Дальше бот будет узнавать вас сам и показывать ваши заявки.</p>
+      <form id="form" novalidate>
+        <div class="card glass">
+          ${field('lastName','Фамилия','',f.lastName,errors.lastName,'family-name')}
+          ${field('firstName','Имя','',f.firstName,errors.firstName,'given-name')}
+          ${field('middleName','Отчество','необязательно',f.middleName,errors.middleName,'additional-name')}
+        </div>
+        <div class="card glass">
+          <label class="field"><span>Телефон</span>
+            <div class="phone-row">
+              <input class="input ${errors.phone ? 'err' : ''}" id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (900) 000-00-00" value="${esc(fmtPhone(f.phone))}" ${state.phoneVerified ? 'readonly' : ''}>
+              ${state.phoneVerified
+                ? `<div class="verified"><b>Номер подтверждён Telegram</b><button type="button" class="link" id="phoneEdit">Ввести другой</button></div>`
+                : canContact ? `<button type="button" class="tg-btn" id="shareContact">${ICON.phone} Взять номер из Telegram</button>` : ''}
+            </div>
+            ${errors.phone ? `<div class="hint">${esc(errors.phone)}</div>` : ''}
+          </label>
+        </div>
+        <div class="checks glass">
+        <label class="consent"><input type="checkbox" id="consent" ${f.consent ? 'checked' : ''}><span>Согласен(на) на обработку моих ФИО, телефона и Telegram-аккаунта для работы с заявками компании <b class="req">*</b></span></label>
+        ${errors.consent ? `<div class="hint">${esc(errors.consent)}</div>` : ''}
+        <label class="consent"><input type="checkbox" id="writeAccess" ${f.writeAccess ? 'checked' : ''}><span>Разрешаю боту присылать мне уведомления о заявках и отчётах <b class="req">*</b></span></label>
+        ${errors.writeAccess ? `<div class="hint">${esc(errors.writeAccess)}</div>` : ''}
+        </div>
+        <button class="primary" id="submit" type="submit" ${state.sending ? 'disabled' : ''}>${state.sending ? '<span class="spinner"></span>Отправляем…' : 'Зарегистрироваться'}</button>
+        <p class="note">После отправки администратор подтвердит доступ — бот пришлёт сообщение.</p>
+      </form>`;
+
+    ['lastName','firstName','middleName'].forEach(k => document.getElementById(k).addEventListener('input', e => { f[k] = e.target.value; e.target.classList.remove('err'); }));
+    const phone = document.getElementById('phone');
+    phone.addEventListener('input', e => {
+      if (state.phoneVerified) return;
+      const caretEnd = e.target.selectionStart === e.target.value.length;
+      f.phone = digits(e.target.value);
+      e.target.value = fmtPhone(f.phone);
+      if (caretEnd) e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+      e.target.classList.remove('err');
+    });
+    document.getElementById('consent').onchange = e => { f.consent = e.target.checked; };
+    document.getElementById('writeAccess').onchange = e => {
+      if (!e.target.checked) { f.writeAccess = false; return; }
+      const canAsk = !demo && tg && tg.isVersionAtLeast && tg.isVersionAtLeast('6.9') && typeof tg.requestWriteAccess === 'function';
+      if (!canAsk) { f.writeAccess = true; return; }
+      e.target.checked = false; // отметится только после «Разрешить» в окне Telegram
+      tg.requestWriteAccess(allowed => {
+        f.writeAccess = !!allowed;
+        if (allowed) haptic('success');
+        renderForm(allowed ? {} : { writeAccess: 'Без разрешения бот не сможет присылать уведомления. Нажмите «Разрешить» в окне Telegram.' });
+      });
+    };
+    const share = document.getElementById('shareContact');
+    if (share) share.onclick = shareContact;
+    const edit = document.getElementById('phoneEdit');
+    if (edit) edit.onclick = () => { state.phoneVerified = false; state.contactResponse = ''; f.phone = ''; renderForm(); document.getElementById('phone').focus(); };
+    document.getElementById('form').onsubmit = submit;
+  }
+
+  function field(id, label, sub, value, err, ac) {
+    return `<label class="field"><span>${label}${sub ? ` <small>${sub}</small>` : ''}</span>
+      <input class="input ${err ? 'err' : ''}" id="${id}" autocomplete="${ac}" autocapitalize="words" value="${esc(value)}" maxlength="40">
+      ${err ? `<div class="hint">${esc(err)}</div>` : ''}</label>`;
+  }
+
+  function shareContact() {
+    tg.requestContact((shared, result) => {
+      if (!shared) { toast('Можно ввести номер вручную'); return; }
+      const r = result && typeof result === 'object' ? result : {};
+      const phone = r.responseUnsafe && r.responseUnsafe.contact && r.responseUnsafe.contact.phone_number;
+      if (r.response && phone) {
+        state.contactResponse = r.response;      // подписанная строка — сервер проверит подлинность
+        state.phoneVerified = true;
+        state.form.phone = digits(phone);
+        haptic('success');
+        renderForm();
+      } else {
+        toast('Telegram не вернул номер — введите его вручную');
+      }
+    });
+  }
+
+  function validate() {
+    const f = state.form, e = {};
+    if (!nameOk(f.lastName)) e.lastName = 'Укажите фамилию буквами';
+    if (!nameOk(f.firstName)) e.firstName = 'Укажите имя буквами';
+    if (f.middleName.trim() && !nameOk(f.middleName)) e.middleName = 'Только буквы';
+    if (!state.phoneVerified && !normPhone(f.phone)) e.phone = 'Нужен номер в формате +7 (9XX) XXX-XX-XX';
+    if (!f.consent) e.consent = 'Отметьте согласие, чтобы продолжить';
+    if (!f.writeAccess) e.writeAccess = 'Разрешите боту присылать уведомления';
+    return e;
+  }
+
+  async function submit(ev) {
+    ev.preventDefault();
+    if (state.sending) return;
+    const errors = validate();
+    if (Object.keys(errors).length) { haptic('error'); renderForm(errors); return; }
+    state.sending = true; renderForm();
+    try {
+      const f = state.form;
+      const res = await api('register', {
+        lastName: f.lastName.trim(), firstName: f.firstName.trim(), middleName: f.middleName.trim(),
+        phone: f.phone, contactResponse: state.contactResponse, consent: true, writeAccess: true,
+      });
+      state.sending = false;
+      haptic('success');
+      route(res);
+    } catch (err) {
+      state.sending = false;
+      haptic('error');
+      const map = { BAD_LAST_NAME:'lastName', BAD_FIRST_NAME:'firstName', BAD_MIDDLE_NAME:'middleName', BAD_PHONE:'phone', NO_CONSENT:'consent', NO_WRITE_ACCESS:'writeAccess' };
+      if (map[err.code]) renderForm({ [map[err.code]]: err.message });
+      else if (err.code === 'ALREADY_ACTIVE' || err.code === 'BLOCKED') start();
+      else { renderForm(); toast(err.message); }
+    }
+  }
+
+  function profileRows(p) {
+    return `<div class="card glass rows">
+      <div><span>ФИО</span><strong>${esc(p.fio)}</strong></div>
+      <div><span>Телефон</span><strong>${esc(fmtPhone(p.phone) || p.phone)}${p.phoneVerified ? ' ✓' : ''}</strong></div>
+      <div><span>Роль</span><strong>${esc(p.role)}</strong></div></div>`;
+  }
+
+  function renderPending(p) {
+    app.innerHTML = header() + `
+      <div class="center" style="padding-top:2vh"><div class="badge wait glass">${ICON.clock}</div>
+      <h1>Заявка на доступ отправлена</h1>
+      <p class="lead">Администратор сверит данные с заявками и откроет доступ. Бот пришлёт сообщение — обычно это занимает несколько минут в рабочее время.</p></div>
+      <ol class="steps card glass">
+        <li class="done"><i>✓</i><span>Данные сохранены</span></li>
+        <li><i>2</i><span>Проверка администратором</span></li>
+        <li><i>3</i><span>Доступ к вашим заявкам</span></li>
+      </ol>
+      ${profileRows(p)}
+      <button class="primary" id="check">Проверить статус</button>
+      <button class="secondary" id="fix">Исправить данные</button>`;
+    document.getElementById('check').onclick = async () => { renderLoading(); try { route(await api('me')); } catch (e) { renderError(e); } };
+    document.getElementById('fix').onclick = () => {
+      Object.assign(state.form, { lastName:p.lastName||'', firstName:p.firstName||'', middleName:p.middleName||'', phone:digits(p.phone), consent:true, writeAccess:true });
+      state.phoneVerified = false; state.contactResponse = '';
+      renderForm();
+    };
+  }
+
+  function renderActive(p) {
+    app.innerHTML = header() + `
+      <div class="center" style="padding-top:2vh"><div class="badge ok glass">${ICON.check}</div>
+      <p class="eyebrow">Доступ открыт</p>
+      <h1>Здравствуйте, ${esc(p.firstName)}!</h1>
+      <p class="lead">Регистрация завершена. Список ваших заявок появится здесь на следующем этапе.</p></div>
+      ${profileRows(p)}
+      <p class="note">Если данные изменились — напишите администратору.</p>`;
+  }
+
+  function renderBlocked() {
+    app.innerHTML = header() + `<div class="center"><div class="badge bad glass">${ICON.lock}</div>
+      <h1>Доступ закрыт</h1><p class="lead">Если это ошибка — обратитесь к администратору.</p></div>`;
+  }
+
+  function route(res) {
+    if (res.status === 'new') {
+      const t = res.telegram || {};
+      try { if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.allows_write_to_pm) state.form.writeAccess = true; } catch (e) {}
+      if (!state.form.firstName && !state.form.lastName) { state.form.firstName = t.firstName || ''; state.form.lastName = t.lastName || ''; }
+      renderForm();
+    } else if (res.status === 'pending') { state.profile = res.profile; renderPending(res.profile); }
+    else if (res.status === 'active') { state.profile = res.profile; renderActive(res.profile); }
+    else if (res.status === 'blocked') renderBlocked();
+    else renderError(new Error('Неизвестный статус'));
+  }
+
+  async function start() {
+    if (!inTelegram && !demo) return renderOutside();
+    renderLoading();
+    try { route(await api('me')); } catch (e) { renderError(e); }
+  }
+
+  start();
+})();
+</script>
+</body>
+</html>
