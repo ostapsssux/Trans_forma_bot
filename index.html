@@ -131,6 +131,8 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
   background:var(--surface);box-shadow:3px 3px 6px var(--neu-d),-2px -2px 5px var(--neu-l);transition:transform .25s cubic-bezier(.3,.7,.3,1)}
 .consent input:checked{background:linear-gradient(90deg,var(--btn-lo),var(--btn-hi));box-shadow:inset 2px 2px 5px rgba(132,61,18,.22),inset -2px -2px 5px rgba(var(--hl),.3)}
 .consent input:checked:after{transform:translateX(20px)}
+.consent input:focus{outline:none}
+.consent input:focus-visible,.toggle:focus-visible{outline:none;box-shadow:var(--pressed-sm),0 0 0 2px color-mix(in srgb,var(--primary) 50%,transparent)}
 .req{color:var(--accent);font-weight:700}
 
 /* главная кнопка — объём светом, не глянцем */
@@ -184,8 +186,7 @@ body.wide .app{max-width:860px}
 .seg button:disabled{opacity:.4;cursor:default}
 .seg button.on{background:var(--surface);color:var(--ink);box-shadow:3px 3px 7px var(--neu-d),-3px -3px 7px var(--neu-l)}
 .seg .n{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--btn);color:var(--on-btn);font-size:11.5px;display:inline-grid;place-items:center}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 4px 12px;margin:0 -4px 6px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:10px;padding:2px 2px 6px;margin:0 0 14px}
 .chip{flex:none;min-height:36px;padding:0 14px;border-radius:999px;border:0;background:var(--surface);box-shadow:var(--raised-sm);color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .chip.on{background:var(--btn);color:var(--on-btn)}
 .chip .c{opacity:.7;font-weight:500}
@@ -231,6 +232,7 @@ body.wide .app{max-width:860px}
 .btn-row.two{grid-template-columns:1fr 1fr}
 .btn-row .secondary{margin-top:0}
 .secondary.danger{color:var(--danger)}
+.secondary svg,.primary svg{width:18px;height:18px;flex:none;stroke-width:1.8}
 .secondary.small,.primary.small{min-height:44px;font-size:14px}
 .input.area{border-radius:24px;padding:14px 20px;min-height:120px;resize:vertical;line-height:1.45;font-family:inherit}
 .counter{text-align:right;font-size:11.5px;color:var(--muted);margin:6px 12px 0}
@@ -263,6 +265,99 @@ body.wide .app{max-width:860px}
 .admin-entry small{color:var(--muted);font-size:13px}
 .admin-entry .n{min-width:28px;height:28px;padding:0 9px;border-radius:999px;background:var(--btn);color:var(--on-btn);font-weight:700;font-size:13px;display:grid;place-items:center}
 .reasonbox{margin-top:16px}
+
+/* ===================== ЗАЯВКИ ===================== */
+.home-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:2px 2px 20px}
+.home-head h1{margin:0 0 4px}
+.home-head small{color:var(--muted);font-size:13px}
+.head-btns{display:flex;gap:10px;align-items:center}
+.round{position:relative}
+.round .dot{position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--btn);color:var(--on-btn);font-size:10.5px;font-weight:700;display:grid;place-items:center}
+.avatar{font-size:13px;font-weight:650;color:var(--ink-2)}
+/* лента дней: семь лунок, выбранный день выпуклый */
+.days{display:grid;grid-template-columns:repeat(7,1fr) 44px;gap:6px;align-items:stretch;margin:0 0 18px}
+.day{border:0;cursor:pointer;background:transparent;border-radius:18px;padding:9px 0 8px;display:grid;justify-items:center;gap:2px;color:var(--muted);transition:box-shadow .2s,background .2s}
+.day b{font-size:17px;font-weight:650;color:var(--ink-2);line-height:1.15}
+.day span{font-size:11px}
+.day i{width:5px;height:5px;border-radius:50%;background:transparent;margin-top:3px}
+.day.has i{background:var(--muted);opacity:.55}
+.day.mine i{background:var(--primary);opacity:1}
+.day.today span{color:var(--primary);font-weight:600}
+.day.on{background:var(--surface);box-shadow:var(--raised-sm)}
+.day.on b{color:var(--ink)}
+.cal{position:relative;align-self:center}
+.cal input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.tools{display:grid;grid-template-columns:1fr 50px;gap:10px;align-items:center;margin-bottom:6px}
+.tools .search{margin:0}
+.tools .round{width:48px;height:48px}
+.search.compact .input{min-height:48px}
+.active-filters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 2px 0}
+.active-filters button{border:0;cursor:pointer;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--primary-soft);color:var(--primary)}
+.list-meta{display:flex;justify-content:space-between;align-items:baseline;margin:18px 10px 12px;font-size:12.5px;color:var(--muted)}
+.list-meta b{color:var(--ink-2);font-weight:600}
+.link-btn{border:0;background:none;padding:0;cursor:pointer;color:var(--primary);font-weight:600;font-size:12.5px}
+/* карточка заявки — как в макете: № и время, тип транспорта, адрес подачи */
+.list{grid-template-columns:minmax(0,1fr)}
+.rq{display:block;width:100%;min-width:0;overflow:hidden;text-align:left;border:0;cursor:pointer;color:var(--ink);background:var(--surface);
+  border-radius:22px;padding:14px 18px 15px;box-shadow:var(--raised);transition:box-shadow .18s}
+.rq:active{box-shadow:var(--pressed)}
+.rq.past{opacity:.6}
+.rq .top{display:flex;align-items:baseline;gap:10px}
+.rq .top b{font-size:17px;font-weight:650;letter-spacing:-.01em}
+.rq .top span{font-size:13px;color:var(--muted)}
+.rq .top i{margin-left:auto;font-style:normal;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--btn);color:var(--on-btn);align-self:center}
+.rq h3{margin:6px 0 8px;font-size:16.5px;font-weight:600;letter-spacing:-.01em;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.rq .addr{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink-2);min-width:0;overflow:hidden}
+.rq .addr:before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--primary)}
+.rq .addr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tags i.me{background:var(--btn);color:var(--on-btn)}
+/* линия «сейчас» */
+.now{display:flex;align-items:center;gap:10px;margin:2px 4px;color:var(--primary);font-size:12px;font-weight:600}
+.now:after{content:"";flex:1;height:2px;border-radius:2px;background:color-mix(in srgb,var(--primary) 45%,transparent)}
+.now i{width:9px;height:9px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px var(--primary-soft)}
+.skeleton{height:132px;border-radius:26px;background:var(--surface);box-shadow:var(--raised);position:relative;overflow:hidden}
+.skeleton:after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(var(--hl),.35) 50%,transparent 70%);animation:shimmer 1.4s infinite}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+/* нижняя шторка фильтров */
+.sheet-bg{position:fixed;inset:0;z-index:20;background:rgba(30,24,18,.28);animation:fadein .2s both}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;max-height:82vh;overflow:auto;background:var(--panel);border-radius:30px 30px 0 0;
+  padding:12px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(30,24,18,.18);animation:up .25s cubic-bezier(.3,.7,.3,1) both;max-width:620px;margin:0 auto}
+.sheet .grab{width:40px;height:5px;border-radius:5px;background:var(--hair);margin:0 auto 14px}
+.sheet h3{font-size:19px;font-weight:650;margin:0 4px 16px;letter-spacing:-.02em}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+/* карточка заявки — подробно */
+.hero{padding:22px}
+.hero .big{font-size:22px;font-weight:650;letter-spacing:-.02em;line-height:1.2;margin:0 0 6px}
+.hero .sub{color:var(--ink-2);font-size:14px;line-height:1.45}
+.hero .tags{margin-top:12px}
+.stops{position:relative;display:grid;gap:18px;padding-left:24px}
+.stops:before{content:"";position:absolute;left:6px;top:10px;bottom:10px;width:2px;border-radius:2px;background:var(--hair)}
+.stops.one:before{display:none}
+.stop{position:relative}
+.stop:before{content:"";position:absolute;left:-24px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--surface);box-shadow:inset 0 0 0 3px var(--muted)}
+.stop.end:before{background:var(--primary);box-shadow:0 0 0 4px var(--primary-soft)}
+.stop .k{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:3px}
+.stop .addr{font-size:15px;line-height:1.4;font-weight:500;white-space:pre-line;word-break:break-word}
+.contacts{display:grid;gap:8px;margin-top:10px}
+.contact{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;color:var(--ink-2)}
+.contact span{min-width:0;word-break:break-word}
+.call{flex:none;display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--ink);font-weight:600;font-size:13px;
+  padding:8px 13px;border-radius:999px;background:var(--surface);box-shadow:var(--raised-sm)}
+.call svg{width:15px;height:15px;stroke-width:2;color:var(--primary)}
+.call:active{box-shadow:var(--pressed-sm)}
+.map-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.map-btns .secondary{margin:0}
+.kv{display:grid;gap:12px;font-size:14px;line-height:1.45}
+.kv .k{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:2px}
+.kv .v{white-space:pre-line;word-break:break-word;color:var(--ink)}
+.driver{display:grid;gap:12px}
+.driver .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.driver .name{font-size:16px;font-weight:600}
+.driver .model{color:var(--ink-2);font-size:14px}
+.raw{margin-top:4px;font-size:12.5px;color:var(--muted);white-space:pre-line;word-break:break-word}
+details summary{cursor:pointer;color:var(--muted);font-size:12.5px;list-style:none}
+details summary::-webkit-details-marker{display:none}
 </style>
 </head>
 <body>
@@ -395,8 +490,41 @@ body.wide .app{max-width:860px}
     }
     if (action === 'admin.history') return { ok:true, ...DEMO_HISTORY };
   }
+  // Демо-заявки: вымышленные люди и телефоны (страница публичная — реальных данных здесь быть не должно)
+  const DEMO_REQ = [
+    ['06:00','ГГ363','Поливомоечная машина 10 м³','г. Москва, ЦАО, Манежная площадь','','Лето в Москве 26','Полив','вода для полива','Камаз У845КН550\n8 977 000-11-22\nНуров Шахбоз','Тихонравова Татьяна','Андрей Анохин +7 965 000-23-16','',''],
+    ['09:00','АТ158','10т/8,6м/55 куб.м/крытый+гидроборт','Жерновка, Серпуховский район','Московская область, Солнечногорск, д. Липуниха','МЕТМАШ 26','Перевозка материалов','Растения','МАН Р062АН797\nСидоров Александр Петрович\n+7 916 000-45-67','Яковлев Дмитрий +7 977 000-27-40','Соколов Остап +7 999 000-00-01','Самвел +7 926 000-88-99','не менее 2-х ремней'],
+    ['11:00','М180','5т/6м/36 куб.м/крытый+гидроборт','г. Москва, ЦАО, Театральная площадь (у Большого театра)','г. Москва, 2-я Фрезерная ул., 14','Лето в Москве 26','Демонтаж','Деревья','','Бобкова Диана','Лиана +7 (913) 000-49-39','Антон +7 966 000-88-99',''],
+    ['14:00','АР674','Манипулятор 10/7т','Ботаническая ул. 31 стр 13 КПП Конюшня','г. Москва, ЦАО, Цветной бульвар','МЕТМАШ 26','Монтаж/Демонтаж','Конструктив','HOWO К279ХТ797\nШайдаев Тагир\n8 999 000-88-72','Соколов Остап +7 999 000-00-01','Александра +7 925 000-85-19','Самвел +7 926 000-88-99','Длина 7м, 3-х секционный'],
+    ['16:00','М183','10т/8,6м/55 куб.м/крытый+гидроборт','г. Москва, ЦАО, Театральная площадь (у Большого театра)','Московская область, Солнечногорск, д. Липуниха','Лето в Москве 26','Демонтаж','Растения','мерседес атего Р658НУ797\nШишов Александр\n8 926 000-35-37','Бобкова Диана','Лиана +7 (913) 000-49-39','Антон +7 966 000-88-99','не менее 2-х ремней, борт от 7.2м'],
+    ['20:00','М184','Автовышка 12м','г. Москва, ЦАО, Манежная площадь (Площадь революции 2/3)','','Лето в Москве 26','Монтаж, демонтаж гирлянд','работа по месту','Номер машины: К543СР790\nМарка машины: Мицубиси Кантер\nВодитель: Абылов Мирбек\n+7 (977) 000-36-12','Каманин Валерий +7 906 000-57-03','Никита Олегович 8 (919) 000-18-47','','Смена 12 часов, с поворотной люлькой'],
+  ];
+  function demoRequests(day) {
+    const seed = [...day].reduce((a, c) => a + c.charCodeAt(0), 0);
+    const n = 3 + seed % 4;
+    return DEMO_REQ.slice(0, n).map((x, i) => {
+      const it = { key:'d' + day + i, no:x[1], day, time:x[0], vehicle:x[2], from:x[3], to:x[4], project:x[5], purpose:x[6], cargo:x[7], transport:x[8].replace(/\\n/g,'\n'),
+        initiator:x[9], fromContact:x[10], toContact:x[11], info:x[12], mid:'', midContact:'', extra:'', stamp:'' };
+      it.roles = []; if (/Соколов/.test(it.initiator)) it.roles.push('инициатор'); if (/Соколов/.test(it.fromContact)) it.roles.push('встречает на подаче');
+      it.mine = it.roles.length > 0; it.hasMid = false;
+      return it;
+    });
+  }
+  function demoReq(action, p) {
+    if (action === 'requests.list') {
+      const strip = []; for (let i = -3; i <= 3; i++) strip.push(shiftDay(p.date, i));
+      const counts = strip.map(d => { const l = demoRequests(d); return { day:d, all:l.length, mine:l.filter(x => x.mine).length }; });
+      return { ok:true, day:p.date, canSeeAll:true, counts, items: demoRequests(p.date), updated:new Date().toISOString() };
+    }
+    if (action === 'requests.get') {
+      const it = demoRequests(p.date).find(x => x.key === p.key);
+      it.stamp = shiftDay(p.date, -1).split('-').reverse().join('.') + ' 19:07:43';
+      return { ok:true, item: it };
+    }
+  }
   function demoApi(action, p) {
     return new Promise((r, j) => setTimeout(() => {
+      if (action.indexOf('requests.') === 0) { r(demoReq(action, p)); return; }
       if (action.indexOf('admin.') === 0) { try { r(demoAdmin(action, p)); } catch (e) { j(e); } return; }
       if (action === 'me') r(demoStore ? { ok:true, ...demoStore } : { ok:true, status:'new', telegram:{ firstName:'Алина', lastName:'', username:'alina_k' } });
       if (action === 'register') {
@@ -452,6 +580,12 @@ body.wide .app{max-width:860px}
     mute:  svg('<path d="M6 9.5a6 6 0 0 1 9.6-4.8"/><path d="M18 11v3.5l1.5 2.5H6"/><path d="M10 20h4"/><path d="M4 4l16 16"/>'),
     tgok:  svg('<path d="m5 12.5 4.5 4.5L19 7.5"/>'),
     reply: svg('<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v4"/>'),
+    call:  svg('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>'),
+    map:   svg('<path d="M9 4 3 6.5v13.5l6-2.5 6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/>'),
+    copy:  svg('<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'),
+    filter:svg('<path d="M4 6h16M7 12h10M10 18h4"/>'),
+    cal:   svg('<rect x="4" y="5.5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3.5v4M15 3.5v4"/>'),
+    refresh:svg('<path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 20v-4h-4"/>'),
   };
 
   /* ---------- screens ---------- */
@@ -660,6 +794,14 @@ body.wide .app{max-width:860px}
   }
 
 
+  /* Системная кнопка «Назад» в Telegram: один обработчик, меняем только действие */
+  let backAction = null;
+  try { tg && tg.BackButton && tg.BackButton.onClick(() => backAction && backAction()); } catch (e) {}
+  function setBack(fn) {
+    backAction = fn;
+    try { if (tg && tg.BackButton) fn ? tg.BackButton.show() : tg.BackButton.hide(); } catch (e) {}
+  }
+
   /* =================== АДМИН-ПАНЕЛЬ =================== */
   const STATUS_RU = { pending:'Ожидает', active:'Активен', rejected:'Отклонён', blocked:'Заблокирован' };
   const TEMPLATES = [
@@ -693,7 +835,7 @@ body.wide .app{max-width:860px}
     },
     close() {
       document.body.classList.remove('wide');
-      try { tg && tg.BackButton.hide(); } catch (e) {}
+      setBack(null);
       start();
     },
     fail(e) { if (e.code === 'FORBIDDEN') { toast(e.message); this.close(); } else renderError(e); },
@@ -707,14 +849,7 @@ body.wide .app{max-width:860px}
       else return this.close();
       this.render();
     },
-    setBack() {
-      try {
-        if (!tg || !tg.BackButton) return;
-        tg.BackButton.offClick(Admin._bb || (() => {}));
-        Admin._bb = () => Admin.back();
-        tg.BackButton.onClick(Admin._bb); tg.BackButton.show();
-      } catch (e) {}
-    },
+    setBack() { setBack(() => Admin.back()); },
 
     top(title, sub) {
       return `<div class="topbar"><button class="round" data-a="back" aria-label="Назад">${ICON.back}</button>
@@ -969,6 +1104,310 @@ body.wide .app{max-width:860px}
     },
   };
 
+
+  /* =================== ЗАЯВКИ =================== */
+  const WD = ['вс','пн','вт','ср','чт','пт','сб'];
+  const WD_FULL = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+  const MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  const pad = n => String(n).padStart(2, '0');
+  const isoOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const dateOf = iso => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d, 12); };
+  function shiftDay(iso, n) { const d = dateOf(iso); d.setDate(d.getDate() + n); return isoOf(d); }
+  const todayIso = () => isoOf(new Date());
+  const longDate = iso => { const d = dateOf(iso); return `${WD_FULL[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]}`; };
+  const shortDate = iso => { const d = dateOf(iso); return `${WD[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]}`; };
+  const nowHM = () => { const d = new Date(); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+  // Телефоны в свободном тексте — так же, как на сервере
+  const PHONE_RE = () => /(?:\+\s?7|\b8|\b7)?[\s \-‐-―().]*(9\d{2})[\s \-‐-―().]*(\d{3})[\s \-‐-―().]*(\d{2})[\s \-‐-―().]*(\d{2})(?!\d)/g;
+  const PLATE_RE = /[АВЕКМНОРСТУХABEKMHOPCTYX]\s?\d{3}\s?[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\s?\d{2,3}(?!\d)/gi;
+  const telHref = m => `tel:+7${m[1]}${m[2]}${m[3]}${m[4]}`;
+  const telText = m => `+7 ${m[1]} ${m[2]}-${m[3]}-${m[4]}`;
+  const cleanBits = t => String(t || '').replace(/^[\s,;:.\-–—/|()+]+|[\s,;:.\-–—/|(+]+$/g, '').replace(/\s{2,}/g, ' ').trim();
+
+  /** «Лиана +7 (913) 716-49-39, Антон 8 966…» → [{ name, phone, href }] */
+  function parseContacts(text) {
+    text = String(text || '').trim();
+    if (!text) return [];
+    const re = PHONE_RE(), found = [];
+    let m;
+    while ((m = re.exec(text))) found.push({ m, start: m.index, end: re.lastIndex });
+    if (!found.length) return [{ name: text }];
+    // «+7… Татьяна +7… Александра» — имя после номера; «Лиана +7…» — перед номером
+    const nameAfter = !cleanBits(text.slice(0, found[0].start));
+    return found.map((f, i) => {
+      const before = cleanBits(text.slice(i ? found[i-1].end : 0, f.start));
+      const after = cleanBits(text.slice(f.end, found[i+1] ? found[i+1].start : text.length)).split(/\n/)[0];
+      let name = nameAfter ? after : before;
+      if (!name) name = nameAfter ? before : after;
+      return { name: name.replace(/^(тел\.?|телефон:?)\s*/i, ''), phone: telText(f.m), href: telHref(f.m) };
+    });
+  }
+
+  /** Свободный текст из колонки «транспорт» → номер машины, марка, водитель, телефон */
+  function parseDriver(text) {
+    text = String(text || '').trim();
+    if (!text) return null;
+    const plates = (text.match(PLATE_RE) || []).map(p => p.replace(/\s/g, '').toUpperCase());
+    const phones = parseContacts(text).filter(c => c.phone);
+    // подписи вида «Номер машины:», «Гос:», «Водитель:» — только целыми словами («длиномер» не трогаем)
+    let rest = text.replace(PLATE_RE, ' ').replace(PHONE_RE(), ' ')
+      .replace(/(^|[^а-яёa-z])(номер машины|марка машины|марка автомобиля|номер автомобиля|гос\.?\s*номер|гос|марка|номер|водитель|телефон|тел)(?![а-яёa-z])\s*[:.]?/gi, '$1 ')
+      .replace(/^\s*\d+\.\s*/gm, '');
+    const lines = rest.split(/\n|,(?![^(]*\))/).map(cleanBits).filter(Boolean);
+    const title = l => l.toLowerCase().replace(/(^|[\s-])([а-яё])/g, (m, a, b) => a + b.toUpperCase());
+    const isName = l => (/^[А-ЯЁ][а-яё]+(\s+[А-ЯЁ][а-яё]+){1,3}$/.test(l) || /^[А-ЯЁ]{2,}(\s+[А-ЯЁ]{2,}){1,3}$/.test(l)) && !/гражданин|паспорт|выдан/i.test(l);
+    let name = lines.filter(isName).pop() || '';
+    // одно имя рядом с телефоном: «Зафар 8977…», «Ислам ↵ +7…»
+    if (!name && phones[0] && phones[0].name && /^[А-ЯЁ][а-яё]+$/.test(phones[0].name)) name = phones[0].name;
+    if (/^[А-ЯЁ\s]+$/.test(name)) name = title(name);
+    const nameKey = name.toLowerCase();
+    const model = lines.find(l => l.toLowerCase() !== nameKey && !/гражданин|паспорт|выдан|г\.р\.|код подразделения/i.test(l) && l.length < 40) || '';
+    return { plates, phones, name, model, raw: text };
+  }
+
+  function yandexRoute(from, to) {
+    const enc = encodeURIComponent;
+    return 'https://yandex.ru/maps/?rtext=' + (to ? enc(from) + '~' + enc(to) : '~' + enc(from)) + '&rtt=auto';
+  }
+  function openExternal(url) {
+    try { if (tg && tg.openLink && !demo) return tg.openLink(url); } catch (e) {}
+    window.open(url, '_blank');
+  }
+
+  const Req = {
+    st: { day: todayIso(), scope: store.get('t26-scope') || 'mine', q: '', fp: new Set(), fu: new Set(), data: null, loading: false,
+          sheet: false, view: 'list', detail: null, detailKey: '', err: null },
+
+    open(day) {
+      app.onclick = null;
+      document.body.classList.remove('wide');
+      this.st.view = 'list';
+      if (day) this.st.day = day;
+      setBack(null);
+      this.render();
+      this.load(false);
+    },
+
+    async load(refresh) {
+      const s = this.st, day = s.day;
+      s.loading = true; s.err = null;
+      if (!s.data || s.data.day !== day) s.data = null;
+      this.render();
+      try {
+        const r = await api('requests.list', { date: day, refresh: !!refresh });
+        if (s.day !== day) return; // пока грузили, выбрали другой день
+        s.data = r;
+        if (!r.canSeeAll) s.scope = 'mine';
+      } catch (e) { s.err = e; if (e.code === 'NOT_ACTIVE') return start(); }
+      s.loading = false;
+      if (s.view === 'list') this.render();
+    },
+
+    setDay(day) {
+      if (day === this.st.day) return;
+      this.st.day = day; this.st.fp.clear(); this.st.fu.clear();
+      haptic('success'); this.load(false);
+    },
+
+    visible() {
+      const s = this.st, items = (s.data && s.data.items) || [];
+      const q = s.q.trim().toLowerCase();
+      return items.filter(it => (s.scope === 'all' || it.mine)
+        && (!s.fp.size || s.fp.has(it.project)) && (!s.fu.size || s.fu.has(it.purpose))
+        && (!q || [it.no, it.vehicle, it.from, it.to, it.project, it.purpose, it.cargo, it.transport].join(' ').toLowerCase().includes(q)));
+    },
+
+    head() {
+      const me = state.me || {}, p = state.profile || {};
+      const initials = ((p.lastName || '')[0] || '') + ((p.firstName || '')[0] || '');
+      return `<div class="home-head"><div><h1>Заявки</h1><small>${longDate(this.st.day)}</small></div>
+        <div class="head-btns">
+          <button class="round" data-r="refresh" aria-label="Обновить">${ICON.refresh}</button>
+          ${me.isAdmin ? `<button class="round" data-r="admin" aria-label="Админ-панель">${ICON.shield}${me.adminPending ? `<span class="dot">${me.adminPending}</span>` : ''}</button>` : ''}
+          <button class="round avatar" data-r="profile" aria-label="Профиль">${esc(initials.toUpperCase() || '·')}</button>
+        </div></div>`;
+    },
+
+    strip() {
+      const s = this.st, counts = {};
+      ((s.data && s.data.counts) || []).forEach(c => { counts[c.day] = c; });
+      const today = todayIso();
+      let html = '';
+      for (let i = -3; i <= 3; i++) {
+        const d = shiftDay(s.day, i), c = counts[d], dt = dateOf(d);
+        const cls = ['day', d === s.day ? 'on' : '', d === today ? 'today' : '', c && c.mine ? 'mine' : '', c && (c.all || c.mine) ? 'has' : ''].join(' ');
+        const label = c ? `${c.mine ? 'ваших ' + c.mine : ''}${c.all !== null && c.all !== undefined ? (c.mine ? ', ' : '') + 'всего ' + c.all : ''}` : '';
+        html += `<button class="${cls}" data-r="day" data-v="${d}" aria-label="${shortDate(d)} ${label}"><span>${d === today ? 'сегодня' : WD[dt.getDay()]}</span><b>${dt.getDate()}</b><i></i></button>`;
+      }
+      return `<div class="days">${html}<label class="round cal" aria-label="Выбрать дату">${ICON.cal}<input type="date" id="pickDate" value="${s.day}"></label></div>`;
+    },
+
+    card(it, past, markMine) {
+      return `<button class="rq ${past ? 'past' : ''}" data-r="open" data-v="${esc(it.key)}">
+        <div class="top"><b>${esc(it.time || '—')}</b><span>${esc(it.no || 'без номера')}</span>${markMine && it.mine ? '<i>ваша</i>' : ''}</div>
+        <h3>${esc(it.vehicle || 'Транспорт не указан')}</h3>
+        <div class="addr"><span>${esc(it.from || 'Адрес не указан')}</span></div>
+      </button>`;
+    },
+
+    render() {
+      if (this.st.view === 'detail') return this.renderDetail();
+      const s = this.st, data = s.data, canAll = !data || data.canSeeAll;
+      const items = data ? data.items : [];
+      const nMine = items.filter(i => i.mine).length;
+      const list = this.visible();
+      const isToday = s.day === todayIso(), now = nowHM();
+      let body;
+      if (s.err && !data) body = `<div class="empty">${esc(s.err.message)}<br><br><button class="secondary small" data-r="reload">Повторить</button></div>`;
+      else if (!data) body = `<div class="list"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>`;
+      else if (!list.length) {
+        const why = s.q || s.fp.size || s.fu.size ? 'По этим условиям заявок нет.'
+          : s.scope === 'mine' ? 'В этот день вас нет в заявках.' : 'На этот день заявок нет.';
+        const act = s.q || s.fp.size || s.fu.size ? `<button class="secondary small" data-r="clear">Сбросить поиск и фильтры</button>`
+          : s.scope === 'mine' && canAll && items.length ? `<button class="secondary small" data-r="scope" data-v="all">Показать все заявки дня · ${items.length}</button>` : '';
+        body = `<div class="empty">${why}${act ? '<br><br>' + act : ''}</div>`;
+      } else {
+        let nowPlaced = !isToday, html = '';
+        list.forEach(it => {
+          const past = isToday && it.time && it.time < now;
+          if (!nowPlaced && (!it.time || it.time >= now)) { html += `<div class="now"><i></i>сейчас ${now}</div>`; nowPlaced = true; }
+          html += this.card(it, past, s.scope === 'all');
+        });
+        if (!nowPlaced) html += `<div class="now"><i></i>сейчас ${now}</div>`;
+        body = `<div class="list">${html}</div>`;
+      }
+      const filt = [...s.fp].map(v => `<button data-r="unfp" data-v="${esc(v)}">${esc(v)} ✕</button>`).concat([...s.fu].map(v => `<button data-r="unfu" data-v="${esc(v)}">${esc(v)} ✕</button>`)).join('');
+      app.innerHTML = this.head() + this.strip()
+        + (canAll ? `<div class="seg"><button class="${s.scope === 'mine' ? 'on' : ''}" data-r="scope" data-v="mine">Мои${data ? ` <span class="n">${nMine}</span>` : ''}</button><button class="${s.scope === 'all' ? 'on' : ''}" data-r="scope" data-v="all">Все${data ? ` · ${items.length}` : ''}</button></div>` : '')
+        + `<div class="tools"><div class="search compact">${ICON.search}<input class="input" id="rq" placeholder="Номер, адрес, машина" value="${esc(s.q)}"></div>
+           <button class="round" data-r="filters" aria-label="Фильтры">${ICON.filter}${s.fp.size + s.fu.size ? `<span class="dot">${s.fp.size + s.fu.size}</span>` : ''}</button></div>`
+        + (filt ? `<div class="active-filters">${filt}</div>` : '')
+        + `<div style="height:16px"></div>`
+        + body
+        + (s.sheet ? this.sheetHtml() : '');
+      this.wire();
+    },
+
+    sheetHtml() {
+      const s = this.st, items = (s.data && s.data.items || []).filter(it => s.scope === 'all' || it.mine);
+      const uniq = k => [...new Set(items.map(i => i[k]).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ru'));
+      const cnt = (k, v) => items.filter(i => i[k] === v).length;
+      const chips = (k, set, act) => uniq(k).map(v => `<button class="chip ${set.has(v) ? 'on' : ''}" data-r="${act}" data-v="${esc(v)}">${esc(v)} <span class="c">${cnt(k, v)}</span></button>`).join('') || '<span class="flag">нет вариантов</span>';
+      return `<div class="sheet-bg" data-r="closeSheet"></div><div class="sheet" role="dialog" aria-label="Фильтры"><div class="grab"></div>
+        <h3>Фильтры</h3>
+        <p class="sect">Проект</p><div class="chips">${chips('project', s.fp, 'fp')}</div>
+        <p class="sect">Назначение</p><div class="chips">${chips('purpose', s.fu, 'fu')}</div>
+        <div class="btn-row two" style="margin-top:8px"><button class="secondary small" data-r="clear">Сбросить</button><button class="primary small" data-r="closeSheet">Показать · ${this.visible().length}</button></div></div>`;
+    },
+
+    async openDetail(key) {
+      const s = this.st, base = ((s.data && s.data.items) || []).find(i => i.key === key);
+      s.view = 'detail'; s.detailKey = key; s.detail = base ? { ...base, partial: true } : null;
+      window.scrollTo(0, 0);
+      setBack(() => this.closeDetail());
+      this.render();
+      try {
+        const r = await api('requests.get', { key, date: s.day });
+        if (s.detailKey === key) { s.detail = r.item; if (s.view === 'detail') this.render(); }
+      } catch (e) { toast(e.message); if (!s.detail) this.closeDetail(); }
+    },
+    closeDetail() { this.st.view = 'list'; setBack(null); this.render(); },
+
+    renderDetail() {
+      const it = this.st.detail;
+      if (!it) { app.innerHTML = `<div class="spinner dark" style="margin:30vh auto"></div>`; return; }
+      const full = !it.partial, drv = parseDriver(it.transport);
+      const contactRows = text => parseContacts(text).map(c => `<div class="contact"><span>${esc(c.name || c.phone || '')}</span>${c.href ? `<a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a>` : ''}</div>`).join('');
+      const stop = (k, addr, contact, end) => addr || contact ? `<div class="stop ${end ? 'end' : ''}"><div class="k">${k}</div><div class="addr">${esc(addr || 'Адрес не указан')}</div>${contact ? `<div class="contacts">${contactRows(contact)}</div>` : ''}</div>` : '';
+      const loadingLine = `<div class="spinner dark" style="width:22px;height:22px;margin:4px 0"></div>`;
+      app.innerHTML = `<div class="topbar"><button class="round" data-r="back" aria-label="Назад">${ICON.back}</button>
+          <div class="grow"><h2>${it.no ? 'Заявка ' + esc(it.no) : 'Заявка без номера'}</h2><small>${shortDate(it.day)}${it.time ? ', ' + esc(it.time) : ''}</small></div></div>
+        <div class="card glass hero">
+          <div class="big">${esc(it.vehicle || 'Транспорт не указан')}</div>
+          <div class="sub">${esc([it.project, it.purpose].filter(Boolean).join(' — '))}${it.cargo ? `<br>${/работа по месту/i.test(it.cargo) ? 'Работа по месту' : 'Что везём: ' + esc(it.cargo)}` : ''}</div>
+          ${it.roles && it.roles.length ? `<div class="tags">${it.roles.map(r => `<i class="me">вы ${esc(r.replace(/^указан/, 'указаны'))}</i>`).join('')}</div>` : ''}
+        </div>
+        <p class="sect">Маршрут</p>
+        <div class="card glass">
+          <div class="stops ${it.to || (full && it.mid) ? '' : 'one'}">
+            ${stop(it.to ? 'Подача' : 'Место работы', it.from, full ? it.fromContact : '', !it.to)}
+            ${full ? stop('Промежуточный адрес', it.mid, it.midContact, false) : ''}
+            ${it.to ? stop('Конечный адрес', it.to, full ? it.toContact : '', true) : ''}
+          </div>
+          ${full ? '' : loadingLine}
+          ${it.from ? `<div class="map-btns"><button class="secondary small" data-r="map">${ICON.map}Маршрут</button><button class="secondary small" data-r="copy">${ICON.copy}Адрес</button></div>` : ''}
+        </div>
+        <p class="sect">Машина и водитель</p>
+        <div class="card glass">${drv ? `<div class="driver">
+            <div class="row">${drv.plates.map(p => `<span class="plate big">${esc(p)}</span>`).join('') || '<span class="flag">номер не распознан</span>'}<span class="model">${esc(drv.model)}</span></div>
+            ${drv.name || drv.phones.length ? `<div class="row"><span class="name">${esc(drv.name || 'Водитель')}</span>${drv.phones.map(c => `<a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a>`).join('')}</div>` : ''}
+            <details><summary>Как записано в заявке</summary><div class="raw">${esc(drv.raw)}</div></details>
+          </div>` : `<div class="flag">Машина ещё не назначена</div>`}</div>
+        ${full && (it.info || it.extra) ? `<p class="sect">Дополнительно</p><div class="card glass kv">
+          ${it.info ? `<div><div class="k">Комментарий</div><div class="v">${esc(it.info)}</div></div>` : ''}
+          ${it.extra ? `<div><div class="k">Дополнительные адреса и контакты</div><div class="v">${esc(it.extra)}</div>${parseContacts(it.extra).some(c => c.href) ? `<div class="contacts">${parseContacts(it.extra).filter(c => c.href).map(c => `<div class="contact"><span>${esc(c.name)}</span><a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a></div>`).join('')}</div>` : ''}</div>` : ''}
+        </div>` : ''}
+        ${full && it.initiator ? `<p class="sect">Инициатор заявки</p><div class="card glass"><div class="contacts" style="margin:0">${contactRows(it.initiator)}</div></div>` : ''}
+        ${full && it.stamp ? `<p class="note">Заявка подана ${esc(it.stamp)}</p>` : ''}`;
+      this.wire();
+    },
+
+    wire() {
+      const s = this.st, $ = id => document.getElementById(id);
+      app.onclick = e => { const b = e.target.closest('[data-r]'); if (b) this.act(b.dataset.r, b.dataset.v, e); };
+      const q = $('rq'); if (q) q.oninput = e => { s.q = e.target.value; const pos = e.target.selectionStart; this.render(); const n = $('rq'); n.focus(); n.setSelectionRange(pos, pos); };
+      const pd = $('pickDate'); if (pd) pd.onchange = e => { if (e.target.value) this.setDay(e.target.value); };
+    },
+
+    act(a, v, e) {
+      const s = this.st;
+      switch (a) {
+        case 'day': return this.setDay(v);
+        case 'scope': s.scope = v; store.set('t26-scope', v); return this.render();
+        case 'open': return this.openDetail(v);
+        case 'back': return this.closeDetail();
+        case 'refresh': haptic('success'); toast('Обновляем заявки…'); return this.load(true).then(() => this.st.data && toast('Обновлено в ' + nowHM()));
+        case 'reload': return this.load(false);
+        case 'filters': s.sheet = true; return this.render();
+        case 'closeSheet': s.sheet = false; return this.render();
+        case 'fp': s.fp.has(v) ? s.fp.delete(v) : s.fp.add(v); return this.render();
+        case 'fu': s.fu.has(v) ? s.fu.delete(v) : s.fu.add(v); return this.render();
+        case 'unfp': s.fp.delete(v); return this.render();
+        case 'unfu': s.fu.delete(v); return this.render();
+        case 'clear': s.q = ''; s.fp.clear(); s.fu.clear(); s.sheet = false; return this.render();
+        case 'admin': return Admin.open();
+        case 'profile': return renderProfile();
+        case 'map': return openExternal(yandexRoute(s.detail.from, s.detail.to));
+        case 'copy': {
+          const t = s.detail.from;
+          (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Адрес подачи скопирован'), () => toast(t));
+          return;
+        }
+      }
+    },
+  };
+
+  function plural(n, one, few, many) {
+    const m10 = n % 10, m100 = n % 100;
+    return m10 === 1 && m100 !== 11 ? one : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? few : many;
+  }
+
+  function renderProfile() {
+    const p = state.profile || {}, me = state.me || {};
+    setBack(() => Req.open());
+    app.onclick = null;
+    app.innerHTML = `<div class="topbar"><button class="round" id="pBack" aria-label="Назад">${ICON.back}</button>
+        <div class="grow"><h2>Профиль</h2><small>${esc(p.role || '')}</small></div>
+        <button class="round" data-theme-toggle aria-label="Сменить тему">${document.documentElement.dataset.theme === 'dark' ? ICON.sun : ICON.moon}</button></div>
+      ${me.isAdmin ? `<button class="admin-entry" id="openAdmin"><span><b>Админ-панель</b><small>${me.adminPending ? 'Ждут проверки: ' + me.adminPending : 'Сотрудники, рассылка, журнал'}</small></span>${me.adminPending ? `<span class="n">${me.adminPending}</span>` : `<span class="round" style="box-shadow:none">${ICON.shield}</span>`}</button>` : ''}
+      ${profileRows(p)}
+      <p class="note">Заявки считаются вашими, если в них указан ваш телефон или ФИО. Если вас записывают иначе — попросите администратора добавить вариант написания.</p>`;
+    document.getElementById('pBack').onclick = () => Req.open();
+    const b = document.getElementById('openAdmin'); if (b) b.onclick = () => Admin.open();
+  }
+
   function route(res) {
     if (res.status === 'new') {
       const t = res.telegram || {};
@@ -976,7 +1415,7 @@ body.wide .app{max-width:860px}
       if (!state.form.firstName && !state.form.lastName) { state.form.firstName = t.firstName || ''; state.form.lastName = t.lastName || ''; }
       renderForm();
     } else if (res.status === 'pending') { state.profile = res.profile; renderPending(res.profile); }
-    else if (res.status === 'active') { state.profile = res.profile; state.me = res; renderActive(res.profile, res); }
+    else if (res.status === 'active') { state.profile = res.profile; state.me = res; Req.open(); }
     else if (res.status === 'rejected') { state.profile = res.profile; renderRejected(res.profile); }
     else if (res.status === 'blocked') renderBlocked();
     else renderError(new Error('Неизвестный статус'));
