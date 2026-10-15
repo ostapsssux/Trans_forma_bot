@@ -1223,9 +1223,20 @@ details summary::-webkit-details-marker{display:none}
     out.hasExif = true;
     const i0 = ifd(u32(4));
     out.make = s(i0, 0x010F); out.model = s(i0, 0x0110); out.software = s(i0, 0x0131);
-    let taken = s(i0, 0x0132);
-    if (i0[0x8769]) { const ex = ifd(u32(i0[0x8769].raw)); taken = s(ex, 0x9003) || s(ex, 0x9004) || taken; }
-    if (taken) out.taken = taken.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3');
+    // Три разных времени, не путаем:
+    //  taken    — момент съёмки (DateTimeOriginal, иначе DateTimeDigitized) — пишет камера при нажатии на кнопку;
+    //  modified — когда файл последний раз сохраняли (DateTime) — меняется после редактирования;
+    //  время загрузки в систему ставит сервер, телефон его не присылает.
+    const norm = x => x.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3');
+    const modified = s(i0, 0x0132);
+    if (modified) out.modified = norm(modified);
+    if (i0[0x8769]) {
+      const ex = ifd(u32(i0[0x8769].raw));
+      const taken = s(ex, 0x9003) || s(ex, 0x9004);
+      if (taken) out.taken = norm(taken);
+      const tz = s(ex, 0x9011) || s(ex, 0x9012);
+      if (/^[+-]\d{2}:\d{2}$/.test(tz)) out.tz = tz;
+    }
     if (i0[0x8825]) {
       const g = ifd(u32(i0[0x8825].raw));
       const coord = (tag, ref) => {
@@ -1700,7 +1711,6 @@ details summary::-webkit-details-marker{display:none}
           ${it.extra ? `<div><div class="k">Дополнительные адреса и контакты</div><div class="v">${esc(it.extra)}</div>${parseContacts(it.extra).some(c => c.href) ? `<div class="contacts">${parseContacts(it.extra).filter(c => c.href).map(c => `<div class="contact"><span>${esc(c.name)}</span><a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a></div>`).join('')}</div>` : ''}</div>` : ''}
         </div>` : ''}
         ${full && it.initiator ? `<p class="sect">Инициатор заявки</p><div class="card glass"><div class="contacts" style="margin:0">${contactRows(it.initiator, 'оформил заявку')}</div></div>` : ''}
-        ${full && it.stamp ? `<p class="note">Заявка подана ${esc(it.stamp)}</p>` : ''}
         <div class="report-bar"><span><small>Фотоотчёт</small><b>${PH_LABEL[it.photo || 'none']}</b></span>
           <button class="primary" data-r="report" ${full ? '' : 'disabled'}>${it.photo === 'full' ? 'Добавить фото' : 'Отчитаться'}</button></div>`;
       this.wire();
