@@ -165,6 +165,102 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
 .fade{animation:fade .35s ease both}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===================== АДМИН-ПАНЕЛЬ ===================== */
+body.wide .app{max-width:860px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin:0 0 8px}
+.topbar{display:flex;align-items:center;gap:14px;margin:2px 2px 22px}
+.topbar h2{font-size:24px;letter-spacing:-.03em;font-weight:650;margin:0;line-height:1.1}
+.topbar small{display:block;color:var(--muted);font-size:12.5px;margin-top:3px}
+.topbar .grow{flex:1;min-width:0}
+.round{width:44px;height:44px;flex:none;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--ink-2);padding:0;border:0;background:var(--surface);box-shadow:var(--raised-sm)}
+.round svg{width:19px;height:19px;stroke-width:1.8}
+.round:active{box-shadow:var(--pressed-sm)}
+/* сегменты: вдавленная дорожка, выбранный — выпуклый */
+.seg{display:flex;gap:4px;padding:5px;border-radius:999px;background:var(--surface);box-shadow:var(--pressed-sm);margin:0 0 20px}
+.seg button{flex:1;min-height:40px;border:0;border-radius:999px;background:transparent;color:var(--muted);font-weight:600;font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 10px;white-space:nowrap;transition:all .2s}
+.seg button:disabled{opacity:.4;cursor:default}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:3px 3px 7px var(--neu-d),-3px -3px 7px var(--neu-l)}
+.seg .n{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--btn);color:var(--on-btn);font-size:11.5px;display:inline-grid;place-items:center}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 4px 12px;margin:0 -4px 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:36px;padding:0 14px;border-radius:999px;border:0;background:var(--surface);box-shadow:var(--raised-sm);color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--btn);color:var(--on-btn)}
+.chip .c{opacity:.7;font-weight:500}
+.search{position:relative;margin-bottom:14px}
+.search svg{position:absolute;left:18px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--muted);stroke-width:1.8}
+.search .input{padding-left:46px;min-height:50px}
+.list{display:grid;gap:14px}
+@media (min-width:720px){body.wide .list.two{grid-template-columns:1fr 1fr}}
+.person{display:block;width:100%;text-align:left;border:0;cursor:pointer;color:var(--ink);background:var(--surface);border-radius:24px;padding:15px 18px;box-shadow:var(--raised);transition:box-shadow .18s}
+.person:active{box-shadow:var(--pressed)}
+.person .row1{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.person b{font-size:15.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.person .sub{color:var(--muted);font-size:13px;margin-top:5px;display:flex;flex-wrap:wrap;gap:4px 12px}
+.flag{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
+.flag svg{width:14px;height:14px;stroke-width:1.9}
+.flag.warn{color:var(--warn)}.flag.bad{color:var(--danger)}.flag.ok{color:var(--ok)}
+.pill{flex:none;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.pill.pending{background:var(--warn-soft);color:var(--warn)}
+.pill.active{background:var(--ok-soft);color:var(--ok)}
+.pill.rejected{background:var(--danger-soft);color:var(--danger)}
+.pill.blocked{background:var(--hair);color:var(--muted)}
+.pill.role{background:transparent;box-shadow:var(--pressed-sm);color:var(--ink-2)}
+.empty{text-align:center;color:var(--muted);padding:36px 10px;font-size:14px}
+.sect{font-size:12.5px;font-weight:600;color:var(--ink-2);margin:0 10px 10px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sect small{font-weight:400;color:var(--muted)}
+.notes{display:grid;gap:8px;font-size:13.5px;line-height:1.45}
+.notes div{display:grid;grid-template-columns:20px 1fr;gap:8px;color:var(--ink-2)}
+.notes svg{width:17px;height:17px;stroke-width:1.9;color:var(--warn);margin-top:1px}
+.notes .ans svg{color:var(--primary)}
+.match{padding:12px 2px;border-bottom:1px solid var(--hair);font-size:13.5px;line-height:1.4}
+.match:last-child{border-bottom:0}
+.match .t{display:flex;justify-content:space-between;gap:10px;font-weight:600}
+.match .t span{color:var(--muted);font-weight:500;white-space:nowrap}
+.match .d{color:var(--ink-2);margin-top:3px}
+.match .m{color:var(--muted);margin-top:3px;font-size:12.5px}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.tags i{font-style:normal;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--primary-soft);color:var(--primary)}
+.counts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px}
+.counts div{text-align:center;padding:10px 4px;border-radius:18px;background:var(--surface);box-shadow:var(--pressed-sm)}
+.counts strong{display:block;font-size:20px;font-weight:650}
+.counts span{font-size:11.5px;color:var(--muted)}
+.btn-row{display:grid;gap:14px;margin-top:4px}
+.btn-row.two{grid-template-columns:1fr 1fr}
+.btn-row .secondary{margin-top:0}
+.secondary.danger{color:var(--danger)}
+.secondary.small,.primary.small{min-height:44px;font-size:14px}
+.input.area{border-radius:24px;padding:14px 20px;min-height:120px;resize:vertical;line-height:1.45;font-family:inherit}
+.counter{text-align:right;font-size:11.5px;color:var(--muted);margin:6px 12px 0}
+.inline{display:flex;gap:10px;align-items:center}
+.inline .input{flex:1}
+.inline .primary{width:auto;padding:0 20px;flex:none}
+.pick{display:grid;grid-template-columns:1fr 50px;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--hair);cursor:pointer}
+.pick:last-child{border-bottom:0}
+.pick b{font-weight:600;font-size:14.5px}
+.pick small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.pick input{justify-self:end}
+.toggle{appearance:none;-webkit-appearance:none;position:relative;width:50px;height:30px;margin:0;border-radius:999px;cursor:pointer;background:var(--surface);box-shadow:var(--pressed-sm);border:0;transition:background .25s}
+.toggle:after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--surface);box-shadow:3px 3px 6px var(--neu-d),-2px -2px 5px var(--neu-l);transition:transform .25s cubic-bezier(.3,.7,.3,1)}
+.toggle:checked{background:linear-gradient(90deg,var(--btn-lo),var(--btn-hi))}
+.toggle:checked:after{transform:translateX(20px)}
+.sticky{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom));margin-top:18px;z-index:3}
+.result{display:grid;gap:8px;font-size:13.5px}
+.result .big{font-size:26px;font-weight:650;letter-spacing:-.02em}
+.logi{padding:12px 2px;border-bottom:1px solid var(--hair);font-size:13.5px;line-height:1.4}
+.logi:last-child{border-bottom:0}
+.logi .t{display:flex;justify-content:space-between;gap:10px}
+.logi .t b{font-weight:600}
+.logi .t span{color:var(--muted);font-size:12px;white-space:nowrap}
+.logi .d{color:var(--ink-2);margin-top:3px;word-break:break-word}
+.logi .e{color:var(--danger);font-size:12.5px;margin-top:3px}
+.admin-entry{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;border:0;cursor:pointer;color:var(--ink);text-align:left;
+  background:var(--surface);border-radius:26px;padding:18px 20px;box-shadow:var(--raised);margin-bottom:22px}
+.admin-entry:active{box-shadow:var(--pressed)}
+.admin-entry b{display:block;font-size:16px;font-weight:600}
+.admin-entry small{color:var(--muted);font-size:13px}
+.admin-entry .n{min-width:28px;height:28px;padding:0 9px;border-radius:999px;background:var(--btn);color:var(--on-btn);font-weight:700;font-size:13px;display:grid;place-items:center}
+.reasonbox{margin-top:16px}
 </style>
 </head>
 <body>
@@ -174,7 +270,7 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
 <script>
 (() => {
   /* ===== НАСТРОЙКА: адрес веб-приложения Apps Script (Deploy → Web app → URL) ===== */
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzQcn5OEoirJ9lPpvKeon5f2O7I95Oz78uohKnnb2qSRv1rmJB4VGC39B8XU2rpk1fl/exec';
+  const API_URL = 'https://script.google.com/macros/s/ВСТАВЬТЕ_ID_РАЗВЁРТЫВАНИЯ/exec';
 
   const tg = window.Telegram && window.Telegram.WebApp;
   const inTelegram = !!(tg && tg.initData);
@@ -230,10 +326,65 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
     } finally { clearTimeout(timer); }
   }
 
-  // Демо-режим: тот же сценарий без сервера (для просмотра в браузере)
-  let demoStore = null;
+  // Демо-режим: тот же сценарий без сервера (для просмотра в браузере). ?demo=admin — сразу как администратор
+  let demoStore = params.get('demo') === 'admin'
+    ? { status:'active', isAdmin:true, adminPending:3, profile:{ lastName:'Соколов', firstName:'Остап', middleName:'', fio:'Соколов Остап', phone:'+79990000001', phoneVerified:true, role:'Администратор' } }
+    : null;
+  const DEMO_STAFF = [
+    ['900001','Соколов Остап','+79990000001',true,'ostap','active','Администратор','',0,0,'',''],
+    ['900002','Курсакова Дарья','+79671877061',true,'dasha_k','pending','Сотрудник','',274,39,'',''],
+    ['900003','Смирнова Юлия','+79162949470',false,'','pending','Сотрудник','',266,204,'Телефон введён вручную',''],
+    ['900004','Покровский Кирилл','+79258602033',true,'kir_p','pending','Сотрудник','',41,0,'⚠ Телефон уже указан у: Покровская Анна (TG 900009)',''],
+    ['900005','Вялов Никита','+79772600475',true,'nvyalov','active','Сотрудник','Никита Вялов',58,12,'',''],
+    ['900006','Каманин Валерий','+79062185703',true,'kamanin','active','Логист','Валерий Каманин',932,932,'',''],
+    ['900007','Бодян Даниил','+79911401653',true,'','active','Сотрудник','',19,7,'⚠ Бот не смог написать сотруднику',''],
+    ['900008','Иванов Пётр','+79035550011',false,'','rejected','Сотрудник','',0,0,'Телефон введён вручную','Не нашли вас в заявках — укажите рабочий номер'],
+    ['900009','Покровская Анна','+79258602033',true,'anna_p','blocked','Сотрудник','',0,0,'','Уволена'],
+  ].map(([tgId,fio,phone,phoneVerified,username,status,role,aliases,byPhone,byName,comment,adminNote],i) => ({
+    tgId, fio, lastName:fio.split(' ')[0], firstName:fio.split(' ')[1], middleName:'', phone, phoneVerified, username, tgName:fio.split(' ')[1],
+    canWrite: tgId !== '900007', status, role, aliases, byPhone, byName, comment, adminNote, changedBy: i ? 'Соколов Остап' : '',
+    registered: new Date(Date.now() - (i+1)*36e5*7).toISOString(), updated: new Date(Date.now() - i*36e5).toISOString(), isSuper: tgId === '900001' }));
+  const DEMO_HISTORY = { notifications: [
+      { time:new Date(Date.now()-36e5).toISOString(), by:'Соколов Остап', to:'Вялов Никита', text:'По заявке АР668 нет фотоотчёта. Пожалуйста, отправьте фото в приложении.', ok:true, error:'' },
+      { time:new Date(Date.now()-72e5).toISOString(), by:'Соколов Остап', to:'Бодян Даниил', text:'Завтра монтаж на Тверской с 7:00.', ok:false, error:'Сотрудник заблокировал бота' } ],
+    log: [
+      { time:new Date(Date.now()-36e5).toISOString(), by:'Соколов Остап', action:'admin.send', result:'1 из 2', details:'Завтра монтаж на Тверской с 7:00.' },
+      { time:new Date(Date.now()-54e5).toISOString(), by:'Соколов Остап', action:'admin.status', result:'Отклонён', details:'Иванов Пётр (TG 900008) · Не нашли вас в заявках — укажите рабочий номер' },
+      { time:new Date(Date.now()-90e5).toISOString(), by:'Соколов Остап', action:'admin.update', result:'Каманин Валерий', details:'роль → Логист' },
+      { time:new Date(Date.now()-99e5).toISOString(), by:'Курсакова Дарья', action:'register', result:'новая', details:'Курсакова Дарья +79671877061' } ] };
+  function demoAdmin(action, p) {
+    const find = id => DEMO_STAFF.find(x => x.tgId === String(id));
+    if (action === 'admin.staff') return { ok:true, me:'900001', staff: DEMO_STAFF.map(x => ({...x})) };
+    if (action === 'admin.matches') {
+      const x = find(p.tgId);
+      const base = [
+        ['М184','12.10.2026 20:00','Автовышка 12м','г. Москва, ЦАО, Манежная площадь (Площадь революции 2/3)','Лето в Москве 26','Монтаж, демонтаж ГИРЛЯНД','Валерий Каманин'],
+        ['М182','12.10.2026 15:00','10т/8,6м/55 куб.м/крытый+гидроборт','г. Москва, ЦАО, Театральная площадь (у Большого театра)','Лето в Москве 26','Демонтаж','Диана Бобкова'],
+        ['АР668','11.10.2026 09:00','Поливомоечная машина 10 м³','г. Москва, ул. Тверская, 8к1с4','Лето в Москве 26','Полив','Тихонравова Татьяна'],
+        ['АТ158','10.10.2026 14:00','10 т · 8,6 м · гидроборт','Жерновка, Серпуховский район','МЕТМАШ 26','Перевозка материалов','Яковлев Дмитрий'],
+      ];
+      const items = (x.byPhone || x.byName) ? base.map(b => ({ no:b[0], date:b[1], vehicle:b[2], from:b[3], project:b[4], purpose:b[5], initiator:b[6], how: x.byName ? ['телефон','ФИО'] : ['телефон'] })) : [];
+      return { ok:true, matches:{ byPhone:x.byPhone, byName:x.byName, byAlias: x.aliases ? 3 : 0, total: Math.max(x.byPhone, x.byName), items } };
+    }
+    if (action === 'admin.setStatus') {
+      if (p.status === 'rejected' && !String(p.reason||'').trim()) { const e = new Error('Напишите причину — её увидит сотрудник'); e.code='NO_REASON'; throw e; }
+      const x = find(p.tgId); x.status = p.status; x.adminNote = p.reason || ''; x.changedBy = 'Соколов Остап';
+      return { ok:true, staff:{...x}, delivered: x.canWrite, error: x.canWrite ? '' : 'Сотрудник заблокировал бота' };
+    }
+    if (action === 'admin.update') {
+      const x = find(p.tgId); if (p.role !== undefined) x.role = p.role; if (p.aliases !== undefined) x.aliases = p.aliases;
+      return { ok:true, staff:{...x} };
+    }
+    if (action === 'admin.send') {
+      const results = p.tgIds.map(id => { const x = find(id); return { tgId:id, fio:x.fio, ok:x.canWrite, error:x.canWrite ? '' : 'Сотрудник заблокировал бота' }; });
+      results.forEach(rr => DEMO_HISTORY.notifications.unshift({ time:new Date().toISOString(), by:'Соколов Остап', to:rr.fio, text:p.text, ok:rr.ok, error:rr.error }));
+      return { ok:true, sent: results.filter(x => x.ok).length, total: results.length, results };
+    }
+    if (action === 'admin.history') return { ok:true, ...DEMO_HISTORY };
+  }
   function demoApi(action, p) {
-    return new Promise(r => setTimeout(() => {
+    return new Promise((r, j) => setTimeout(() => {
+      if (action.indexOf('admin.') === 0) { try { r(demoAdmin(action, p)); } catch (e) { j(e); } return; }
       if (action === 'me') r(demoStore ? { ok:true, ...demoStore } : { ok:true, status:'new', telegram:{ firstName:'Алина', lastName:'', username:'alina_k' } });
       if (action === 'register') {
         const cap = x => String(x||'').replace(/(^|[\s-])([а-яёa-z])/g,(m,a,b)=>a+b.toUpperCase());
@@ -281,6 +432,13 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
     phone: svg('<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 17.5h2"/>'),
     sun:   svg('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/>'),
     moon:  svg('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>'),
+    back:  svg('<path d="M15 5 8 12l7 7"/>'),
+    search:svg('<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>'),
+    shield:svg('<path d="M12 3 5 6v5.5c0 4.2 2.9 7.7 7 9.5 4.1-1.8 7-5.3 7-9.5V6z"/><path d="m9 12 2 2 4-4"/>'),
+    warn:  svg('<path d="M12 4 2.8 19.5h18.4z"/><path d="M12 10v4.5"/><path d="M12 17h.01"/>'),
+    mute:  svg('<path d="M6 9.5a6 6 0 0 1 9.6-4.8"/><path d="M18 11v3.5l1.5 2.5H6"/><path d="M10 20h4"/><path d="M4 4l16 16"/>'),
+    tgok:  svg('<path d="m5 12.5 4.5 4.5L19 7.5"/>'),
+    reply: svg('<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v4"/>'),
   };
 
   /* ---------- screens ---------- */
@@ -455,20 +613,348 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
     };
   }
 
-  function renderActive(p) {
+  function renderActive(p, res = {}) {
     app.innerHTML = header() + `
       <div class="center" style="padding-top:2vh"><div class="badge ok glass">${ICON.check}</div>
       <p class="eyebrow">Доступ открыт</p>
       <h1>Здравствуйте, ${esc(p.firstName)}!</h1>
       <p class="lead">Регистрация завершена. Список ваших заявок появится здесь на следующем этапе.</p></div>
+      ${res.isAdmin ? `<button class="admin-entry" id="openAdmin"><span><b>Админ-панель</b><small>${res.adminPending ? 'Ждут проверки: ' + res.adminPending : 'Сотрудники, рассылка, журнал'}</small></span>${res.adminPending ? `<span class="n">${res.adminPending}</span>` : `<span class="round" style="box-shadow:none">${ICON.shield}</span>`}</button>` : ''}
       ${profileRows(p)}
       <p class="note">Если данные изменились — напишите администратору.</p>`;
+    const b = document.getElementById('openAdmin');
+    if (b) b.onclick = () => Admin.open();
+  }
+
+  function renderRejected(p) {
+    app.innerHTML = header() + `
+      <div class="center" style="padding-top:2vh"><div class="badge bad glass">${ICON.alert}</div>
+      <h1>Регистрация не подтверждена</h1>
+      <p class="lead">Администратор проверил данные и попросил их исправить.</p></div>
+      ${p.adminNote ? `<div class="card glass"><div class="notes"><div class="ans">${ICON.reply}<span><b>Ответ администратора:</b> ${esc(p.adminNote)}</span></div></div></div>` : ''}
+      ${profileRows(p)}
+      <button class="primary" id="fix">Исправить данные</button>`;
+    document.getElementById('fix').onclick = () => {
+      Object.assign(state.form, { lastName:p.lastName||'', firstName:p.firstName||'', middleName:p.middleName||'', phone:digits(p.phone), consent:true, writeAccess:true });
+      state.phoneVerified = false; state.contactResponse = '';
+      renderForm();
+    };
   }
 
   function renderBlocked() {
     app.innerHTML = header() + `<div class="center"><div class="badge bad glass">${ICON.lock}</div>
       <h1>Доступ закрыт</h1><p class="lead">Если это ошибка — обратитесь к администратору.</p></div>`;
   }
+
+
+  /* =================== АДМИН-ПАНЕЛЬ =================== */
+  const STATUS_RU = { pending:'Ожидает', active:'Активен', rejected:'Отклонён', blocked:'Заблокирован' };
+  const TEMPLATES = [
+    ['Нет фото', 'Здравствуйте! По заявке № … нет фотоотчёта. Пожалуйста, отправьте фото в приложении.'],
+    ['Отчёт на доработку', 'Фотоотчёт по заявке № … возвращён на доработку: …'],
+    ['Изменения по заявке', 'Внимание: по заявке № … изменилось время подачи — теперь …'],
+    ['Общее объявление', 'Уважаемые коллеги! '],
+  ];
+  const fmtDate = iso => { const d = new Date(iso); if (isNaN(d)) return String(iso || ''); const p = n => String(n).padStart(2,'0'); return `${p(d.getDate())}.${p(d.getMonth()+1)} ${p(d.getHours())}:${p(d.getMinutes())}`; };
+  const shortName = fio => { const [a, b] = String(fio || '').split(' '); return b ? `${a} ${b[0]}.` : a || ''; };
+  function confirmDlg(text) {
+    return new Promise(res => {
+      if (!demo && tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) tg.showConfirm(text, ok => res(!!ok));
+      else res(window.confirm(text));
+    });
+  }
+
+  const Admin = {
+    st: { view:'list', tab:'staff', filter:'pending', q:'', staff:[], me:'', sel:null, matches:{}, showAll:false,
+          rec:new Set(), text:'', withButton:true, pickQ:'', result:null, history:null, logTab:'log', busy:false, reject:false, reason:'' },
+
+    async open() {
+      document.body.classList.add('wide');
+      renderLoading('Загружаем сотрудников…');
+      try {
+        const r = await api('admin.staff');
+        this.st.staff = r.staff; this.st.me = r.me;
+        if (!this.st.staff.some(x => x.status === 'pending')) this.st.filter = 'all';
+        this.st.view = 'list'; this.render();
+      } catch (e) { this.fail(e); }
+    },
+    close() {
+      document.body.classList.remove('wide');
+      try { tg && tg.BackButton.hide(); } catch (e) {}
+      start();
+    },
+    fail(e) { if (e.code === 'FORBIDDEN') { toast(e.message); this.close(); } else renderError(e); },
+    get(id) { return this.st.staff.find(x => x.tgId === String(id)); },
+    put(x) { const i = this.st.staff.findIndex(y => y.tgId === x.tgId); if (i >= 0) this.st.staff[i] = { ...this.st.staff[i], ...x }; },
+
+    back() {
+      const s = this.st;
+      if (s.view === 'person') { s.view = 'list'; s.reject = false; }
+      else if (s.view === 'pick') { s.view = 'list'; s.tab = 'send'; }
+      else return this.close();
+      this.render();
+    },
+    setBack() {
+      try {
+        if (!tg || !tg.BackButton) return;
+        tg.BackButton.offClick(Admin._bb || (() => {}));
+        Admin._bb = () => Admin.back();
+        tg.BackButton.onClick(Admin._bb); tg.BackButton.show();
+      } catch (e) {}
+    },
+
+    top(title, sub) {
+      return `<div class="topbar"><button class="round" data-a="back" aria-label="Назад">${ICON.back}</button>
+        <div class="grow"><h2>${esc(title)}</h2>${sub ? `<small>${sub}</small>` : ''}</div>
+        <button class="round" data-theme-toggle aria-label="Сменить тему">${document.documentElement.dataset.theme === 'dark' ? ICON.sun : ICON.moon}</button></div>`;
+    },
+    tabs() {
+      const n = this.st.staff.filter(x => x.status === 'pending').length;
+      const t = (id, label, extra='') => `<button class="${this.st.tab === id ? 'on' : ''}" data-a="tab" data-v="${id}">${label}${extra}</button>`;
+      return `<div class="seg">${t('staff','Сотрудники', n ? `<span class="n">${n}</span>` : '')}${t('send','Рассылка')}${t('log','Журнал')}</div>`;
+    },
+
+    render() {
+      this.setBack();
+      const s = this.st;
+      let html;
+      if (s.view === 'person') html = this.viewPerson();
+      else if (s.view === 'pick') html = this.viewPick();
+      else html = this.top('Админ-панель', esc(state.profile ? state.profile.fio : '')) + this.tabs()
+        + (s.tab === 'staff' ? this.viewList() : s.tab === 'send' ? this.viewSend() : this.viewLog());
+      app.innerHTML = html;
+      this.wire();
+    },
+
+    /* ---------- сотрудники ---------- */
+    filtered() {
+      const s = this.st, q = s.q.trim().toLowerCase(), qd = digits(q);
+      const order = { pending:0, rejected:1, active:2, blocked:3 };
+      return s.staff
+        .filter(x => s.filter === 'all' || x.status === s.filter)
+        .filter(x => !q || x.fio.toLowerCase().includes(q) || (x.username || '').toLowerCase().includes(q.replace('@','')) || (qd.length >= 3 && digits(x.phone).includes(qd)))
+        .sort((a, b) => order[a.status] - order[b.status] || (a.status === 'pending' ? String(b.registered).localeCompare(String(a.registered)) : a.fio.localeCompare(b.fio, 'ru')));
+    },
+    flags(x) {
+      const f = [];
+      if (x.phoneVerified) f.push(`<span class="flag ok">${ICON.tgok}номер из Telegram</span>`);
+      else f.push(`<span class="flag">номер вручную</span>`);
+      if (/⚠ Телефон уже/.test(x.comment)) f.push(`<span class="flag warn">${ICON.warn}телефон у другого</span>`);
+      if (!x.canWrite) f.push(`<span class="flag bad">${ICON.mute}бот не может писать</span>`);
+      return f.join('');
+    },
+    viewList() {
+      const s = this.st, cnt = st => s.staff.filter(x => x.status === st).length;
+      const chip = (v, label, c) => `<button class="chip ${s.filter === v ? 'on' : ''}" data-a="filter" data-v="${v}">${label}${c !== undefined ? ` <span class="c">${c}</span>` : ''}</button>`;
+      const list = this.filtered();
+      return `<div class="search">${ICON.search}<input class="input" id="q" placeholder="ФИО, телефон или @username" value="${esc(s.q)}"></div>
+        <div class="chips">${chip('pending','Ожидают',cnt('pending'))}${chip('active','Активные',cnt('active'))}${chip('rejected','Отклонённые',cnt('rejected'))}${chip('blocked','Заблокированы',cnt('blocked'))}${chip('all','Все',s.staff.length)}</div>
+        <div class="list two">${list.map(x => `
+          <button class="person" data-a="person" data-v="${x.tgId}">
+            <div class="row1"><b>${esc(x.fio)}</b><span class="pill ${x.status}">${STATUS_RU[x.status]}</span></div>
+            <div class="sub"><span>${esc(fmtPhone(x.phone) || x.phone)}</span>${x.role !== 'Сотрудник' ? `<span>${esc(x.role)}</span>` : ''}<span>заявок: ${Math.max(+x.byPhone || 0, +x.byName || 0)}</span></div>
+            <div class="sub">${this.flags(x)}</div>
+          </button>`).join('') || `<div class="empty">Никого не найдено</div>`}</div>`;
+    },
+
+    viewPerson() {
+      const s = this.st, x = this.get(s.sel), m = s.matches[x.tgId];
+      const self = x.tgId === s.me;
+      const notes = String(x.comment || '').split(';').map(t => t.trim()).filter(Boolean);
+      const items = m && m.items ? (s.showAll ? m.items : m.items.slice(0, 6)) : [];
+      const roleSeg = ['Сотрудник','Логист','Администратор'].map(r => `<button class="${x.role === r ? 'on' : ''}" data-a="role" data-v="${r}" ${self && r !== 'Администратор' ? 'disabled' : ''}>${r}</button>`).join('');
+      let actions = '';
+      if (x.status === 'pending' || x.status === 'rejected') actions = s.reject ? '' : `<div class="btn-row two"><button class="primary" data-a="approve">Утвердить</button><button class="secondary" data-a="rejectOpen">Отклонить</button></div>`;
+      if (x.status === 'active') actions = `<div class="btn-row ${self ? '' : 'two'}"><button class="secondary" data-a="write">Написать</button>${self ? '' : `<button class="secondary danger" data-a="blockOpen">Заблокировать</button>`}</div>`;
+      if (x.status === 'blocked') actions = `<div class="btn-row"><button class="primary" data-a="approve">Разблокировать</button></div>`;
+      const reasonBox = s.reject ? `<div class="card glass reasonbox">
+          <p class="sect">${s.reject === 'block' ? 'Причина блокировки' : 'Причина отказа'}<small>${s.reject === 'block' ? 'необязательно' : 'увидит сотрудник'}</small></p>
+          <textarea class="input area" id="reason" placeholder="${s.reject === 'block' ? 'Например: больше не работает в компании' : 'Например: не нашли вас в заявках — укажите рабочий номер'}">${esc(s.reason)}</textarea>
+          <div class="btn-row two" style="margin-top:16px"><button class="secondary small" data-a="rejectCancel">Отмена</button><button class="primary small" data-a="${s.reject === 'block' ? 'block' : 'reject'}">${s.reject === 'block' ? 'Заблокировать' : 'Отправить отказ'}</button></div></div>` : '';
+      return this.top(x.fio, `<span class="pill ${x.status}">${STATUS_RU[x.status]}</span>`) + `
+        <div class="card glass rows">
+          <div><span>Телефон</span><strong>${esc(fmtPhone(x.phone) || x.phone)}<br><small style="font-weight:400;color:var(--muted)">${x.phoneVerified ? 'подтверждён Telegram' : 'введён вручную'}</small></strong></div>
+          <div><span>Telegram</span><strong>${x.username ? '@' + esc(String(x.username).replace('@','')) + ' · ' : ''}ID ${esc(x.tgId)}</strong></div>
+          <div><span>Бот может писать</span><strong>${x.canWrite ? 'да' : '<span style="color:var(--danger)">нет</span>'}</strong></div>
+          <div><span>Зарегистрирован</span><strong>${fmtDate(x.registered)}</strong></div>
+          ${x.changedBy ? `<div><span>Изменил</span><strong>${esc(x.changedBy)} · ${fmtDate(x.updated)}</strong></div>` : ''}
+        </div>
+        ${notes.length || x.adminNote ? `<div class="card glass"><div class="notes">
+          ${notes.map(n => `<div>${ICON.warn}<span>${esc(n.replace(/^⚠\s*/,''))}</span></div>`).join('')}
+          ${x.adminNote ? `<div class="ans">${ICON.reply}<span><b>Ответ сотруднику:</b> ${esc(x.adminNote)}</span></div>` : ''}
+        </div></div>` : ''}
+        ${actions}${reasonBox}
+        <div style="height:22px"></div>
+        <p class="sect">Найденные заявки<small>последние ${m && m.items ? m.items.length : '…'}</small></p>
+        <div class="card glass">${!m ? `<div class="spinner dark" style="margin:10px auto"></div>` : `
+          <div class="counts"><div><strong>${m.byPhone}</strong><span>по телефону</span></div><div><strong>${m.byName}</strong><span>по ФИО</span></div><div><strong>${m.byAlias}</strong><span>по вариантам</span></div></div>
+          ${items.map(i => `<div class="match"><div class="t">${esc(i.no || 'без №')}<span>${esc(String(i.date).slice(0,16))}</span></div>
+            <div class="d">${esc(i.project)} · ${esc(i.purpose)}</div>
+            <div class="m">${esc(i.from)}${i.initiator ? ' · инициатор: ' + esc(i.initiator) : ''}</div>
+            <div class="tags">${i.how.map(h => `<i>${esc(h)}</i>`).join('')}</div></div>`).join('') || `<div class="empty">Заявок с этим телефоном или ФИО не найдено</div>`}
+          ${m.items && m.items.length > 6 && !s.showAll ? `<button class="secondary small" data-a="more">Показать все ${m.items.length}</button>` : ''}`}
+        </div>
+        <p class="sect">Роль</p>
+        <div class="seg">${roleSeg}</div>
+        <p class="sect">Как записывают в заявках<small>через ;</small></p>
+        <div class="card glass">
+          <div class="inline"><input class="input" id="aliases" placeholder="Например: Юля Смирнова; Смирнова Ю." value="${esc(x.aliases)}"><button class="primary small" data-a="saveAliases">Сохранить</button></div>
+          <p class="note" style="text-align:left;margin:10px 10px 0">Если сотрудника пишут в заявках по-разному, добавьте варианты — заявки найдутся и по ним.</p>
+        </div>`;
+    },
+
+    async loadMatches(id) {
+      try { const r = await api('admin.matches', { tgId:id }); this.st.matches[id] = r.matches;
+        this.put({ tgId:id, byPhone:r.matches.byPhone, byName:r.matches.byName }); }
+      catch (e) { this.st.matches[id] = { byPhone:'—', byName:'—', byAlias:'—', items:[] }; toast(e.message); }
+      if (this.st.view === 'person' && this.st.sel === id) this.render();
+    },
+
+    async setStatus(status, reason = '') {
+      const x = this.get(this.st.sel);
+      if (this.st.busy) return; this.st.busy = true;
+      try {
+        const r = await api('admin.setStatus', { tgId:x.tgId, status, reason });
+        this.put(r.staff); this.st.reject = false; this.st.reason = '';
+        haptic('success');
+        toast(({ active:'Доступ открыт', rejected:'Отказ отправлен', blocked:'Заблокирован' })[status] + (r.delivered ? ' · сообщение доставлено' : ' · не доставлено: ' + (r.error || 'ошибка')));
+      } catch (e) { haptic('error'); toast(e.message); }
+      this.st.busy = false; this.render();
+    },
+
+    /* ---------- рассылка ---------- */
+    viewSend() {
+      const s = this.st, rec = [...s.rec].map(id => this.get(id)).filter(Boolean);
+      const mute = rec.filter(x => !x.canWrite).length;
+      return `<p class="sect">Получатели<small>${rec.length ? 'выбрано: ' + rec.length : 'не выбраны'}</small></p>
+        <div class="card glass">
+          ${rec.length ? `<div class="tags" style="margin:0 0 14px">${rec.slice(0, 12).map(x => `<i>${esc(shortName(x.fio))}</i>`).join('')}${rec.length > 12 ? `<i>ещё ${rec.length - 12}</i>` : ''}</div>` : ''}
+          ${mute ? `<div class="notes" style="margin-bottom:14px"><div>${ICON.mute}<span>${mute} из выбранных запретили боту писать — им сообщение может не дойти</span></div></div>` : ''}
+          <button class="secondary small" style="margin:0" data-a="pick">${rec.length ? 'Изменить получателей' : 'Выбрать получателей'}</button>
+        </div>
+        <p class="sect">Сообщение<small>шаблоны</small></p>
+        <div class="chips">${TEMPLATES.map((t, i) => `<button class="chip" data-a="tpl" data-v="${i}">${t[0]}</button>`).join('')}</div>
+        <div class="card glass">
+          <textarea class="input area" id="msg" maxlength="3500" placeholder="Текст сообщения сотрудникам">${esc(s.text)}</textarea>
+          <div class="counter" id="cnt">${s.text.length} / 3500</div>
+          <label class="consent" style="padding-bottom:0"><input type="checkbox" id="withButton" ${s.withButton ? 'checked' : ''}><span>Добавить кнопку «Открыть приложение»</span></label>
+        </div>
+        <p class="note" style="margin:-8px 8px 18px;text-align:left">Сотрудник увидит: «Сообщение от администратора», ваш текст и подпись «— ${esc(state.profile ? state.profile.fio : '')}».</p>
+        <button class="primary" data-a="send" ${s.busy ? 'disabled' : ''}>${s.busy ? '<span class="spinner"></span>Отправляем…' : 'Отправить' + (rec.length ? ' · ' + rec.length : '')}</button>
+        ${s.result ? `<div class="card glass" style="margin-top:22px"><div class="result">
+          <div class="big">Доставлено ${s.result.sent} из ${s.result.total}</div>
+          ${s.result.results.filter(r => !r.ok).map(r => `<div class="logi"><div class="t"><b>${esc(r.fio || r.tgId)}</b></div><div class="e">${esc(r.error)}</div></div>`).join('')}
+        </div></div>` : ''}`;
+    },
+    viewPick() {
+      const s = this.st, q = s.pickQ.trim().toLowerCase();
+      const people = s.staff.filter(x => x.status === 'active' && (!q || x.fio.toLowerCase().includes(q)))
+        .sort((a, b) => a.fio.localeCompare(b.fio, 'ru'));
+      return this.top('Получатели', 'выбрано: ' + s.rec.size) + `
+        <div class="search">${ICON.search}<input class="input" id="pq" placeholder="Поиск по ФИО" value="${esc(s.pickQ)}"></div>
+        <div class="chips">
+          <button class="chip" data-a="pickAll">Все активные</button>
+          <button class="chip" data-a="pickRole" data-v="Логист">Логисты</button>
+          <button class="chip" data-a="pickRole" data-v="Администратор">Администраторы</button>
+          <button class="chip" data-a="pickNone">Очистить</button>
+        </div>
+        <div class="card glass" style="padding:8px 18px">${people.map(x => `
+          <label class="pick"><span><b>${esc(x.fio)}</b><small>${esc(x.role)}${x.canWrite ? '' : ' · бот не может писать'}</small></span>
+          <input type="checkbox" class="toggle" data-pick="${x.tgId}" ${s.rec.has(x.tgId) ? 'checked' : ''}></label>`).join('') || `<div class="empty">Нет активных сотрудников</div>`}
+        </div>
+        <div class="sticky"><button class="primary" data-a="pickDone">Готово · ${s.rec.size}</button></div>`;
+    },
+
+    /* ---------- журнал ---------- */
+    viewLog() {
+      const s = this.st, h = s.history;
+      const seg = `<div class="seg"><button class="${s.logTab === 'log' ? 'on' : ''}" data-a="logTab" data-v="log">Действия</button><button class="${s.logTab === 'msg' ? 'on' : ''}" data-a="logTab" data-v="msg">Сообщения</button></div>`;
+      if (!h) return seg + `<div class="spinner dark" style="margin:30px auto"></div>`;
+      const label = a => ({ 'admin.status':'Смена статуса', 'admin.update':'Изменение данных', 'admin.send':'Рассылка', 'register':'Регистрация', 'status':'Статус изменён в таблице' })[a] || a;
+      const rows = s.logTab === 'log'
+        ? h.log.map(l => `<div class="logi"><div class="t"><b>${esc(label(l.action))}${l.result ? ' · ' + esc(l.result) : ''}</b><span>${fmtDate(l.time)}</span></div><div class="d">${esc(l.by)} — ${esc(l.details)}</div></div>`)
+        : h.notifications.map(n => `<div class="logi"><div class="t"><b>${esc(n.to)}</b><span>${fmtDate(n.time)}</span></div><div class="d">${esc(n.text)}</div>${n.ok ? `<div class="m" style="color:var(--ok);font-size:12.5px;margin-top:3px">доставлено · отправил ${esc(n.by)}</div>` : `<div class="e">не доставлено: ${esc(n.error)}</div>`}</div>`);
+      return seg + `<div class="card glass" style="padding:6px 20px">${rows.join('') || '<div class="empty">Пока пусто</div>'}</div>
+        <button class="secondary small" data-a="reloadLog">Обновить</button>`;
+    },
+    async loadHistory() {
+      try { this.st.history = await api('admin.history'); } catch (e) { this.st.history = { log:[], notifications:[] }; toast(e.message); }
+      if (this.st.tab === 'log' && this.st.view === 'list') this.render();
+    },
+
+    /* ---------- события ---------- */
+    wire() {
+      const s = this.st, $ = id => document.getElementById(id);
+      app.onclick = e => { const b = e.target.closest('[data-a]'); if (b && !b.disabled) this.act(b.dataset.a, b.dataset.v); };
+      const q = $('q'); if (q) q.oninput = e => { s.q = e.target.value; const pos = e.target.selectionStart; this.render(); const n = $('q'); n.focus(); n.setSelectionRange(pos, pos); };
+      const pq = $('pq'); if (pq) pq.oninput = e => { s.pickQ = e.target.value; const pos = e.target.selectionStart; this.render(); const n = $('pq'); n.focus(); n.setSelectionRange(pos, pos); };
+      const msg = $('msg'); if (msg) msg.oninput = e => { s.text = e.target.value; $('cnt').textContent = s.text.length + ' / 3500'; };
+      const wb = $('withButton'); if (wb) wb.onchange = e => { s.withButton = e.target.checked; };
+      const rs = $('reason'); if (rs) rs.oninput = e => { s.reason = e.target.value; };
+      document.querySelectorAll('[data-pick]').forEach(t => t.onchange = e => { const id = e.target.dataset.pick; e.target.checked ? s.rec.add(id) : s.rec.delete(id);
+        document.querySelector('.topbar small').textContent = 'выбрано: ' + s.rec.size; document.querySelector('[data-a="pickDone"]').textContent = 'Готово · ' + s.rec.size; });
+    },
+
+    async act(a, v) {
+      const s = this.st;
+      switch (a) {
+        case 'back': return this.back();
+        case 'tab': s.tab = v; s.view = 'list'; if (v === 'log' && !s.history) this.loadHistory(); return this.render();
+        case 'filter': s.filter = v; return this.render();
+        case 'person': s.sel = v; s.view = 'person'; s.reject = false; s.reason = ''; s.showAll = false; window.scrollTo(0, 0);
+          this.render(); if (!s.matches[v]) this.loadMatches(v); return;
+        case 'more': s.showAll = true; return this.render();
+        case 'approve': {
+          const x = this.get(s.sel);
+          if (!await confirmDlg(`Открыть доступ: ${x.fio}?`)) return;
+          return this.setStatus('active');
+        }
+        case 'rejectOpen': s.reject = 'reject'; return this.render();
+        case 'blockOpen': s.reject = 'block'; return this.render();
+        case 'rejectCancel': s.reject = false; s.reason = ''; return this.render();
+        case 'reject':
+          if (!s.reason.trim()) { toast('Напишите причину — её увидит сотрудник'); haptic('error'); return; }
+          return this.setStatus('rejected', s.reason);
+        case 'block': {
+          const x = this.get(s.sel);
+          if (!await confirmDlg(`Заблокировать ${x.fio}? Сотрудник потеряет доступ к приложению.`)) return;
+          return this.setStatus('blocked', s.reason);
+        }
+        case 'role': {
+          const x = this.get(s.sel); if (x.role === v) return;
+          if (v === 'Администратор' && !await confirmDlg(`Дать ${x.fio} права администратора? Он сможет утверждать сотрудников и делать рассылки.`)) return;
+          try { const r = await api('admin.update', { tgId:x.tgId, role:v }); this.put(r.staff); haptic('success'); toast('Роль: ' + v); } catch (e) { toast(e.message); }
+          return this.render();
+        }
+        case 'saveAliases': {
+          const x = this.get(s.sel), val = document.getElementById('aliases').value;
+          try { const r = await api('admin.update', { tgId:x.tgId, aliases:val }); this.put(r.staff); delete s.matches[x.tgId]; haptic('success'); toast('Сохранено — пересчитываем заявки'); this.render(); this.loadMatches(x.tgId); }
+          catch (e) { toast(e.message); }
+          return;
+        }
+        case 'write': s.rec = new Set([s.sel]); s.tab = 'send'; s.view = 'list'; s.result = null; window.scrollTo(0, 0); return this.render();
+        case 'pick': s.view = 'pick'; s.pickQ = ''; window.scrollTo(0, 0); return this.render();
+        case 'pickAll': s.staff.filter(x => x.status === 'active').forEach(x => s.rec.add(x.tgId)); return this.render();
+        case 'pickRole': s.staff.filter(x => x.status === 'active' && x.role === v).forEach(x => s.rec.add(x.tgId)); return this.render();
+        case 'pickNone': s.rec.clear(); return this.render();
+        case 'pickDone': s.view = 'list'; s.tab = 'send'; return this.render();
+        case 'tpl': s.text = TEMPLATES[+v][1]; this.render(); const m = document.getElementById('msg'); m.focus(); m.setSelectionRange(m.value.length, m.value.length); return;
+        case 'send': {
+          if (!s.rec.size) { toast('Выберите получателей'); haptic('error'); return; }
+          if (!s.text.trim()) { toast('Напишите текст сообщения'); haptic('error'); return; }
+          if (!await confirmDlg(`Отправить сообщение ${s.rec.size} ${s.rec.size === 1 ? 'сотруднику' : 'сотрудникам'}?`)) return;
+          s.busy = true; s.result = null; this.render();
+          try { s.result = await api('admin.send', { tgIds:[...s.rec], text:s.text, withButton:s.withButton }); haptic(s.result.sent === s.result.total ? 'success' : 'warning');
+            s.result.results.forEach(r => this.put({ tgId:r.tgId, canWrite:r.ok || this.get(r.tgId).canWrite && r.error.indexOf('заблокировал') < 0 }));
+            if (s.result.sent) { s.text = ''; } s.history = null; }
+          catch (e) { haptic('error'); toast(e.message); }
+          s.busy = false; return this.render();
+        }
+        case 'logTab': s.logTab = v; return this.render();
+        case 'reloadLog': s.history = null; this.render(); return this.loadHistory();
+      }
+    },
+  };
 
   function route(res) {
     if (res.status === 'new') {
@@ -477,12 +963,14 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
       if (!state.form.firstName && !state.form.lastName) { state.form.firstName = t.firstName || ''; state.form.lastName = t.lastName || ''; }
       renderForm();
     } else if (res.status === 'pending') { state.profile = res.profile; renderPending(res.profile); }
-    else if (res.status === 'active') { state.profile = res.profile; renderActive(res.profile); }
+    else if (res.status === 'active') { state.profile = res.profile; state.me = res; renderActive(res.profile, res); }
+    else if (res.status === 'rejected') { state.profile = res.profile; renderRejected(res.profile); }
     else if (res.status === 'blocked') renderBlocked();
     else renderError(new Error('Неизвестный статус'));
   }
 
   async function start() {
+    app.onclick = null;
     if (!inTelegram && !demo) return renderOutside();
     renderLoading();
     try { route(await api('me')); } catch (e) { renderError(e); }
