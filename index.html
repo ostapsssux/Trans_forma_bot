@@ -301,7 +301,6 @@ body.wide .app{max-width:860px}
 .rq{display:block;width:100%;min-width:0;overflow:hidden;text-align:left;border:0;cursor:pointer;color:var(--ink);background:var(--surface);
   border-radius:22px;padding:14px 18px 15px;box-shadow:var(--raised);transition:box-shadow .18s}
 .rq:active{box-shadow:var(--pressed)}
-.rq.past{opacity:.6}
 .rq .top{display:flex;align-items:baseline;gap:10px}
 .rq .top b{font-size:17px;font-weight:650;letter-spacing:-.01em}
 .rq .top span{font-size:13px;color:var(--muted)}
@@ -311,6 +310,8 @@ body.wide .app{max-width:860px}
 .rq .addr:before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--primary)}
 .rq .addr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tags i.me{background:var(--btn);color:var(--on-btn)}
+.plate{display:inline-flex;align-items:center;font-weight:650;letter-spacing:.04em;color:var(--ink);font-size:17px;padding:5px 12px;border-radius:9px;
+  background:var(--surface);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ink) 55%,transparent);text-transform:uppercase;white-space:nowrap}
 /* линия «сейчас» */
 .now{display:flex;align-items:center;gap:10px;margin:2px 4px;color:var(--primary);font-size:12px;font-weight:600}
 .now:after{content:"";flex:1;height:2px;border-radius:2px;background:color-mix(in srgb,var(--primary) 45%,transparent)}
@@ -342,6 +343,9 @@ body.wide .app{max-width:860px}
 .contacts{display:grid;gap:8px;margin-top:10px}
 .contact{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;color:var(--ink-2)}
 .contact span{min-width:0;word-break:break-word}
+.contact .who{display:grid;gap:1px}
+.contact .who b{font-weight:600;color:var(--ink);font-size:14.5px}
+.contact .who small{font-size:12px;color:var(--muted)}
 .call{flex:none;display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--ink);font-weight:600;font-size:13px;
   padding:8px 13px;border-radius:999px;background:var(--surface);box-shadow:var(--raised-sm)}
 .call svg{width:15px;height:15px;stroke-width:2;color:var(--primary)}
@@ -354,6 +358,8 @@ body.wide .app{max-width:860px}
 .driver{display:grid;gap:12px}
 .driver .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .driver .name{font-size:16px;font-weight:600}
+.driver .who{display:grid;gap:1px}
+.driver .who small{font-size:12px;color:var(--muted)}
 .driver .model{color:var(--ink-2);font-size:14px}
 .raw{margin-top:4px;font-size:12.5px;color:var(--muted);white-space:pre-line;word-break:break-word}
 details summary{cursor:pointer;color:var(--muted);font-size:12.5px;list-style:none}
@@ -425,7 +431,12 @@ details summary::-webkit-details-marker{display:none}
           : 'Сервер ответил непонятно (код ' + res.status + '). Проверьте развёртывание Apps Script.');
         x.code = 'BAD_RESPONSE'; throw x;
       }
-      if (!data.ok) { const e = new Error(data.message || 'Ошибка'); e.code = data.error; throw e; }
+      if (!data.ok) {
+        const e = new Error(data.error === 'BAD_ACTION'
+          ? 'Сервер работает на старой версии кода. В Apps Script: «Начать развёртывание» → «Управление развёртываниями» → карандаш → «Новая версия».'
+          : data.message || 'Ошибка');
+        e.code = data.error; throw e;
+      }
       return data;
     } catch (e) {
       if (e.name === 'AbortError') { const x = new Error('Сервер долго не отвечает. Проверьте интернет и попробуйте ещё раз.'); x.code='TIMEOUT'; throw x; }
@@ -1200,6 +1211,8 @@ details summary::-webkit-details-marker{display:none}
         if (s.day !== day) return; // пока грузили, выбрали другой день
         s.data = r;
         if (!r.canSeeAll) s.scope = 'mine';
+        // пока человек сам не выбрал вкладку: если «моих» на день нет, а заявки есть — сразу показываем «Все»
+        else if (!store.get('t26-scope')) s.scope = r.items.some(i => i.mine) || !r.items.length ? 'mine' : 'all';
       } catch (e) { s.err = e; if (e.code === 'NOT_ACTIVE') return start(); }
       s.loading = false;
       if (s.view === 'list') this.render();
@@ -1214,7 +1227,8 @@ details summary::-webkit-details-marker{display:none}
     visible() {
       const s = this.st, items = (s.data && s.data.items) || [];
       const q = s.q.trim().toLowerCase();
-      return items.filter(it => (s.scope === 'all' || it.mine)
+      // сначала самые поздние по времени подачи, дальше по убыванию; заявки без времени — в конце
+      return items.slice().sort((a, b) => (b.time || '').localeCompare(a.time || '')).filter(it => (s.scope === 'all' || it.mine)
         && (!s.fp.size || s.fp.has(it.project)) && (!s.fu.size || s.fu.has(it.purpose))
         && (!q || [it.no, it.vehicle, it.from, it.to, it.project, it.purpose, it.cargo, it.transport].join(' ').toLowerCase().includes(q)));
     },
@@ -1269,13 +1283,12 @@ details summary::-webkit-details-marker{display:none}
           : s.scope === 'mine' && canAll && items.length ? `<button class="secondary small" data-r="scope" data-v="all">Показать все заявки дня · ${items.length}</button>` : '';
         body = `<div class="empty">${why}${act ? '<br><br>' + act : ''}</div>`;
       } else {
+        // линия «сейчас» (только для сегодняшнего дня): выше — предстоящие, ниже — время подачи уже прошло
         let nowPlaced = !isToday, html = '';
         list.forEach(it => {
-          const past = isToday && it.time && it.time < now;
-          if (!nowPlaced && (!it.time || it.time >= now)) { html += `<div class="now"><i></i>сейчас ${now}</div>`; nowPlaced = true; }
-          html += this.card(it, past, s.scope === 'all');
+          if (!nowPlaced && it.time && it.time < now) { html += `<div class="now"><i></i>сейчас ${now}</div>`; nowPlaced = true; }
+          html += this.card(it, false, s.scope === 'all');
         });
-        if (!nowPlaced) html += `<div class="now"><i></i>сейчас ${now}</div>`;
         body = `<div class="list">${html}</div>`;
       }
       const filt = [...s.fp].map(v => `<button data-r="unfp" data-v="${esc(v)}">${esc(v)} ✕</button>`).concat([...s.fu].map(v => `<button data-r="unfu" data-v="${esc(v)}">${esc(v)} ✕</button>`)).join('');
@@ -1319,8 +1332,9 @@ details summary::-webkit-details-marker{display:none}
       const it = this.st.detail;
       if (!it) { app.innerHTML = `<div class="spinner dark" style="margin:30vh auto"></div>`; return; }
       const full = !it.partial, drv = parseDriver(it.transport);
-      const contactRows = text => parseContacts(text).map(c => `<div class="contact"><span>${esc(c.name || c.phone || '')}</span>${c.href ? `<a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a>` : ''}</div>`).join('');
-      const stop = (k, addr, contact, end) => addr || contact ? `<div class="stop ${end ? 'end' : ''}"><div class="k">${k}</div><div class="addr">${esc(addr || 'Адрес не указан')}</div>${contact ? `<div class="contacts">${contactRows(contact)}</div>` : ''}</div>` : '';
+      // role — подпись под именем: кто этот человек в заявке
+      const contactRows = (text, role) => parseContacts(text).map(c => `<div class="contact"><span class="who"><b>${esc(c.name || 'Без имени')}</b>${role ? `<small>${role}</small>` : ''}</span>${c.href ? `<a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a>` : ''}</div>`).join('');
+      const stop = (k, addr, contact, end, role) => addr || contact ? `<div class="stop ${end ? 'end' : ''}"><div class="k">${k}</div><div class="addr">${esc(addr || 'Адрес не указан')}</div>${contact ? `<div class="contacts">${contactRows(contact, role)}</div>` : ''}</div>` : '';
       const loadingLine = `<div class="spinner dark" style="width:22px;height:22px;margin:4px 0"></div>`;
       app.innerHTML = `<div class="topbar"><button class="round" data-r="back" aria-label="Назад">${ICON.back}</button>
           <div class="grow"><h2>${it.no ? 'Заявка ' + esc(it.no) : 'Заявка без номера'}</h2><small>${shortDate(it.day)}${it.time ? ', ' + esc(it.time) : ''}</small></div></div>
@@ -1332,9 +1346,9 @@ details summary::-webkit-details-marker{display:none}
         <p class="sect">Маршрут</p>
         <div class="card glass">
           <div class="stops ${it.to || (full && it.mid) ? '' : 'one'}">
-            ${stop(it.to ? 'Подача' : 'Место работы', it.from, full ? it.fromContact : '', !it.to)}
-            ${full ? stop('Промежуточный адрес', it.mid, it.midContact, false) : ''}
-            ${it.to ? stop('Конечный адрес', it.to, full ? it.toContact : '', true) : ''}
+            ${stop(it.to ? 'Подача' : 'Место работы', it.from, full ? it.fromContact : '', !it.to, it.to ? 'встречает на подаче' : 'встречает на месте работы')}
+            ${full ? stop('Промежуточный адрес', it.mid, it.midContact, false, 'встречает на промежуточном адресе') : ''}
+            ${it.to ? stop('Конечный адрес', it.to, full ? it.toContact : '', true, 'встречает на конечном адресе') : ''}
           </div>
           ${full ? '' : loadingLine}
           ${it.from ? `<div class="map-btns"><button class="secondary small" data-r="map">${ICON.map}Маршрут</button><button class="secondary small" data-r="copy">${ICON.copy}Адрес</button></div>` : ''}
@@ -1342,14 +1356,14 @@ details summary::-webkit-details-marker{display:none}
         <p class="sect">Машина и водитель</p>
         <div class="card glass">${drv ? `<div class="driver">
             <div class="row">${drv.plates.map(p => `<span class="plate big">${esc(p)}</span>`).join('') || '<span class="flag">номер не распознан</span>'}<span class="model">${esc(drv.model)}</span></div>
-            ${drv.name || drv.phones.length ? `<div class="row"><span class="name">${esc(drv.name || 'Водитель')}</span>${drv.phones.map(c => `<a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a>`).join('')}</div>` : ''}
+            ${drv.name || drv.phones.length ? `<div class="row"><span class="who"><b class="name">${esc(drv.name || 'Имя не указано')}</b><small>водитель</small></span>${drv.phones.map(c => `<a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a>`).join('')}</div>` : ''}
             <details><summary>Как записано в заявке</summary><div class="raw">${esc(drv.raw)}</div></details>
           </div>` : `<div class="flag">Машина ещё не назначена</div>`}</div>
         ${full && (it.info || it.extra) ? `<p class="sect">Дополнительно</p><div class="card glass kv">
           ${it.info ? `<div><div class="k">Комментарий</div><div class="v">${esc(it.info)}</div></div>` : ''}
           ${it.extra ? `<div><div class="k">Дополнительные адреса и контакты</div><div class="v">${esc(it.extra)}</div>${parseContacts(it.extra).some(c => c.href) ? `<div class="contacts">${parseContacts(it.extra).filter(c => c.href).map(c => `<div class="contact"><span>${esc(c.name)}</span><a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a></div>`).join('')}</div>` : ''}</div>` : ''}
         </div>` : ''}
-        ${full && it.initiator ? `<p class="sect">Инициатор заявки</p><div class="card glass"><div class="contacts" style="margin:0">${contactRows(it.initiator)}</div></div>` : ''}
+        ${full && it.initiator ? `<p class="sect">Инициатор заявки</p><div class="card glass"><div class="contacts" style="margin:0">${contactRows(it.initiator, 'оформил заявку')}</div></div>` : ''}
         ${full && it.stamp ? `<p class="note">Заявка подана ${esc(it.stamp)}</p>` : ''}`;
       this.wire();
     },
