@@ -176,6 +176,7 @@ button.rq:active,button.person:active,button.admin-entry:active,button.type:not(
 /* Индикатор загрузки (анимированная пиктограмма) — в фирменном цвете; на оранжевых кнопках — цветом текста кнопки */
 .fl-loader{display:block;flex:none;color:var(--primary)}
 .fl-loader.on{color:var(--on-btn)}
+.fl-loader.thick path{stroke-width:96!important}  /* мелкий значок (≤ 32 px) — линия толще, иначе почти не видно */
 button .fl-loader,.saving .fl-loader,.moment .fl-loader{display:inline-block;vertical-align:middle}
 .fl-loader path{stroke:currentColor;stroke-width:66;stroke-linecap:round;stroke-linejoin:round;animation:var(--fl-duration,3s) linear infinite}
 .fl-loader .fl-0{animation-name:fl-0;stroke-dasharray:1 1792;stroke-dashoffset:-110}
@@ -350,14 +351,20 @@ body.wide .app{max-width:860px}
 .skeleton i:nth-of-type(1){width:34%;height:14px}
 .skeleton i:nth-of-type(2){width:62%;height:16px;margin-top:18px}
 .skeleton i:nth-of-type(3){width:80%}
-.moment{position:absolute;top:14px;right:16px;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:650;color:var(--primary)}
+.moment{position:absolute;top:14px;right:16px;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--muted)}
 /* нижняя шторка фильтров */
-.sheet-bg{position:fixed;inset:0;z-index:20;background:rgba(30,24,18,.28);animation:fadein .2s both}
+.sheet-bg{position:fixed;inset:0;z-index:20;background:rgba(30,24,18,.28);transition:opacity .22s}
+.sheet-bg.enter{animation:fadein .2s both}
+.sheet-bg.closing{opacity:0}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;max-height:82vh;overflow:auto;background:var(--panel);border-radius:30px 30px 0 0;
-  padding:12px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(30,24,18,.18);animation:up .25s cubic-bezier(.3,.7,.3,1) both;max-width:620px;margin:0 auto}
+  padding:12px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(30,24,18,.18);max-width:620px;margin:0 auto;overscroll-behavior:contain;touch-action:pan-y}
+.sheet.enter{animation:up .28s cubic-bezier(.3,.7,.3,1) both}
+.sheet.closing{transition:transform .22s ease-in;transform:translateY(105%)!important}
+.sheet.dragging{transition:none}
+.sheet .grab{padding:10px 0;margin-top:-10px;background-clip:content-box;box-sizing:content-box}
 .sheet .grab{width:40px;height:5px;border-radius:5px;background:var(--hair);margin:0 auto 14px}
 .sheet h3{font-size:19px;font-weight:650;margin:0 4px 16px;letter-spacing:-.02em}
-@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 /* карточка заявки — подробно */
 .hero{padding:22px}
@@ -453,23 +460,24 @@ details summary::-webkit-details-marker{display:none}
 .progress i{display:block;height:100%;border-radius:999px;background:var(--btn);transition:width .35s linear;
   background-image:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);background-size:200% 100%;animation:shine 1.4s linear infinite}
 @keyframes shine{from{background-position:200% 0}to{background-position:-200% 0}}
-.time-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px}
-.time-row label{display:grid;gap:1px}
+.time-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;margin:0 0 14px;min-height:48px}
+.time-row label{display:grid;gap:1px;min-width:0}
+.time-row label small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .time-row label b{font-size:15px;font-weight:650}
 .time-row label small{font-size:12px;color:var(--muted)}
 .time-box{display:flex;align-items:center;gap:8px}
-.input.time{width:124px;min-height:44px;padding:0 14px;text-align:center;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+.input.time{display:block;width:100%;height:46px;min-height:0;line-height:46px;padding:0 14px;text-align:center;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
 .input.time::-webkit-date-and-time-value{text-align:center}
 .input.time::-webkit-calendar-picker-indicator{display:none}
 /* Пустое поле времени: iPhone не рисует в нём ничего — показываем свою подсказку «--:--» и пунктирную рамку */
-.time-wrap{position:relative;display:inline-block}
+.time-wrap{position:relative;display:block;width:108px;height:46px;flex:none} /* iPhone растягивает пустое поле времени — размер задаём жёстко */
 .time-hint{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:6px;pointer-events:none;
   font-size:17px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
-.time-wrap.empty .time-hint{display:flex}
-.time-wrap.empty .input.time{color:transparent;box-shadow:none;outline:1.5px dashed var(--primary);outline-offset:-1.5px}
-.time-wrap.empty .input.time:focus{color:inherit}
-.time-wrap.empty .input.time:focus + .time-hint{display:none}
-.now-btn{white-space:nowrap}
+.time-wrap.t-empty .time-hint{display:flex}
+.time-wrap.t-empty .input.time{color:transparent;box-shadow:none;outline:1.5px dashed var(--primary);outline-offset:-1.5px}
+.time-wrap.t-empty .input.time:focus{color:inherit}
+.time-wrap.t-empty .input.time:focus + .time-hint{display:none}
+.now-btn{white-space:nowrap;min-width:84px;justify-content:center}
 .no-photo{padding:14px 16px;border-radius:20px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);font-size:13.5px;line-height:1.45}
 .no-photo-btn{margin-top:12px}
 .no-photo-btn.on{color:var(--primary)}
@@ -484,6 +492,10 @@ details summary::-webkit-details-marker{display:none}
 .pending-bar .pb-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .pending-bar.err b{color:var(--danger)}
 .big-status{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px}
+.big-status.center{justify-content:center;font-size:16px}
+.big-status.center span{color:var(--muted);font-variant-numeric:tabular-nums}
+.send-loader{display:grid;place-items:center;padding:8px 0 16px}
+.send-pct{text-align:center;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:4px}
 </style>
 </head>
 <body>
@@ -540,6 +552,8 @@ details summary::-webkit-details-marker{display:none}
   applyTheme();
   if (tg) {
     tg.ready(); tg.expand();
+    // свайп вниз внутри приложения (шторка фильтров) не должен сворачивать само приложение Telegram
+    try { if (tg.disableVerticalSwipes && tg.isVersionAtLeast && tg.isVersionAtLeast('7.7')) tg.disableVerticalSwipes(); } catch (e) {}
     try { tg.onEvent('themeChanged', applyTheme); } catch (e) {}
   }
 
@@ -550,10 +564,35 @@ details summary::-webkit-details-marker{display:none}
   /** Какой экран сейчас открыт: фоновые ответы сервера перерисовывают только свой экран (иначе админку «скидывало» на заявки). */
   let screen = '';
 
+  /**
+   * Горизонтальный жест пальцем по элементу. Направление определяется по первым 8 px:
+   * если палец пошёл вертикально — это прокрутка страницы, жест не мешает. Работает одинаково на iOS и Android.
+   */
+  function hSwipe(el, h) {
+    if (el.__hswipe) return; el.__hswipe = 1;
+    let x0, y0, t0, mode = '', dx = 0;
+    el.addEventListener('touchstart', e => { if (e.touches.length !== 1) return; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now(); mode = ''; dx = 0; }, { passive: true });
+    el.addEventListener('touchmove', e => {
+      if (x0 == null) return;
+      const ddx = e.touches[0].clientX - x0, ddy = e.touches[0].clientY - y0;
+      if (!mode) { if (Math.abs(ddx) < 8 && Math.abs(ddy) < 8) return; mode = Math.abs(ddx) > Math.abs(ddy) ? 'h' : 'v'; }
+      if (mode !== 'h') return;
+      dx = ddx; h.move(dx);
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+    const end = () => {
+      if (x0 == null) return; const m = mode; x0 = null;
+      if (m !== 'h') return;
+      el.__swiped = Date.now(); // клик после жеста не считается нажатием
+      h.end(dx, dx / Math.max(1, Date.now() - t0));
+    };
+    el.addEventListener('touchend', end); el.addEventListener('touchcancel', end);
+  }
+
   /** Анимированная пиктограмма загрузки. tone 'on' — на оранжевой кнопке. */
   const LOADER_PATHS = '<path class="fl-0" d="M295.62 244.45 A136.15 136.15 0 0 0 80.16 293.37 A136.15 136.15 0 0 0 194.81 482.24 L194.83 483.75 A135.9 135.9 0 0 0 90.67 693.49 A135.9 135.9 0 0 0 324.61 682.98 L330.15 686.19 A136.38 136.38 0 0 0 499.45 884.5 A136.38 136.38 0 0 0 470.56 625.36"/><path class="fl-1" d="M722.34 753.32 A137.24 137.24 0 0 0 697.68 483.99 L697.6 481.82 A136 136 0 0 0 802.41 272.49 A136 136 0 0 0 568.47 281.42 L561.96 277.57 A136.17 136.17 0 0 0 394.17 78.31 A136.17 136.17 0 0 0 422.14 337.3"/><path class="fl-2" d="M519.56 470.57 C519.13 465.95 518.25 461.35 516.92 456.86 C515.59 452.37 513.81 447.99 511.61 443.81 C509.41 439.63 506.79 435.64 503.79 431.93 C500.8 428.22 497.42 424.8 493.73 421.72 C490.04 418.64 486.03 415.91 481.78 413.59 C477.52 411.27 473.03 409.36 468.37 407.9 C463.72 406.44 458.9 405.43 454.02 404.9 C449.13 404.37 444.18 404.31 439.26 404.74 C434.34 405.18 429.44 406.09 424.67 407.48 C419.89 408.87 415.24 410.72 410.81 413.02 C406.37 415.32 402.15 418.07 398.22 421.2 C394.3 424.33 390.68 427.85 387.42 431.71 C384.17 435.56 381.28 439.74 378.83 444.16 C376.37 448.59 374.35 453.26 372.79 458.1 C371.24 462.93 370.16 467.93 369.57 472.99 C368.98 478.05 368.89 483.17 369.3 488.26 C369.7 493.35 370.61 498.41 372 503.33 C373.39 508.26 375.26 513.05 377.58 517.62 C379.91 522.19 382.68 526.53 385.84 530.56 C389.01 534.6 392.58 538.33 396.47 541.67 C400.36 545.02 404.59 547.99 409.06 550.51 C413.53 553.04 418.24 555.13 423.12 556.75 C427.99 558.36 433.03 559.49 438.12 560.13 C443.21 560.77 448.36 560.9 453.48 560.54 C458.59 560.17 463.66 559.31 468.6 557.96 C473.54 556.62 478.34 554.79 482.92 552.51 C487.49 550.23 491.84 547.51 495.87 544.4 C499.91 541.29 503.64 537.78 506.98 533.96 C510.33 530.13 513.29 525.98 515.83 521.6 C518.36 517.21 520.45 512.58 522.08 507.8 C523.7 503.02 524.86 498.09 525.52 493.11 C526.19 488.13 526.36 483.09 526.04 478.1 C525.73 473.11 524.93 468.16 523.65 463.34 C522.38 458.53 520.64 453.86 518.47 449.41 C516.3 444.96 513.7 440.74 510.72 436.82 C507.75 432.9 504.4 429.28 500.74 426.04 C497.09 422.8 493.12 419.92 488.94 417.47 C484.75 415.01 480.34 412.98 475.79 411.4 C471.24 409.82 466.55 408.69 461.82 408.03"/>';
   function loader(size = 24, tone = '', style = '') {
-    return `<svg class="fl-loader ${tone}" viewBox="-6 30 904 904" width="${size}" height="${size}" fill="none" role="img" aria-label="Загрузка"${style ? ` style="${style}"` : ''}>${LOADER_PATHS}</svg>`;
+    return `<svg class="fl-loader ${tone}${size <= 32 ? ' thick' : ''}" viewBox="-6 30 904 904" width="${size}" height="${size}" fill="none" role="img" aria-label="Загрузка"${style ? ` style="${style}"` : ''}>${LOADER_PATHS}</svg>`;
   }
 
   function setApp(html) {
@@ -826,7 +865,7 @@ details summary::-webkit-details-marker{display:none}
 
   /* ---------- helpers ---------- */
   const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const haptic = t => { try { tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred(t); } catch (e) {} };
+  const haptic = t => { try { const h = tg && tg.HapticFeedback; if (!h) return; t === 'select' ? h.selectionChanged() : h.notificationOccurred(t); } catch (e) {} };
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && typeof Admin !== 'undefined' && Admin.st.open) Admin.refresh(); });
 
   // iOS показывает нажатие (:active) только если на странице есть обработчик касаний
@@ -1909,9 +1948,9 @@ details summary::-webkit-details-marker{display:none}
     },
     paintProgress() {
       const s = this.st; if (!s) return;
-      const bar = document.querySelector('.send-box .progress i'), cnt = document.querySelector('.send-box .big-status span'), ttl = document.querySelector('.send-box .big-status b');
-      if (!bar) return;
-      bar.style.width = Math.round(this.progress() * 100) + '%';
+      const pct = document.querySelector('.send-box .send-pct'), cnt = document.querySelector('.send-box .big-status span'), ttl = document.querySelector('.send-box .big-status b');
+      if (!pct) return;
+      pct.textContent = Math.round(this.progress() * 100) + '%';
       if (cnt) cnt.textContent = s.done + '/' + s.total;
       if (ttl) ttl.textContent = s.done < s.total ? 'Отправляем фото' : 'Сохраняем отчёт…';
     },
@@ -1953,9 +1992,9 @@ details summary::-webkit-details-marker{display:none}
             ${s.sending ? '' : `<button class="x" data-p="rm" data-v="${st}:${i}" aria-label="Удалить фото">×</button>`}</div>`).join('')}
           ${list.length < 10 && !s.sending ? `<button class="add" data-p="add" data-v="${st}"><span class="add-in">${ICON.plus}<b>${list.length ? 'Ещё фото' : 'Добавить фото'}</b></span></button>` : ''}</div>`;
       };
-      const timeRow = st => `<div class="time-row"><label for="t_${st}"><b>${st === 'arrival' ? 'Прибыл' : 'Убыл'}</b><small>время по факту</small></label>
-          <div class="time-box"><span class="time-wrap ${s.times[st] ? '' : 'empty'}"><input class="input time" type="time" id="t_${st}" data-t="${st}" value="${esc(s.times[st] || '')}" ${s.sending ? 'disabled' : ''} aria-label="${st === 'arrival' ? 'Время прибытия' : 'Время убытия'}"><span class="time-hint" aria-hidden="true">--:--</span></span>
-          ${s.times[st] || s.sending ? '' : `<button class="chip now-btn" data-p="now" data-v="${st}">Сейчас</button>`}</div></div>`;
+      const timeRow = st => `<div class="time-row"><label for="t_${st}"><b>${st === 'arrival' ? 'Прибыл' : 'Убыл'}</b><small>по факту</small></label>
+          <div class="time-box"><span class="time-wrap ${s.times[st] ? '' : 't-empty'}"><input class="input time" type="time" id="t_${st}" data-t="${st}" value="${esc(s.times[st] || '')}" ${s.sending ? 'disabled' : ''} aria-label="${st === 'arrival' ? 'Время прибытия' : 'Время убытия'}"><span class="time-hint" aria-hidden="true">--:--</span></span>
+          <button class="chip now-btn" data-p="now" data-v="${st}" ${s.sending ? 'disabled' : ''}>Сейчас</button></div></div>`;
       const section = st => {
         const canNo = st === 'departure' && s.type === 'full';
         const off = this.noPhoto(st);
@@ -1969,7 +2008,7 @@ details summary::-webkit-details-marker{display:none}
       setApp(`<div class="topbar"><button class="round" data-p="back" aria-label="Назад">${ICON.back}</button>
           <div class="grow"><h2>Фотоотчёт</h2><small>${it.no ? 'Заявка ' + esc(it.no) : 'Заявка'}${it.time ? ' · ' + esc(it.time) : ''} · ${esc(it.vehicle || '')}</small></div></div>
         <div class="card glass hint-card"><div class="ic">${ICON.camera}</div><div><h3>Что фиксируем?</h3>
-          <p>${s.type === 'full' ? 'Для полного отчёта нужны фото прибытия и фото убытия.' : 'Можно отправить одну фотографию. Прибытие и убытие могут загрузить разные люди.'}</p></div></div>
+          <p>Полный — прибытие и убытие. Этап — что-то одно, второе можно дослать позже.</p></div></div>
         <div class="types">
           ${type('full', 'Полный отчёт', 'Прибытие и убытие сразу', has === 'full')}
           ${type('arrival', 'Прибытие', 'Можно дополнить позже', has === 'arrival' || has === 'full')}
@@ -1982,12 +2021,13 @@ details summary::-webkit-details-marker{display:none}
         <div class="send-space"></div>
         <div class="send-bar"><button class="primary" data-p="send" ${this.ready() && !s.sending ? '' : 'disabled'}>${this.missing() || 'Отправить' + (n ? ' · ' + n + ' фото' : '')}</button></div>
         ${s.sending || s.error ? `<div class="send-overlay"><div class="send-box glass" role="alertdialog" aria-live="polite">
-            <div class="big-status"><b>${s.error ? 'Отправка прервалась' : s.done < s.total ? 'Отправляем фото' : 'Сохраняем отчёт…'}</b><span>${s.done}/${s.total}</span></div>
-            <div class="progress"><i style="width:${Math.round(this.progress() * 100)}%"></i></div>
+            ${s.error ? '' : `<div class="send-loader">${loader(96)}</div>`}
+            <div class="big-status ${s.error ? '' : 'center'}"><b>${s.error ? 'Отправка прервалась' : s.done < s.total ? 'Отправляем фото' : 'Сохраняем отчёт…'}</b><span>${s.done}/${s.total}</span></div>
+            ${s.error ? '' : `<div class="send-pct">${Math.round(this.progress() * 100)}%</div>`}
             ${s.error ? `<div class="hint" style="margin:6px 2px 12px">${esc(s.error)}</div>
               <button class="primary small" data-p="send">Повторить — отправленные фото не потеряются</button>
               <button class="secondary small" data-p="hideErr" style="margin-top:10px">Вернуться к отчёту</button>`
-            : '<p class="note" style="margin:8px 0 0">Не закрывайте приложение до конца отправки. Если всё же закроете — при следующем открытии предложим доотправить.</p>'}
+            : '<p class="note" style="margin:12px 0 0;text-align:center">Не закрывайте приложение до конца отправки. Если всё же закроете — отчёт отправится сам при следующем открытии.</p>'}
           </div></div>` : ''}`);
       this.wire();
     },
@@ -2015,7 +2055,7 @@ details summary::-webkit-details-marker{display:none}
     wire() {
       app.onclick = e => { const b = e.target.closest('[data-p]'); if (b && !b.disabled) this.act(b.dataset.p, b.dataset.v); };
       const c = document.getElementById('pComment'); if (c) c.oninput = e => { this.st.comment = e.target.value; };
-      document.querySelectorAll('input[data-t]').forEach(t => { t.onchange = t.oninput = e => { this.st.times[e.target.dataset.t] = e.target.value; e.target.parentNode.classList.toggle('empty', !e.target.value); this.render(); }; });
+      document.querySelectorAll('input[data-t]').forEach(t => { t.onchange = t.oninput = e => { this.st.times[e.target.dataset.t] = e.target.value; e.target.parentNode.classList.toggle('t-empty', !e.target.value); this.render(); }; });
     },
 
     pick(stage) {
@@ -2346,12 +2386,54 @@ details summary::-webkit-details-marker{display:none}
       this.wire();
     },
 
+    paintSheet() {
+      const sh = document.querySelector('.sheet');
+      if (!this.st.sheet || !sh) return this.render();
+      const tmp = document.createElement('div'); tmp.innerHTML = this.sheetHtml();
+      const neu = tmp.querySelector('.sheet'), top = sh.scrollTop;
+      sh.innerHTML = neu.innerHTML; sh.scrollTop = top;
+    },
+    /** Шторка уезжает вниз, потом список перерисовывается с выбранными фильтрами. */
+    closeSheet() {
+      const s = this.st, sh = document.querySelector('.sheet'), bg = document.querySelector('.sheet-bg');
+      if (!sh || s.sheetClosing) { s.sheet = false; return this.render(); }
+      s.sheetClosing = true;
+      sh.classList.remove('enter'); sh.classList.add('closing'); if (bg) bg.classList.add('closing');
+      setTimeout(() => { s.sheetClosing = false; s.sheet = false; this.render(); }, 220);
+    },
+    /** Смахнуть шторку вниз: тянется за пальцем, отпустили ниже 90 px (или резко) — закрывается. */
+    wireSheet() {
+      const sh = document.querySelector('.sheet'), bg = document.querySelector('.sheet-bg');
+      if (!sh || sh.__swipe) return; sh.__swipe = 1;
+      let y0 = null, dy = 0, t0 = 0, drag = false;
+      sh.addEventListener('touchstart', e => { if (e.touches.length !== 1) return; y0 = e.touches[0].clientY; dy = 0; t0 = Date.now(); drag = false; }, { passive: true });
+      sh.addEventListener('touchmove', e => {
+        if (y0 === null) return;
+        const d = e.touches[0].clientY - y0;
+        if (!drag) { if (d > 6 && sh.scrollTop <= 0) { drag = true; sh.classList.remove('enter'); sh.classList.add('dragging'); } else if (Math.abs(d) > 6) { y0 = null; return; } else return; }
+        dy = Math.max(0, d); sh.style.transform = `translateY(${dy}px)`;
+        if (bg) bg.style.opacity = String(Math.max(0.2, 1 - dy / 400));
+        if (e.cancelable) e.preventDefault();
+      }, { passive: false });
+      const end = () => {
+        if (y0 === null) return; y0 = null;
+        if (!drag) return;
+        sh.classList.remove('dragging');
+        const fast = dy > 40 && dy / Math.max(1, Date.now() - t0) > 0.5;
+        if (dy > 90 || fast) return this.closeSheet();
+        sh.style.transition = 'transform .2s'; sh.style.transform = ''; if (bg) bg.style.opacity = '';
+        setTimeout(() => { sh.style.transition = ''; }, 220);
+      };
+      sh.addEventListener('touchend', end); sh.addEventListener('touchcancel', end);
+    },
+
     sheetHtml() {
       const s = this.st, items = (s.data && s.data.items || []).filter(it => s.scope === 'all' || it.mine);
       const uniq = k => [...new Set(items.map(i => i[k]).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ru'));
       const cnt = (k, v) => items.filter(i => i[k] === v).length;
       const chips = (k, set, act) => uniq(k).map(v => `<button class="chip ${set.has(v) ? 'on' : ''}" data-r="${act}" data-v="${esc(v)}">${esc(v)} <span class="c">${cnt(k, v)}</span></button>`).join('') || '<span class="flag">нет вариантов</span>';
-      return `<div class="sheet-bg" data-r="closeSheet"></div><div class="sheet" role="dialog" aria-label="Фильтры"><div class="grab"></div>
+      const enter = s.sheetEnter ? ' enter' : ''; s.sheetEnter = false; // выезжает только при открытии, не при каждом нажатии
+      return `<div class="sheet-bg${enter}" data-r="closeSheet"></div><div class="sheet${enter}" role="dialog" aria-label="Фильтры"><div class="grab"></div>
         <h3>Фильтры</h3>
         <p class="sect">Проект</p><div class="chips">${chips('project', s.fp, 'fp')}</div>
         <p class="sect">Назначение</p><div class="chips">${chips('purpose', s.fu, 'fu')}</div>
@@ -2420,16 +2502,40 @@ details summary::-webkit-details-marker{display:none}
 
     wire() {
       const s = this.st, $ = id => document.getElementById(id);
-      app.onclick = e => { const b = e.target.closest('[data-r]'); if (b) this.act(b.dataset.r, b.dataset.v, e); };
+      app.onclick = e => {
+        const b = e.target.closest('[data-r]'); if (!b) return;
+        const sw = e.target.closest('.days,.seg'); if (sw && sw.__swiped && Date.now() - sw.__swiped < 400) return; // это был жест, а не нажатие
+        this.act(b.dataset.r, b.dataset.v, e);
+      };
       const q = $('rq'); if (q) q.oninput = e => { s.q = e.target.value; this.render(); };
       const pd = $('pickDate'); if (pd) pd.onchange = e => { if (e.target.value) this.setDay(e.target.value); };
+      if (s.sheet) this.wireSheet();
+      // лента дней тянется пальцем: на сколько дней сдвинули — столько и перелистнули (до недели за раз)
+      const days = document.querySelector('.days');
+      if (days) hSwipe(days, {
+        move: dx => { days.querySelectorAll('.day').forEach(d => { d.style.transform = `translateX(${dx}px)`; }); },
+        end: (dx, v) => {
+          const cell = (days.querySelector('.day') || {}).offsetWidth || 44;
+          let n = Math.round(-dx / (cell + 6));
+          if (!n && Math.abs(v) > 0.4) n = v < 0 ? 1 : -1;
+          n = Math.max(-7, Math.min(7, n));
+          days.querySelectorAll('.day').forEach(d => { d.style.transition = 'transform .18s'; d.style.transform = ''; });
+          if (n) this.setDay(shiftDay(s.day, n));
+        },
+      });
+      // «Мои / Все» — переключается и смахиванием
+      const seg = document.querySelector('.seg [data-r="scope"]') && document.querySelector('.seg');
+      if (seg) hSwipe(seg, {
+        move: () => {},
+        end: (dx, v) => { const want = dx < -24 || v < -0.4 ? 'all' : dx > 24 || v > 0.4 ? 'mine' : ''; if (want && want !== s.scope) this.act('scope', want); },
+      });
     },
 
     act(a, v, e) {
       const s = this.st;
       switch (a) {
         case 'day': return this.setDay(v);
-        case 'scope': s.scope = v; store.set('t26-scope', v); return this.render();
+        case 'scope': if (s.scope !== v) haptic('select'); s.scope = v; store.set('t26-scope', v); return this.render();
         case 'open': return this.openDetail(v);
         case 'sendNow':
           if (navigator.onLine === false) return toast('Нет интернета — отчёт уйдёт сам, когда появится связь');
@@ -2450,11 +2556,12 @@ details summary::-webkit-details-marker{display:none}
           });
         }
         case 'reload': return this.load(false);
-        case 'filters': s.sheet = true; return this.render();
-        case 'closeSheet': s.sheet = false; return this.render();
-        case 'fp': s.fp.has(v) ? s.fp.delete(v) : s.fp.add(v); return this.render();
-        case 'fu': s.fu.has(v) ? s.fu.delete(v) : s.fu.add(v); return this.render();
-        case 'fph': s.fph.has(v) ? s.fph.delete(v) : s.fph.add(v); return this.render();
+        case 'filters': s.sheet = true; s.sheetEnter = true; return this.render();
+        case 'closeSheet': return this.closeSheet();
+        // внутри шторки перерисовываем только её — раньше перерисовывался весь экран и всё мигало
+        case 'fp': s.fp.has(v) ? s.fp.delete(v) : s.fp.add(v); haptic('select'); return this.paintSheet();
+        case 'fu': s.fu.has(v) ? s.fu.delete(v) : s.fu.add(v); haptic('select'); return this.paintSheet();
+        case 'fph': s.fph.has(v) ? s.fph.delete(v) : s.fph.add(v); haptic('select'); return this.paintSheet();
         case 'unfph': s.fph.delete(v); return this.render();
         case 'report': return Report.open(s.detail);
         case 'unfp': s.fp.delete(v); return this.render();
