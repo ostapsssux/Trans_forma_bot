@@ -394,6 +394,11 @@ details summary::-webkit-details-marker{display:none}
 .report-bar{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),488px);bottom:calc(12px + env(safe-area-inset-bottom));z-index:20;
   display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 12px 12px 20px;border-radius:999px;background:var(--panel);box-shadow:var(--raised-lg)}
 .report-space{height:96px}
+.saving{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:999px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);font-weight:600}
+.saving .spinner{width:18px;height:18px}
+/* кнопка «Отправить» на экране отчёта — всегда внизу экрана */
+.send-bar{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),488px);bottom:calc(12px + env(safe-area-inset-bottom));z-index:20}
+.send-space{height:84px}
 .report-bar small{display:block;font-size:11.5px;color:var(--muted)}
 .report-bar b{font-size:14.5px;font-weight:600}
 .report-bar .primary{width:auto;min-height:48px;padding:0 22px;font-size:15px;box-shadow:none}
@@ -730,6 +735,8 @@ details summary::-webkit-details-marker{display:none}
   /* ---------- helpers ---------- */
   const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const haptic = t => { try { tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred(t); } catch (e) {} };
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && typeof Admin !== 'undefined' && Admin.st.open) Admin.refresh(); });
+
   // iOS показывает нажатие (:active) только если на странице есть обработчик касаний
   document.addEventListener('touchstart', () => {}, { passive: true });
 
@@ -1076,8 +1083,9 @@ details summary::-webkit-details-marker{display:none}
   const shortName = fio => { const [a, b] = String(fio || '').split(' '); return b ? `${a} ${b[0]}.` : a || ''; };
   function confirmDlg(text) {
     return new Promise(res => {
-      if (!demo && tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) tg.showConfirm(text, ok => res(!!ok));
-      else res(window.confirm(text));
+      // второе окно поверх первого Telegram не открывает и бросает ошибку — тогда спрашиваем обычным способом
+      try { if (!demo && tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) return tg.showConfirm(text, ok => res(!!ok)); } catch (e) {}
+      res(window.confirm(text));
     });
   }
 
@@ -1085,7 +1093,21 @@ details summary::-webkit-details-marker{display:none}
     st: { view:'list', tab:'staff', filter:'pending', q:'', staff:[], me:'', sel:null, matches:{}, showAll:false,
           rec:new Set(), text:'', withButton:true, pickQ:'', result:null, history:null, logTab:'log', busy:false, reject:false, reason:'' },
 
+    /** Свежий список с сервера (несколько админов: чужие изменения подтягиваются сами). */
+    async refresh() {
+      const s = this.st;
+      if (!s.open || s.refreshing || s.busy) return;
+      s.refreshing = true;
+      try {
+        const r = await api('admin.staff');
+        if (!s.busy) { s.staff = r.staff; s.me = r.me; local.set('admin-staff', { staff: r.staff, me: r.me }); if (s.open) this.render(); }
+      } catch (e) { /* тихо: попробуем при следующем обновлении */ }
+      s.refreshing = false;
+    },
+
     async open() {
+      this.st.open = true;
+      clearInterval(this.timer); this.timer = setInterval(() => this.refresh(), 45000); // раз в 45 с, пока админка открыта
       document.body.classList.add('wide');
       // сразу показываем сохранённый с прошлого раза список, свежий подменяет его через 1–2 с
       const saved = local.get('admin-staff');
@@ -1104,13 +1126,18 @@ details summary::-webkit-details-marker{display:none}
       } catch (e) { if (saved && saved.staff && e.code !== 'FORBIDDEN') { this.st.stale = false; toast('Не удалось обновить: ' + e.message); } else this.fail(e); }
     },
     close() {
+      this.st.open = false; clearInterval(this.timer);
       document.body.classList.remove('wide');
       setBack(null);
       start();
     },
     fail(e) { if (e.code === 'FORBIDDEN') { toast(e.message); this.close(); } else renderError(e); },
     get(id) { return this.st.staff.find(x => x.tgId === String(id)); },
-    put(x) { const i = this.st.staff.findIndex(y => y.tgId === x.tgId); if (i >= 0) this.st.staff[i] = { ...this.st.staff[i], ...x }; },
+    put(x) {
+      const i = this.st.staff.findIndex(y => y.tgId === x.tgId);
+      if (i >= 0) this.st.staff[i] = { ...this.st.staff[i], ...x };
+      local.set('admin-staff', { staff: this.st.staff, me: this.st.me }); // сохранённая копия — всегда как на экране
+    },
 
     back() {
       const s = this.st;
@@ -1185,6 +1212,7 @@ details summary::-webkit-details-marker{display:none}
       if (x.status === 'pending' || x.status === 'rejected') actions = s.reject ? '' : `<div class="btn-row two"><button class="primary" data-a="approve">Утвердить</button><button class="secondary" data-a="rejectOpen">Отклонить</button></div>`;
       if (x.status === 'active') actions = `<div class="btn-row ${self ? '' : 'two'}"><button class="secondary" data-a="write">Написать</button>${self ? '' : `<button class="secondary danger" data-a="blockOpen">Заблокировать</button>`}</div>`;
       if (x.status === 'blocked') actions = `<div class="btn-row"><button class="primary" data-a="approve">Разблокировать</button></div>`;
+      if (s.busy) actions = `<div class="saving"><span class="spinner dark"></span>Сохраняем…</div>`;
       const reasonBox = s.reject ? `<div class="card glass reasonbox">
           <p class="sect">${s.reject === 'block' ? 'Причина блокировки' : 'Причина отказа'}<small>${s.reject === 'block' ? 'необязательно' : 'увидит сотрудник'}</small></p>
           <textarea class="input area" id="reason" placeholder="${s.reject === 'block' ? 'Например: больше не работает в компании' : 'Например: не нашли вас в заявках — укажите рабочий номер'}">${esc(s.reason)}</textarea>
@@ -1232,15 +1260,21 @@ details summary::-webkit-details-marker{display:none}
     },
 
     async setStatus(status, reason = '') {
-      const x = this.get(this.st.sel);
-      if (this.st.busy) return; this.st.busy = true;
+      const s = this.st, x = this.get(s.sel);
+      if (!x || s.busy) return;
+      const before = { ...x };
+      // сразу показываем новый статус и «Сохраняем…»; если сервер не принял — возвращаем как было
+      s.busy = status; s.reject = false;
+      this.put({ tgId: x.tgId, status, adminNote: reason });
+      this.render();
       try {
-        const r = await api('admin.setStatus', { tgId:x.tgId, status, reason });
-        this.put(r.staff); this.st.reject = false; this.st.reason = '';
-        haptic('success');
-        toast(({ active:'Доступ открыт', rejected:'Отказ отправлен', blocked:'Заблокирован' })[status] + (r.delivered ? ' · сообщение доставлено' : ' · не доставлено: ' + (r.error || 'ошибка')));
-      } catch (e) { haptic('error'); toast(e.message); }
-      this.st.busy = false; this.render();
+        const r = await api('admin.setStatus', { tgId: x.tgId, status, reason, expect: before.status });
+        this.put(r.staff); s.reason = '';
+        if (r.conflict) { haptic('error'); toast('Статус уже изменил ' + (r.by || 'другой админ') + ': ' + STATUS_RU[r.staff.status].toLowerCase()); }
+        else if (r.already) { haptic('success'); toast('Уже ' + STATUS_RU[r.staff.status].toLowerCase() + (r.by ? ' — изменил ' + r.by : '')); }
+        else { haptic('success'); toast(({ active:'Доступ открыт', rejected:'Отказ отправлен', blocked:'Заблокирован' })[status] + (r.delivered ? ' · сообщение доставлено' : ' · не доставлено: ' + (r.error || 'ошибка'))); }
+      } catch (e) { this.put(before); haptic('error'); toast('Не сохранилось: ' + e.message); }
+      s.busy = false; this.render();
     },
 
     /* ---------- рассылка ---------- */
@@ -1674,8 +1708,9 @@ details summary::-webkit-details-marker{display:none}
         ${this.stages().map(section).join('')}
         <p class="sect">Комментарий<small>необязательно</small></p>
         <div class="card glass"><textarea class="input area" id="pComment" maxlength="1000" placeholder="Например: разгрузка завершена" ${s.sending ? 'disabled' : ''}>${esc(s.comment)}</textarea></div>
-        <div class="sticky"><button class="primary" data-p="send" ${this.ready() && !s.sending ? '' : 'disabled'}>${this.missing() || 'Отправить' + (n ? ' · ' + n + ' фото' : '')}</button></div>
         <p class="note">Фото сохранятся в папку заявки на Google Диске</p>
+        <div class="send-space"></div>
+        <div class="send-bar"><button class="primary" data-p="send" ${this.ready() && !s.sending ? '' : 'disabled'}>${this.missing() || 'Отправить' + (n ? ' · ' + n + ' фото' : '')}</button></div>
         ${s.sending || s.error ? `<div class="send-overlay"><div class="send-box glass" role="alertdialog" aria-live="polite">
             <div class="big-status"><b>${s.error ? 'Отправка прервалась' : s.done < s.total ? 'Отправляем фото' : 'Сохраняем отчёт…'}</b><span>${s.done}/${s.total}</span></div>
             <div class="progress"><i style="width:${Math.round(this.progress() * 100)}%"></i></div>
