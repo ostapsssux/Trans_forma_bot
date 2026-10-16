@@ -145,6 +145,15 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
   box-shadow:var(--raised);
   transition:transform .12s,box-shadow .12s,opacity .15s}
 .primary:active{transform:scale(.995);box-shadow:var(--raised-sm)}
+/* ===== нажатие: кнопки «вжимаются» (iOS включает :active только при обработчике touchstart — он добавлен в скрипте) ===== */
+button,a,.rq,.person,.admin-entry,.type,.chip,.day,.call{-webkit-tap-highlight-color:transparent}
+button:not(:disabled),.call,.rq,.person,.admin-entry{transition:transform .12s ease,box-shadow .12s ease,background-color .12s}
+button:not(:disabled):active,.call:active{transform:scale(.96)}
+button.rq:active,button.person:active,button.admin-entry:active,button.type:not(:disabled):active,.add:active{transform:scale(.985)}
+.primary:not(:disabled):active{transform:scale(.97);box-shadow:var(--pressed-sm);background:var(--btn-lo)}
+.secondary:not(:disabled):active,.round:active,.chip:active,.day:active{box-shadow:var(--pressed-sm)}
+.call{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.round.spin svg{animation:spin .8s linear infinite}
 .primary:disabled{opacity:1;cursor:default;background:var(--surface);color:var(--muted);box-shadow:var(--raised-sm)}
 .note{font-size:12px;color:var(--muted);text-align:center;margin:14px 8px 0;line-height:1.5}
 
@@ -167,7 +176,7 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
 .spinner{width:20px;height:20px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--on-btn) 30%,transparent);border-top-color:var(--on-btn);animation:spin .8s linear infinite}
 .spinner.dark{border-color:var(--hair);border-top-color:var(--primary);width:34px;height:34px;margin:0 auto 16px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,16px);color:var(--ink);padding:12px 20px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:all .22s;max-width:90vw}
+.toast{z-index:100;position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,16px);color:var(--ink);padding:12px 20px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:all .22s;max-width:90vw}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .fade{animation:fade .35s ease both}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -412,12 +421,15 @@ details summary::-webkit-details-marker{display:none}
 .shot .busy{position:absolute;inset:0;display:grid;place-items:center;background:rgba(var(--hl),.55)}
 .shot .geo{position:absolute;left:6px;bottom:6px;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:rgba(30,24,18,.55);color:#fbf3ea}
 .add{aspect-ratio:1;border:0;cursor:pointer;border-radius:18px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);
-  display:grid;place-items:center;align-content:center;gap:4px;padding:8px;text-align:center}
-.add span{font-size:26px;line-height:1;color:var(--primary)}
-.add b{font-size:12.5px;font-weight:600}
-.add small{font-size:10.5px;color:var(--muted)}
+  display:flex;align-items:center;justify-content:center;padding:8px;text-align:center}
+.add .add-in{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.add svg{width:26px;height:26px;color:var(--primary);stroke-width:2.2}
+.add b{font-size:12.5px;font-weight:600;line-height:1.2}
+.add:active{box-shadow:var(--pressed)}
 .progress{height:10px;border-radius:999px;background:var(--surface);box-shadow:var(--pressed-sm);overflow:hidden;margin:14px 0 8px}
-.progress i{display:block;height:100%;border-radius:999px;background:var(--btn);transition:width .3s}
+.progress i{display:block;height:100%;border-radius:999px;background:var(--btn);transition:width .35s linear;
+  background-image:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);background-size:200% 100%;animation:shine 1.4s linear infinite}
+@keyframes shine{from{background-position:200% 0}to{background-position:-200% 0}}
 .time-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px}
 .time-row label{display:grid;gap:1px}
 .time-row label b{font-size:15px;font-weight:650}
@@ -541,7 +553,7 @@ details summary::-webkit-details-marker{display:none}
     let last;
     for (let a = 1; a <= tries; a++) {
       const used = API_URL;
-      try { return await apiOnce(action, payload, timeoutMs); }
+      try { return await apiOnce(action, a > 1 ? { ...payload, _retry: true } : payload, timeoutMs); } // повтор помечаем: сервер проверит, не сохранено ли уже
       catch (e) {
         last = e;
         // адрес сервера в config.js поменяли (новое развёртывание), а на телефоне был старый — повторяем по новому
@@ -713,6 +725,41 @@ details summary::-webkit-details-marker{display:none}
   /* ---------- helpers ---------- */
   const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const haptic = t => { try { tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred(t); } catch (e) {} };
+  // iOS показывает нажатие (:active) только если на странице есть обработчик касаний
+  document.addEventListener('touchstart', () => {}, { passive: true });
+
+  /** Телефоны: короткое нажатие — звонок, удержание — номер копируется. */
+  (function phoneLongPress() {
+    let timer = null, fired = false, startX = 0, startY = 0;
+    const copy = text => {
+      const done = () => { haptic('success'); toast('Номер скопирован: ' + text); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => fallback());
+      else fallback();
+      function fallback() {
+        const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) { toast(text); } ta.remove();
+      }
+    };
+    const start = e => {
+      const a = e.target.closest && e.target.closest('a[href^="tel:"]');
+      if (!a) return;
+      fired = false;
+      const p = e.touches ? e.touches[0] : e; startX = p.clientX; startY = p.clientY;
+      clearTimeout(timer);
+      timer = setTimeout(() => { fired = true; copy((a.textContent || '').trim() || a.getAttribute('href').slice(4)); }, 550);
+    };
+    const cancel = () => clearTimeout(timer);
+    const move = e => { const p = e.touches ? e.touches[0] : e; if (Math.abs(p.clientX - startX) > 10 || Math.abs(p.clientY - startY) > 10) cancel(); };
+    document.addEventListener('touchstart', start, { passive: true });
+    document.addEventListener('touchmove', move, { passive: true });
+    document.addEventListener('touchend', cancel, { passive: true });
+    document.addEventListener('mousedown', start);
+    document.addEventListener('mouseup', cancel);
+    document.addEventListener('contextmenu', e => { if (e.target.closest && e.target.closest('a[href^="tel:"]')) e.preventDefault(); });
+    // после удержания не звоним
+    document.addEventListener('click', e => { if (fired && e.target.closest && e.target.closest('a[href^="tel:"]')) { e.preventDefault(); e.stopPropagation(); fired = false; } }, true);
+  })();
+
   function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600); }
   function digits(s) { return String(s || '').replace(/\D/g, ''); }
   function normPhone(s) {
@@ -761,6 +808,7 @@ details summary::-webkit-details-marker{display:none}
     filter:svg('<path d="M4 6h16M7 12h10M10 18h4"/>'),
     camera:svg('<path d="M4 8.5h3l1.6-2.5h6.8L17 8.5h3v10.5H4z"/><circle cx="12" cy="13.5" r="3.5"/>'),
     cal:   svg('<rect x="4" y="5.5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3.5v4M15 3.5v4"/>'),
+    plus:svg('<path d="M12 5v14M5 12h14"/>'),
     refresh:svg('<path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 20v-4h-4"/>'),
   };
 
@@ -1001,13 +1049,21 @@ details summary::-webkit-details-marker{display:none}
 
     async open() {
       document.body.classList.add('wide');
-      renderLoading('Загружаем сотрудников…');
+      // сразу показываем сохранённый с прошлого раза список, свежий подменяет его через 1–2 с
+      const saved = local.get('admin-staff');
+      if (saved && saved.staff) {
+        this.st.staff = saved.staff; this.st.me = saved.me; this.st.view = 'list'; this.st.stale = true;
+        if (!this.st.staff.some(x => x.status === 'pending')) this.st.filter = 'all';
+        this.render();
+      } else renderLoading('Загружаем сотрудников…');
       try {
         const r = await api('admin.staff');
-        this.st.staff = r.staff; this.st.me = r.me;
-        if (!this.st.staff.some(x => x.status === 'pending')) this.st.filter = 'all';
-        this.st.view = 'list'; this.render();
-      } catch (e) { this.fail(e); }
+        local.set('admin-staff', { staff: r.staff, me: r.me });
+        const first = !saved;
+        this.st.staff = r.staff; this.st.me = r.me; this.st.stale = false;
+        if (!this.st.staff.some(x => x.status === 'pending') && this.st.filter === 'pending') this.st.filter = 'all';
+        if (this.st.view === 'list' || first) { if (first) this.st.view = 'list'; this.render(); }
+      } catch (e) { if (saved && saved.staff && e.code !== 'FORBIDDEN') { this.st.stale = false; toast('Не удалось обновить: ' + e.message); } else this.fail(e); }
     },
     close() {
       document.body.classList.remove('wide');
@@ -1112,6 +1168,7 @@ details summary::-webkit-details-marker{display:none}
         <p class="sect">Найденные заявки<small>последние ${m && m.items ? m.items.length : '…'}</small></p>
         <div class="card glass">${!m ? `<div class="spinner dark" style="margin:10px auto"></div>` : `
           <div class="counts"><div><strong>${m.byPhone}</strong><span>по телефону</span></div><div><strong>${m.byName}</strong><span>по ФИО</span></div><div><strong>${m.byAlias}</strong><span>по вариантам</span></div></div>
+          ${m.window ? `<p class="note" style="margin:8px 0 0">Заявки с ${shortDate(m.window.from)} по ${shortDate(m.window.to)}</p>` : ''}
           ${items.map(i => `<div class="match"><div class="t">${esc(i.no || 'без №')}<span>${esc(String(i.date).slice(0,16))}</span></div>
             <div class="d">${esc(i.project)} · ${esc(i.purpose)}</div>
             <div class="m">${esc(i.from)}${i.initiator ? ' · инициатор: ' + esc(i.initiator) : ''}</div>
@@ -1128,7 +1185,9 @@ details summary::-webkit-details-marker{display:none}
     },
 
     async loadMatches(id) {
-      try { const r = await api('admin.matches', { tgId:id }); this.st.matches[id] = r.matches;
+      const saved = local.get('admin-m:' + id);
+      if (saved && !this.st.matches[id]) { this.st.matches[id] = saved; if (this.st.view === 'person' && this.st.sel === id) this.render(); }
+      try { const r = await api('admin.matches', { tgId:id }); this.st.matches[id] = r.matches; local.set('admin-m:' + id, r.matches);
         this.put({ tgId:id, byPhone:r.matches.byPhone, byName:r.matches.byName }); }
       catch (e) { this.st.matches[id] = { byPhone:'—', byName:'—', byAlias:'—', items:[] }; toast(e.message); }
       if (this.st.view === 'person' && this.st.sel === id) this.render();
@@ -1226,7 +1285,7 @@ details summary::-webkit-details-marker{display:none}
         case 'tab': s.tab = v; s.view = 'list'; if (v === 'log' && !s.history) this.loadHistory(); return this.render();
         case 'filter': s.filter = v; return this.render();
         case 'person': s.sel = v; s.view = 'person'; s.reject = false; s.reason = ''; s.showAll = false; window.scrollTo(0, 0);
-          this.render(); if (!s.matches[v]) this.loadMatches(v); return;
+          this.render(); this.loadMatches(v); return; // сохранённое — сразу, свежее — фоном
         case 'more': s.showAll = true; return this.render();
         case 'approve': {
           const x = this.get(s.sel);
@@ -1252,7 +1311,7 @@ details summary::-webkit-details-marker{display:none}
         }
         case 'saveAliases': {
           const x = this.get(s.sel), val = document.getElementById('aliases').value;
-          try { const r = await api('admin.update', { tgId:x.tgId, aliases:val }); this.put(r.staff); delete s.matches[x.tgId]; haptic('success'); toast('Сохранено — пересчитываем заявки'); this.render(); this.loadMatches(x.tgId); }
+          try { const r = await api('admin.update', { tgId:x.tgId, aliases:val }); this.put(r.staff); delete s.matches[x.tgId]; local.set('admin-m:' + x.tgId, null); haptic('success'); toast('Сохранено — пересчитываем заявки'); this.render(); this.loadMatches(x.tgId); }
           catch (e) { toast(e.message); }
           return;
         }
@@ -1377,10 +1436,10 @@ details summary::-webkit-details-marker{display:none}
     try { sha = hex(await crypto.subtle.digest('SHA-256', buf)); } catch (e) {}
     const img = await loadBitmap(file);
     const W = img.width || img.naturalWidth, H = img.height || img.naturalHeight;
-    const k = Math.min(1, 1600 / Math.max(W, H));
+    const k = Math.min(1, 1440 / Math.max(W, H)); // 1440 px: штамп читается, файл ~150–250 КБ
     const c = document.createElement('canvas'); c.width = Math.round(W * k); c.height = Math.round(H * k);
     c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-    const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.82));
+    const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.8));
     if (!blob) throw new Error('compress failed');
     const meta = { ...exif, sha, dhash: dHash(img), w: c.width, h: c.height, origBytes: file.size, origType: file.type || '',
       fileModified: file.lastModified ? new Date(file.lastModified).toISOString() : '' };
@@ -1455,11 +1514,35 @@ details summary::-webkit-details-marker{display:none}
       setBack(() => this.close());
       this.render();
     },
+    /**
+     * Плавная полоска: готовые фото + «идущие» фото по времени (сервер не сообщает проценты — оцениваем
+     * по типичным ~4 с на фото) + последний шаг «сохраняем отчёт». Обновляется только полоска, без перерисовки экрана.
+     */
+    progress() {
+      const s = this.st;
+      if (!s || !s.total && !s.committing) return s && s.committing === -1 ? 1 : 0;
+      if (s.committing === -1) return 1;
+      const ease = (t, tau) => 1 - Math.exp(-t / tau);
+      const now = Date.now();
+      let running = 0;
+      (s.inflight || new Map()).forEach(t0 => { running += 0.92 * ease(now - t0, 2000); });
+      const commit = s.committing > 0 ? 0.9 * ease(now - s.committing, 1500) : 0;
+      return Math.min(0.99, (s.done + running + commit) / (s.total + 1));
+    },
+    paintProgress() {
+      const s = this.st; if (!s) return;
+      const bar = document.querySelector('.send-box .progress i'), cnt = document.querySelector('.send-box .big-status span'), ttl = document.querySelector('.send-box .big-status b');
+      if (!bar) return;
+      bar.style.width = Math.round(this.progress() * 100) + '%';
+      if (cnt) cnt.textContent = s.done + '/' + s.total;
+      if (ttl) ttl.textContent = s.done < s.total ? 'Отправляем фото' : 'Сохраняем отчёт…';
+    },
+
     /** Доотправить сохранённый отчёт (приложение закрыли посреди отправки). */
     resume(p) {
       const wrap = x => ({ ...x, url: URL.createObjectURL(x.blob) });
       this.st = { item: p.item, type: p.type, shots: { arrival: p.shots.arrival.map(wrap), departure: p.shots.departure.map(wrap) },
-        times: p.times || { arrival: '', departure: '' }, noPhoto: !!p.noPhoto, comment: p.comment || '', reportId: p.id,
+        times: p.times || { arrival: '', departure: '' }, noPhoto: !!p.noPhoto, comment: p.comment || '', reportId: p.id, resumed: true,
         sending: false, done: 0, total: 0, error: '', result: null };
       Req.st.detailKey = p.item.key; Req.st.day = p.item.day;
       window.scrollTo(0, 0);
@@ -1501,7 +1584,7 @@ details summary::-webkit-details-marker{display:none}
             ${x.busy ? '<div class="busy"><span class="spinner dark" style="width:24px;height:24px;margin:0"></span></div>' : ''}
             ${x.meta && x.meta.lat != null ? '<span class="geo">GPS</span>' : ''}
             ${s.sending ? '' : `<button class="x" data-p="rm" data-v="${st}:${i}" aria-label="Удалить фото">×</button>`}</div>`).join('')}
-          ${list.length < 10 && !s.sending ? `<button class="add" data-p="add" data-v="${st}"><span>＋</span><b>${list.length ? 'Ещё фото' : 'Добавить фото'}</b><small>Камера или галерея</small></button>` : ''}</div>`;
+          ${list.length < 10 && !s.sending ? `<button class="add" data-p="add" data-v="${st}"><span class="add-in">${ICON.plus}<b>${list.length ? 'Ещё фото' : 'Добавить фото'}</b></span></button>` : ''}</div>`;
       };
       const timeRow = st => `<div class="time-row"><label for="t_${st}"><b>${st === 'arrival' ? 'Прибыл' : 'Убыл'}</b><small>время по факту</small></label>
           <div class="time-box"><input class="input time" type="time" id="t_${st}" data-t="${st}" value="${esc(s.times[st] || '')}" ${s.sending ? 'disabled' : ''}>
@@ -1532,7 +1615,7 @@ details summary::-webkit-details-marker{display:none}
         <p class="note">Фото сохранятся в папку заявки на Google Диске</p>
         ${s.sending || s.error ? `<div class="send-overlay"><div class="send-box glass" role="alertdialog" aria-live="polite">
             <div class="big-status"><b>${s.error ? 'Отправка прервалась' : s.done < s.total ? 'Отправляем фото' : 'Сохраняем отчёт…'}</b><span>${s.done}/${s.total}</span></div>
-            <div class="progress"><i style="width:${s.total ? Math.round(s.done / s.total * 100) : 100}%"></i></div>
+            <div class="progress"><i style="width:${Math.round(this.progress() * 100)}%"></i></div>
             ${s.error ? `<div class="hint" style="margin:6px 2px 12px">${esc(s.error)}</div>
               <button class="primary small" data-p="send">Повторить — отправленные фото не потеряются</button>
               <button class="secondary small" data-p="hideErr" style="margin-top:10px">Вернуться к отчёту</button>`
@@ -1592,6 +1675,8 @@ details summary::-webkit-details-marker{display:none}
       const queue = [];
       this.stages().forEach(st => { if (!this.noPhoto(st)) s.shots[st].forEach((x, i) => queue.push({ st, i: i + 1, x })); });
       s.total = queue.length; s.done = queue.filter(q => q.x.fileId).length;
+      s.inflight = new Map(); s.committing = 0;
+      clearInterval(this.ticker); this.ticker = setInterval(() => this.paintProgress(), 150);
       // Закрыть приложение во время отправки — Telegram переспросит. Отчёт сохраняется на телефоне,
       // чтобы его можно было доотправить при следующем открытии (сервер не создаст дублей).
       try { tg && tg.enableClosingConfirmation && tg.enableClosingConfirmation(); } catch (e) {}
@@ -1603,32 +1688,38 @@ details summary::-webkit-details-marker{display:none}
         const todo = queue.filter(q => !q.x.fileId);
         let failed = null;
         const uploadOne = async q => {
+          s.inflight.set(q, Date.now());
           const data = await blobToB64(q.x.blob);
           let lastErr;
-          for (let attempt = 1; attempt <= 2; attempt++) { // api сам повторяет сбои Google; здесь — ещё круг после паузы
-            try {
-              const r = await api('reports.upload', { key: s.item.key, day: s.item.day, reportId: s.reportId, stage: q.st, index: q.i, data, meta: q.x.meta }, 120000);
-              q.x.fileId = r.fileId; lastErr = null; break;
-            } catch (e) { lastErr = e; if (e.code && !['TIMEOUT', 'NETWORK', 'SERVER_ERROR', 'BAD_RESPONSE', 'GOOGLE_BUSY'].includes(e.code)) break; await sleep(attempt * 2000); }
-          }
+          try {
+            for (let attempt = 1; attempt <= 2; attempt++) { // api сам повторяет сбои Google; здесь — ещё круг после паузы
+              try {
+                const r = await api('reports.upload', { key: s.item.key, day: s.item.day, reportId: s.reportId, stage: q.st, index: q.i, data, meta: q.x.meta, retry: attempt > 1 || !!s.resumed }, 120000);
+                q.x.fileId = r.fileId; lastErr = null; break;
+              } catch (e) { lastErr = e; if (e.code && !['TIMEOUT', 'NETWORK', 'SERVER_ERROR', 'BAD_RESPONSE', 'GOOGLE_BUSY'].includes(e.code)) break; await sleep(attempt * 2000); }
+            }
+          } finally { s.inflight.delete(q); }
           if (lastErr) throw lastErr;
-          s.done++; this.render();
+          s.done++; this.paintProgress();
         };
-        // по 3 фото одновременно: быстрее, и не упираемся в лимит одновременных запусков Google
+        // по 4 фото одновременно: быстрее, и не упираемся в лимит одновременных запусков Google
         const worker = async () => { while (todo.length && !failed) { const q = todo.shift(); try { await uploadOne(q); } catch (e) { failed = failed || e; } } };
-        await Promise.all([worker(), worker(), worker()]);
+        await Promise.all([worker(), worker(), worker(), worker()]);
         if (failed) throw failed;
         s.location = await locP;
+        s.committing = Date.now(); this.paintProgress();
         const counts = {}; this.stages().forEach(st => { counts[st] = this.noPhoto(st) ? 0 : s.shots[st].length; });
         const times = {}; this.stages().forEach(st => { times[st] = s.times[st]; });
         const r = await api('reports.commit', { key: s.item.key, day: s.item.day, reportId: s.reportId, type: s.type, counts, times,
           noPhoto: { departure: this.noPhoto('departure') }, comment: s.comment, location: s.location }, 90000);
+        clearInterval(this.ticker); s.committing = -1; this.paintProgress(); await sleep(250); // полоска доходит до конца
         s.sending = false; s.result = { status: r.status, photos: r.photos || s.total };
         Pending.del(s.reportId);
         try { tg && tg.disableClosingConfirmation && tg.disableClosingConfirmation(); } catch (e) {}
         const li = Req.st.data && Req.st.data.items.find(x => x.key === s.item.key); if (li) li.photo = r.status;
         haptic('success'); this.render();
       } catch (e) {
+        clearInterval(this.ticker);
         s.sending = false; s.error = e.message || 'Нет связи'; haptic('error'); this.render();
         try { tg && tg.disableClosingConfirmation && tg.disableClosingConfirmation(); } catch (e2) {}
       }
@@ -1816,7 +1907,7 @@ details summary::-webkit-details-marker{display:none}
       const sub = this.st.stale && this.st.loading ? ' · обновляем…' : this.st.stale && this.st.err ? ' · сохранённые данные' : '';
       return `<div class="home-head"><div><h1>Заявки</h1><small>${longDate(this.st.day)}${sub}</small></div>
         <div class="head-btns">
-          <button class="round" data-r="refresh" aria-label="Обновить">${ICON.refresh}</button>
+          <button class="round ${this.st.refreshing ? 'spin' : ''}" data-r="refresh" aria-label="Обновить" ${this.st.refreshing ? 'disabled' : ''}>${ICON.refresh}</button>
           ${me.isAdmin ? `<button class="round" data-r="admin" aria-label="Админ-панель">${ICON.shield}${me.adminPending ? `<span class="dot">${me.adminPending}</span>` : ''}</button>` : ''}
           <button class="round avatar" data-r="profile" aria-label="Профиль">${esc(initials.toUpperCase() || '·')}</button>
         </div></div>`;
@@ -1975,7 +2066,16 @@ details summary::-webkit-details-marker{display:none}
         case 'dropPending': if (!window.confirm('Удалить неотправленный отчёт? Фото останутся в галерее телефона.')) return;
           Pending.del(v); s.pending = (s.pending || []).filter(x => x.id !== v); return this.render();
         case 'back': return this.closeDetail();
-        case 'refresh': haptic('success'); toast('Обновляем заявки…'); return this.load(true).then(() => this.st.data && toast('Обновлено в ' + nowHM()));
+        case 'refresh': {
+          if (s.refreshing) return;
+          haptic('success'); s.refreshing = true; this.render();
+          const t0 = Date.now();
+          return this.load(true).then(async () => {
+            await sleep(Math.max(0, 600 - (Date.now() - t0))); // чтобы вращение было заметно даже при мгновенном ответе
+            s.refreshing = false; this.render();
+            toast(s.err ? 'Не удалось обновить: ' + s.err.message : 'Обновлено в ' + nowHM() + ' · заявок: ' + ((s.data && s.data.items.length) || 0));
+          });
+        }
         case 'reload': return this.load(false);
         case 'filters': s.sheet = true; return this.render();
         case 'closeSheet': s.sheet = false; return this.render();
