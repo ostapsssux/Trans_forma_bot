@@ -59,7 +59,10 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{background:var(--bg)}
+html{background:var(--bg);overflow-x:hidden;overscroll-behavior:none;width:100%}
+/* страницу нельзя утащить вбок: горизонтальной прокрутки нет, жесты — только вертикальные */
+html,body{max-width:100%;touch-action:pan-y pinch-zoom}
+body{overflow-x:hidden;overscroll-behavior-x:none;position:relative}
 body{margin:0;min-height:100vh;color:var(--ink);font-family:"Onest",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   -webkit-font-smoothing:antialiased;
   background:linear-gradient(170deg,var(--bg-top) 0%,var(--bg) 45%,var(--bg-2) 100%) fixed}
@@ -283,6 +286,7 @@ body.wide .app{max-width:860px}
 .day.has i{background:var(--muted);opacity:.55}
 .day.mine i{background:var(--primary);opacity:1}
 .day.today span{color:var(--primary);font-weight:600}
+.day.today b{color:var(--primary)}
 .day.on{background:var(--surface);box-shadow:var(--raised-sm)}
 .day.on b{color:var(--ink)}
 .cal{position:relative;align-self:center}
@@ -414,6 +418,26 @@ details summary::-webkit-details-marker{display:none}
 .add small{font-size:10.5px;color:var(--muted)}
 .progress{height:10px;border-radius:999px;background:var(--surface);box-shadow:var(--pressed-sm);overflow:hidden;margin:14px 0 8px}
 .progress i{display:block;height:100%;border-radius:999px;background:var(--btn);transition:width .3s}
+.time-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px}
+.time-row label{display:grid;gap:1px}
+.time-row label b{font-size:15px;font-weight:650}
+.time-row label small{font-size:12px;color:var(--muted)}
+.time-box{display:flex;align-items:center;gap:8px}
+.input.time{width:124px;min-height:44px;padding:0 14px;text-align:center;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+.input.time::-webkit-date-and-time-value{text-align:center}
+.input.time::-webkit-calendar-picker-indicator{display:none}
+.now-btn{white-space:nowrap}
+.no-photo{padding:14px 16px;border-radius:20px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);font-size:13.5px;line-height:1.45}
+.no-photo-btn{margin-top:12px}
+.no-photo-btn.on{color:var(--primary)}
+/* окно отправки — по центру экрана поверх формы */
+.send-overlay{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:24px;background:rgba(40,34,28,.28);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:fadeIn .18s ease}
+.send-box{width:min(100%,380px);padding:22px 22px 20px;border-radius:28px;background:var(--panel);box-shadow:var(--lift)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.pending-bar{padding:14px 16px;border-radius:22px;margin:0 0 16px;background:var(--panel);box-shadow:var(--raised-sm)}
+.pending-bar b{display:block;font-size:14.5px;color:var(--primary)}
+.pending-bar small{display:block;color:var(--muted);font-size:12.5px;margin:2px 0 12px}
 .big-status{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px}
 </style>
 </head>
@@ -472,6 +496,31 @@ details summary::-webkit-details-marker{display:none}
   if (tg) {
     tg.ready(); tg.expand();
     try { tg.onEvent('themeChanged', applyTheme); } catch (e) {}
+  }
+
+  /**
+   * Перерисовать экран, не трогая поле, в котором человек сейчас печатает.
+   * Если пересоздать поле, iOS сбрасывает клавиатуру (с цифр на буквы) — поэтому меняем всё вокруг него.
+   */
+  function setApp(html) {
+    const cur = document.activeElement;
+    if (!cur || !cur.id || !app.contains(cur) || !/^(INPUT|TEXTAREA)$/.test(cur.tagName)) { app.innerHTML = html; return; }
+    const tpl = document.createElement('div');
+    tpl.innerHTML = html;
+    const neu = tpl.querySelector('#' + (window.CSS && CSS.escape ? CSS.escape(cur.id) : cur.id));
+    if (!neu || neu.tagName !== cur.tagName || neu.type !== cur.type) { app.innerHTML = html; return; }
+    (function patch(oldP, newP) {
+      const oldKeep = [...oldP.childNodes].find(n => n === cur || (n.contains && n.contains(cur)));
+      const newKids = [...newP.childNodes];
+      const newKeep = newKids.find(n => n === neu || (n.contains && n.contains(neu)));
+      const i = newKids.indexOf(newKeep);
+      [...oldP.childNodes].forEach(n => { if (n !== oldKeep) n.remove(); });
+      newKids.slice(0, i).forEach(n => oldP.insertBefore(n, oldKeep));
+      newKids.slice(i + 1).forEach(n => oldP.appendChild(n));
+      [...oldKeep.attributes].forEach(a => { if (!newKeep.hasAttribute(a.name) && a.name !== 'value') oldKeep.removeAttribute(a.name); });
+      [...newKeep.attributes].forEach(a => { if (a.name !== 'value' && oldKeep.getAttribute(a.name) !== a.value) oldKeep.setAttribute(a.name, a.value); });
+      if (oldKeep !== cur) patch(oldKeep, newKeep);
+    })(app, tpl);
   }
 
   /* ---------- API ---------- */
@@ -628,7 +677,7 @@ details summary::-webkit-details-marker{display:none}
     if (action === 'reports.upload') return { ok:true, fileId:'demo' + Math.random().toString(16).slice(2) };
     if (action === 'reports.commit') {
       const r = DEMO_REP[p.key] = DEMO_REP[p.key] || { arrival:false, departure:false, list:[] };
-      Object.keys(p.counts).forEach(st => { r[st] = true; r.list.push({ stage: st === 'arrival' ? 'Прибытие' : 'Убытие', fio:'Соколов Остап', at:new Date().toISOString(), photos:p.counts[st] }); });
+      Object.keys(p.counts).forEach(st => { r[st] = true; r.list.push({ stage: st === 'arrival' ? 'Прибытие' : 'Убытие', fio:'Соколов Остап', at:new Date().toISOString(), photos:p.counts[st], time:(p.times||{})[st]||'' }); });
       return { ok:true, status: demoPhoto(p.key), photos: Object.values(p.counts).reduce((a, b) => a + b, 0) };
     }
     if (action === 'requests.list') {
@@ -997,7 +1046,7 @@ details summary::-webkit-details-marker{display:none}
       else if (s.view === 'pick') html = this.viewPick();
       else html = this.top('Админ-панель', esc(state.profile ? state.profile.fio : '')) + this.tabs()
         + (s.tab === 'staff' ? this.viewList() : s.tab === 'send' ? this.viewSend() : this.viewLog());
-      app.innerHTML = html;
+      setApp(html);
       this.wire();
     },
 
@@ -1161,8 +1210,8 @@ details summary::-webkit-details-marker{display:none}
     wire() {
       const s = this.st, $ = id => document.getElementById(id);
       app.onclick = e => { const b = e.target.closest('[data-a]'); if (b && !b.disabled) this.act(b.dataset.a, b.dataset.v); };
-      const q = $('q'); if (q) q.oninput = e => { s.q = e.target.value; const pos = e.target.selectionStart; this.render(); const n = $('q'); n.focus(); n.setSelectionRange(pos, pos); };
-      const pq = $('pq'); if (pq) pq.oninput = e => { s.pickQ = e.target.value; const pos = e.target.selectionStart; this.render(); const n = $('pq'); n.focus(); n.setSelectionRange(pos, pos); };
+      const q = $('q'); if (q) q.oninput = e => { s.q = e.target.value; this.render(); };
+      const pq = $('pq'); if (pq) pq.oninput = e => { s.pickQ = e.target.value; this.render(); };
       const msg = $('msg'); if (msg) msg.oninput = e => { s.text = e.target.value; $('cnt').textContent = s.text.length + ' / 3500'; };
       const wb = $('withButton'); if (wb) wb.onchange = e => { s.withButton = e.target.checked; };
       const rs = $('reason'); if (rs) rs.oninput = e => { s.reason = e.target.value; };
@@ -1358,6 +1407,41 @@ details summary::-webkit-details-marker{display:none}
   const newReportId = () => { const a = new Uint8Array(8); crypto.getRandomValues(a); return hex(a.buffer); };
 
   /* =================== ЭКРАН ФОТООТЧЁТА =================== */
+  /**
+   * Неотправленные отчёты на телефоне (IndexedDB: фото уже сжаты, ~200 КБ каждое).
+   * Если приложение закрыли посреди отправки — при следующем открытии предложим доотправить.
+   */
+  const Pending = {
+    _db: null,
+    db() {
+      if (this._db) return this._db;
+      return (this._db = new Promise(res => {
+        try { const r = indexedDB.open('t26-pending', 1); r.onupgradeneeded = () => r.result.createObjectStore('reports'); r.onsuccess = () => res(r.result); r.onerror = () => res(null); }
+        catch (e) { res(null); }
+      }));
+    },
+    async run(mode, fn) {
+      const db = await this.db(); if (!db) return null;
+      return new Promise(res => { try { const t = db.transaction('reports', mode), st = t.objectStore('reports'); const r = fn(st); t.oncomplete = () => res(r && r.result); t.onerror = () => res(null); } catch (e) { res(null); } });
+    },
+    save(s) {
+      if (demo) return;
+      const pick = x => ({ blob: x.blob, meta: x.meta, fileId: x.fileId || '' });
+      const it = s.item;
+      return this.run('readwrite', st => st.put({ id: s.reportId, uid: myId(), at: Date.now(),
+        item: { key: it.key, day: it.day, no: it.no, time: it.time, vehicle: it.vehicle, photo: it.photo },
+        type: s.type, times: s.times, noPhoto: s.noPhoto, comment: s.comment,
+        shots: { arrival: s.shots.arrival.filter(x => x.blob).map(pick), departure: s.shots.departure.filter(x => x.blob).map(pick) } }, s.reportId));
+    },
+    del(id) { if (id) return this.run('readwrite', st => st.delete(id)); },
+    async list() {
+      const all = (await this.run('readonly', st => st.getAll())) || [];
+      const week = Date.now() - 7 * 864e5;
+      all.filter(r => r.at < week).forEach(r => this.del(r.id)); // старше недели — уже неактуально
+      return all.filter(r => r.uid === myId() && r.at >= week);
+    },
+  };
+
   const Report = {
     st: null,
     picker: null,
@@ -1365,20 +1449,46 @@ details summary::-webkit-details-marker{display:none}
     open(item) {
       const has = item.photo || 'none';
       this.st = { item, type: has === 'arrival' ? 'departure' : has === 'departure' ? 'arrival' : 'full',
-        shots: { arrival: [], departure: [] }, comment: '', sending: false, done: 0, total: 0, error: '', result: null };
+        shots: { arrival: [], departure: [] }, times: { arrival: '', departure: '' }, noPhoto: false,
+        comment: '', sending: false, done: 0, total: 0, error: '', result: null };
       window.scrollTo(0, 0);
       setBack(() => this.close());
       this.render();
     },
+    /** Доотправить сохранённый отчёт (приложение закрыли посреди отправки). */
+    resume(p) {
+      const wrap = x => ({ ...x, url: URL.createObjectURL(x.blob) });
+      this.st = { item: p.item, type: p.type, shots: { arrival: p.shots.arrival.map(wrap), departure: p.shots.departure.map(wrap) },
+        times: p.times || { arrival: '', departure: '' }, noPhoto: !!p.noPhoto, comment: p.comment || '', reportId: p.id,
+        sending: false, done: 0, total: 0, error: '', result: null };
+      Req.st.detailKey = p.item.key; Req.st.day = p.item.day;
+      window.scrollTo(0, 0);
+      setBack(() => this.close());
+      this.render();
+      this.send();
+    },
     close() {
       const s = this.st;
+      if (s && s.sending) return toast('Дождитесь окончания отправки');
       if (s && !s.result && (s.shots.arrival.length || s.shots.departure.length) && !window.confirm('Выйти без отправки? Выбранные фото не сохранятся.')) return;
+      if (s && s.reportId && !s.result) Pending.del(s.reportId); // человек сам отказался от отчёта
       this.st = null;
       Req.openDetail(Req.st.detailKey, true);
     },
     stages() { return this.st.type === 'full' ? ['arrival', 'departure'] : [this.st.type]; },
-    count() { return this.stages().reduce((n, k) => n + this.st.shots[k].filter(x => x.blob).length, 0); },
-    ready() { return this.stages().every(k => this.st.shots[k].some(x => x.blob)) && !this.stages().some(k => this.st.shots[k].some(x => x.busy)); },
+    /** «Нет фото» бывает только у убытия в полном отчёте: машина уехала раньше, чем успели снять */
+    noPhoto(k) { return k === 'departure' && this.st.type === 'full' && this.st.noPhoto; },
+    count() { return this.stages().reduce((n, k) => n + (this.noPhoto(k) ? 0 : this.st.shots[k].filter(x => x.blob).length), 0); },
+    /** чего не хватает для отправки (пусто — можно отправлять) */
+    missing() {
+      const s = this.st, ks = this.stages();
+      if (ks.some(k => !this.noPhoto(k) && s.shots[k].some(x => x.busy))) return 'Обрабатываем фото…';
+      if (ks.some(k => !this.noPhoto(k) && !s.shots[k].some(x => x.blob))) return 'Добавьте фото';
+      const t = ks.filter(k => !/^\d{2}:\d{2}$/.test(s.times[k] || ''));
+      if (t.length) return 'Укажите время ' + t.map(k => (k === 'arrival' ? 'прибытия' : 'убытия')).join(' и ');
+      return '';
+    },
+    ready() { return !this.missing(); },
 
     render() {
       const s = this.st, it = s.item;
@@ -1393,10 +1503,20 @@ details summary::-webkit-details-marker{display:none}
             ${s.sending ? '' : `<button class="x" data-p="rm" data-v="${st}:${i}" aria-label="Удалить фото">×</button>`}</div>`).join('')}
           ${list.length < 10 && !s.sending ? `<button class="add" data-p="add" data-v="${st}"><span>＋</span><b>${list.length ? 'Ещё фото' : 'Добавить фото'}</b><small>Камера или галерея</small></button>` : ''}</div>`;
       };
-      const section = st => `<p class="sect">${s.type === 'full' ? 'Фото ' + (st === 'arrival' ? 'прибытия' : 'убытия') : 'Фотографии'}<small>минимум 1</small></p>
-        <div class="card glass">${shotsHtml(st)}</div>`;
+      const timeRow = st => `<div class="time-row"><label for="t_${st}"><b>${st === 'arrival' ? 'Прибыл' : 'Убыл'}</b><small>время по факту</small></label>
+          <div class="time-box"><input class="input time" type="time" id="t_${st}" data-t="${st}" value="${esc(s.times[st] || '')}" ${s.sending ? 'disabled' : ''}>
+          ${s.times[st] || s.sending ? '' : `<button class="chip now-btn" data-p="now" data-v="${st}">Сейчас</button>`}</div></div>`;
+      const section = st => {
+        const canNo = st === 'departure' && s.type === 'full';
+        const off = this.noPhoto(st);
+        return `<p class="sect">${s.type === 'full' ? (st === 'arrival' ? 'Прибытие' : 'Убытие') : st === 'arrival' ? 'Прибытие' : 'Убытие'}<small>${off ? 'без фото' : 'фото: минимум 1'}</small></p>
+        <div class="card glass">${timeRow(st)}
+          ${off ? `<div class="no-photo">Фото убытия нет — машина уехала раньше, чем удалось снять. Укажите время убытия; отчёт уйдёт на проверку.</div>` : shotsHtml(st)}
+          ${canNo && !s.sending ? `<button class="chip no-photo-btn ${off ? 'on' : ''}" data-p="nophoto">${off ? '✓ Нет фото — вернуть фото' : 'Нет фото'}</button>` : ''}
+        </div>`;
+      };
       const n = this.count();
-      app.innerHTML = `<div class="topbar"><button class="round" data-p="back" aria-label="Назад">${ICON.back}</button>
+      setApp(`<div class="topbar"><button class="round" data-p="back" aria-label="Назад">${ICON.back}</button>
           <div class="grow"><h2>Фотоотчёт</h2><small>${it.no ? 'Заявка ' + esc(it.no) : 'Заявка'}${it.time ? ' · ' + esc(it.time) : ''} · ${esc(it.vehicle || '')}</small></div></div>
         <div class="card glass hint-card"><div class="ic">${ICON.camera}</div><div><h3>Что фиксируем?</h3>
           <p>${s.type === 'full' ? 'Для полного отчёта нужны фото прибытия и фото убытия.' : 'Можно отправить одну фотографию. Прибытие и убытие могут загрузить разные люди.'}</p></div></div>
@@ -1408,13 +1528,16 @@ details summary::-webkit-details-marker{display:none}
         ${this.stages().map(section).join('')}
         <p class="sect">Комментарий<small>необязательно</small></p>
         <div class="card glass"><textarea class="input area" id="pComment" maxlength="1000" placeholder="Например: разгрузка завершена" ${s.sending ? 'disabled' : ''}>${esc(s.comment)}</textarea></div>
-        ${s.sending || s.error ? `<div class="card glass">
-            <div class="big-status"><b>${s.error ? 'Отправка прервалась' : s.done < s.total ? 'Отправляем фото ' + Math.min(s.done + 1, s.total) + ' из ' + s.total : 'Сохраняем отчёт…'}</b><span>${s.done}/${s.total}</span></div>
-            <div class="progress"><i style="width:${s.total ? Math.round(s.done / s.total * 100) : 0}%"></i></div>
-            ${s.error ? `<div class="hint" style="margin:6px 2px 12px">${esc(s.error)}</div><button class="primary small" data-p="send">Повторить — уже отправленные фото не потеряются</button>` : '<p class="note" style="margin:6px 0 0">Не закрывайте приложение до конца отправки</p>'}
-          </div>` : ''}
-        ${s.sending || s.error ? '' : `<div class="sticky"><button class="primary" data-p="send" ${this.ready() ? '' : 'disabled'}>${n ? 'Отправить · ' + n + ' ' + plural(n, 'фото', 'фото', 'фото') : 'Добавьте фото'}</button></div>
-        <p class="note">Фото сохранятся в папку заявки на Google Диске</p>`}`;
+        <div class="sticky"><button class="primary" data-p="send" ${this.ready() && !s.sending ? '' : 'disabled'}>${this.missing() || 'Отправить' + (n ? ' · ' + n + ' фото' : '')}</button></div>
+        <p class="note">Фото сохранятся в папку заявки на Google Диске</p>
+        ${s.sending || s.error ? `<div class="send-overlay"><div class="send-box glass" role="alertdialog" aria-live="polite">
+            <div class="big-status"><b>${s.error ? 'Отправка прервалась' : s.done < s.total ? 'Отправляем фото' : 'Сохраняем отчёт…'}</b><span>${s.done}/${s.total}</span></div>
+            <div class="progress"><i style="width:${s.total ? Math.round(s.done / s.total * 100) : 100}%"></i></div>
+            ${s.error ? `<div class="hint" style="margin:6px 2px 12px">${esc(s.error)}</div>
+              <button class="primary small" data-p="send">Повторить — отправленные фото не потеряются</button>
+              <button class="secondary small" data-p="hideErr" style="margin-top:10px">Вернуться к отчёту</button>`
+            : '<p class="note" style="margin:8px 0 0">Не закрывайте приложение до конца отправки. Если всё же закроете — при следующем открытии предложим доотправить.</p>'}
+          </div></div>` : ''}`);
       this.wire();
     },
 
@@ -1422,7 +1545,7 @@ details summary::-webkit-details-marker{display:none}
       const s = this.st, r = s.result, it = s.item;
       app.innerHTML = `<div class="center" style="padding-top:4vh"><div class="badge ok glass">${ICON.check}</div>
           <p class="eyebrow">Готово</p><h1>Фотоотчёт отправлен</h1>
-          <p class="lead">${r.photos} ${plural(r.photos, 'фотография сохранена', 'фотографии сохранены', 'фотографий сохранено')} в папку заявки ${esc(it.no || '')}.</p></div>
+          <p class="lead">${r.photos ? r.photos + ' ' + plural(r.photos, 'фотография сохранена', 'фотографии сохранены', 'фотографий сохранено') + ' в папку заявки ' + esc(it.no || '') + '.' : 'Отчёт сохранён.'}</p></div>
         <div class="card glass"><div class="big-status"><span>Статус фотоотчёта</span><span class="ph ${r.status}">${PH_LABEL[r.status] || '—'}</span></div></div>
         <button class="primary" data-p="back">Вернуться к заявке</button>
         <button class="secondary" data-p="more">Добавить ещё фото</button>`;
@@ -1432,6 +1555,7 @@ details summary::-webkit-details-marker{display:none}
     wire() {
       app.onclick = e => { const b = e.target.closest('[data-p]'); if (b && !b.disabled) this.act(b.dataset.p, b.dataset.v); };
       const c = document.getElementById('pComment'); if (c) c.oninput = e => { this.st.comment = e.target.value; };
+      document.querySelectorAll('input[data-t]').forEach(t => { t.onchange = t.oninput = e => { this.st.times[e.target.dataset.t] = e.target.value; this.render(); }; });
     },
 
     pick(stage) {
@@ -1466,8 +1590,12 @@ details summary::-webkit-details-marker{display:none}
       s.sending = true; s.error = '';
       s.reportId = s.reportId || newReportId();
       const queue = [];
-      this.stages().forEach(st => s.shots[st].forEach((x, i) => queue.push({ st, i: i + 1, x })));
+      this.stages().forEach(st => { if (!this.noPhoto(st)) s.shots[st].forEach((x, i) => queue.push({ st, i: i + 1, x })); });
       s.total = queue.length; s.done = queue.filter(q => q.x.fileId).length;
+      // Закрыть приложение во время отправки — Telegram переспросит. Отчёт сохраняется на телефоне,
+      // чтобы его можно было доотправить при следующем открытии (сервер не создаст дублей).
+      try { tg && tg.enableClosingConfirmation && tg.enableClosingConfirmation(); } catch (e) {}
+      Pending.save(s);
       this.render();
       try {
         // геопозицию ищем параллельно с загрузкой (раньше отправка ждала её до 9 секунд)
@@ -1491,13 +1619,18 @@ details summary::-webkit-details-marker{display:none}
         await Promise.all([worker(), worker(), worker()]);
         if (failed) throw failed;
         s.location = await locP;
-        const counts = {}; this.stages().forEach(st => { counts[st] = s.shots[st].length; });
-        const r = await api('reports.commit', { key: s.item.key, day: s.item.day, reportId: s.reportId, type: s.type, counts, comment: s.comment, location: s.location }, 90000);
+        const counts = {}; this.stages().forEach(st => { counts[st] = this.noPhoto(st) ? 0 : s.shots[st].length; });
+        const times = {}; this.stages().forEach(st => { times[st] = s.times[st]; });
+        const r = await api('reports.commit', { key: s.item.key, day: s.item.day, reportId: s.reportId, type: s.type, counts, times,
+          noPhoto: { departure: this.noPhoto('departure') }, comment: s.comment, location: s.location }, 90000);
         s.sending = false; s.result = { status: r.status, photos: r.photos || s.total };
+        Pending.del(s.reportId);
+        try { tg && tg.disableClosingConfirmation && tg.disableClosingConfirmation(); } catch (e) {}
         const li = Req.st.data && Req.st.data.items.find(x => x.key === s.item.key); if (li) li.photo = r.status;
         haptic('success'); this.render();
       } catch (e) {
         s.sending = false; s.error = e.message || 'Нет связи'; haptic('error'); this.render();
+        try { tg && tg.disableClosingConfirmation && tg.disableClosingConfirmation(); } catch (e2) {}
       }
     },
 
@@ -1506,6 +1639,9 @@ details summary::-webkit-details-marker{display:none}
       switch (a) {
         case 'back': return s.result ? (this.st = null, Req.openDetail(Req.st.detailKey, true)) : this.close();
         case 'type': s.type = v; return this.render();
+        case 'now': { const d = new Date(); s.times[v] = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); haptic('success'); return this.render(); }
+        case 'nophoto': s.noPhoto = !s.noPhoto; haptic('success'); return this.render();
+        case 'hideErr': s.error = ''; return this.render();
         case 'add': return this.pick(v);
         case 'rm': { const [st, i] = v.split(':'); const x = s.shots[st][+i]; if (x && x.url) URL.revokeObjectURL(x.url); s.shots[st].splice(+i, 1); return this.render(); }
         case 'send': return this.send();
@@ -1695,7 +1831,7 @@ details summary::-webkit-details-marker{display:none}
         const d = shiftDay(s.day, i), c = counts[d], dt = dateOf(d);
         const cls = ['day', d === s.day ? 'on' : '', d === today ? 'today' : '', c && c.mine ? 'mine' : '', c && (c.all || c.mine) ? 'has' : ''].join(' ');
         const label = c ? `${c.mine ? 'ваших ' + c.mine : ''}${c.all !== null && c.all !== undefined ? (c.mine ? ', ' : '') + 'всего ' + c.all : ''}` : '';
-        html += `<button class="${cls}" data-r="day" data-v="${d}" aria-label="${shortDate(d)} ${label}"><span>${d === today ? 'сегодня' : WD[dt.getDay()]}</span><b>${dt.getDate()}</b><i></i></button>`;
+        html += `<button class="${cls}" data-r="day" data-v="${d}" aria-label="${d === today ? 'сегодня, ' : ''}${shortDate(d)} ${label}"><span>${WD[dt.getDay()]}</span><b>${dt.getDate()}</b><i></i></button>`;
       }
       return `<div class="days">${html}<label class="round cal" aria-label="Выбрать дату">${ICON.cal}<input type="date" id="pickDate" value="${s.day}"></label></div>`;
     },
@@ -1738,14 +1874,17 @@ details summary::-webkit-details-marker{display:none}
       }
       const PHF = { none:'Без фото', partial:'Частично', full:'Фото есть' };
       const filt = [...s.fp].map(v => `<button data-r="unfp" data-v="${esc(v)}">${esc(v)} ✕</button>`).concat([...s.fu].map(v => `<button data-r="unfu" data-v="${esc(v)}">${esc(v)} ✕</button>`)).concat([...s.fph].map(v => `<button data-r="unfph" data-v="${v}">${PHF[v]} ✕</button>`)).join('');
-      app.innerHTML = this.head() + this.strip()
+      setApp(this.head() + this.strip()
         + (canAll ? `<div class="seg"><button class="${s.scope === 'mine' ? 'on' : ''}" data-r="scope" data-v="mine">Мои${data ? ` <span class="n">${nMine}</span>` : ''}</button><button class="${s.scope === 'all' ? 'on' : ''}" data-r="scope" data-v="all">Все${data ? ` · ${items.length}` : ''}</button></div>` : '')
         + `<div class="tools"><div class="search compact">${ICON.search}<input class="input" id="rq" placeholder="Номер, адрес, машина" value="${esc(s.q)}"></div>
            <button class="round" data-r="filters" aria-label="Фильтры">${ICON.filter}${s.fp.size + s.fu.size + s.fph.size ? `<span class="dot">${s.fp.size + s.fu.size + s.fph.size}</span>` : ''}</button></div>`
         + (filt ? `<div class="active-filters">${filt}</div>` : '')
         + `<div style="height:16px"></div>`
+        + (s.pending && s.pending.length ? s.pending.map(p => `<div class="pending-bar glass"><div><b>Фотоотчёт не отправлен до конца</b>
+            <small>Заявка ${esc(p.item.no || '')} · ${shortDate(p.item.day)} · ${p.shots.arrival.length + p.shots.departure.length} фото</small></div>
+            <div class="btn-row two"><button class="secondary small" data-r="dropPending" data-v="${esc(p.id)}">Удалить</button><button class="primary small" data-r="resume" data-v="${esc(p.id)}">Отправить</button></div></div>`).join('') : '')
         + body
-        + (s.sheet ? this.sheetHtml() : '');
+        + (s.sheet ? this.sheetHtml() : ''));
       this.wire();
     },
 
@@ -1792,7 +1931,7 @@ details summary::-webkit-details-marker{display:none}
           <div class="sub">${esc([it.project, it.purpose].filter(Boolean).join(' — '))}${it.cargo ? `<br>${/работа по месту/i.test(it.cargo) ? 'Работа по месту' : 'Что везём: ' + esc(it.cargo)}` : ''}</div>
           ${it.roles && it.roles.length ? `<div class="tags">${it.roles.map(r => `<i class="me">вы ${esc(r.replace(/^указан/, 'указаны'))}</i>`).join('')}</div>` : ''}
         </div>
-        ${full && it.reports && it.reports.length ? `<p class="sect">Фотоотчёты<small>${it.reports.length}</small></p><div class="card glass"><div class="rep-list">${it.reports.map(r => `<div class="rep-item"><span><b>${esc(r.stage)} · ${r.photos} фото</b><small>${esc(r.fio)}</small></span><span>${fmtDate(r.at)}</span></div>`).join('')}</div></div>` : ''}
+        ${full && it.reports && it.reports.length ? `<p class="sect">Фотоотчёты<small>${it.reports.length}</small></p><div class="card glass"><div class="rep-list">${it.reports.map(r => `<div class="rep-item"><span><b>${esc(r.stage)}${r.time ? ' в ' + esc(r.time) : ''} · ${r.photos ? r.photos + ' фото' : 'без фото'}</b><small>${esc(r.fio)}</small></span><span>${fmtDate(r.at)}</span></div>`).join('')}</div></div>` : ''}
         <p class="sect">Маршрут</p>
         <div class="card glass">
           <div class="stops ${it.to || (full && it.mid) ? '' : 'one'}">
@@ -1822,7 +1961,7 @@ details summary::-webkit-details-marker{display:none}
     wire() {
       const s = this.st, $ = id => document.getElementById(id);
       app.onclick = e => { const b = e.target.closest('[data-r]'); if (b) this.act(b.dataset.r, b.dataset.v, e); };
-      const q = $('rq'); if (q) q.oninput = e => { s.q = e.target.value; const pos = e.target.selectionStart; this.render(); const n = $('rq'); n.focus(); n.setSelectionRange(pos, pos); };
+      const q = $('rq'); if (q) q.oninput = e => { s.q = e.target.value; this.render(); };
       const pd = $('pickDate'); if (pd) pd.onchange = e => { if (e.target.value) this.setDay(e.target.value); };
     },
 
@@ -1832,6 +1971,9 @@ details summary::-webkit-details-marker{display:none}
         case 'day': return this.setDay(v);
         case 'scope': s.scope = v; store.set('t26-scope', v); return this.render();
         case 'open': return this.openDetail(v);
+        case 'resume': { const p = (s.pending || []).find(x => x.id === v); if (p) { s.pending = s.pending.filter(x => x !== p); Report.resume(p); } return; }
+        case 'dropPending': if (!window.confirm('Удалить неотправленный отчёт? Фото останутся в галерее телефона.')) return;
+          Pending.del(v); s.pending = (s.pending || []).filter(x => x.id !== v); return this.render();
         case 'back': return this.closeDetail();
         case 'refresh': haptic('success'); toast('Обновляем заявки…'); return this.load(true).then(() => this.st.data && toast('Обновлено в ' + nowHM()));
         case 'reload': return this.load(false);
@@ -1909,6 +2051,7 @@ details summary::-webkit-details-marker{display:none}
         else if (Req.st.view === 'list') Req.render(); // могли обновиться права и счётчик админки
         if (r.list) Req.receive(r.list);
         else { Req.st.err = new Error(r.listError || 'Не удалось загрузить заявки'); Req.st.loading = false; if (Req.st.view === 'list') Req.render(); }
+        Pending.list().then(l => { Req.st.pending = l; if (l.length && Req.st.view === 'list' && !Report.st) Req.render(); });
       } else {
         route(r); // статус изменился (заблокирован, ждёт подтверждения…) — показываем нужный экран
       }
