@@ -59,10 +59,10 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{background:var(--bg);overflow-x:hidden;overscroll-behavior:none;width:100%}
+html{background:var(--bg);overflow-x:hidden;overflow-x:clip;overscroll-behavior:none;width:100%}
 /* страницу нельзя утащить вбок: горизонтальной прокрутки нет, жесты — только вертикальные */
 html,body{max-width:100%;touch-action:pan-y pinch-zoom}
-body{overflow-x:hidden;overscroll-behavior-x:none;position:relative}
+body{overflow-x:hidden;overflow-x:clip;overscroll-behavior-x:none;position:relative}
 body{margin:0;min-height:100vh;color:var(--ink);font-family:"Onest",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   -webkit-font-smoothing:antialiased;
   background:linear-gradient(170deg,var(--bg-top) 0%,var(--bg) 45%,var(--bg-2) 100%) fixed}
@@ -103,9 +103,9 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
 .input{width:100%;min-height:54px;border:0;background:var(--surface);box-shadow:var(--pressed);
   border-radius:999px;padding:0 22px;font-size:16px;outline:0;color:var(--ink);transition:background .2s,box-shadow .2s}
 .input::placeholder{color:var(--muted);opacity:.75}
-.input:focus{background:var(--surface-focus);box-shadow:var(--pressed),0 0 0 2px color-mix(in srgb,var(--primary) 55%,transparent)}
-.input.err{box-shadow:var(--pressed),0 0 0 2px color-mix(in srgb,var(--danger) 60%,transparent)}
-.input[readonly]{color:var(--ok);box-shadow:var(--pressed-sm),0 0 0 2px color-mix(in srgb,var(--ok) 40%,transparent)}
+.input:focus{background:var(--surface-focus);box-shadow:var(--pressed),0 0 0 2px rgba(192,98,43,0.55);box-shadow:var(--pressed),0 0 0 2px color-mix(in srgb,var(--primary) 55%,transparent)}
+.input.err{box-shadow:var(--pressed),0 0 0 2px rgba(145,39,59,0.60);box-shadow:var(--pressed),0 0 0 2px color-mix(in srgb,var(--danger) 60%,transparent)}
+.input[readonly]{color:var(--ok);box-shadow:var(--pressed-sm),0 0 0 2px rgba(76,110,72,0.40);box-shadow:var(--pressed-sm),0 0 0 2px color-mix(in srgb,var(--ok) 40%,transparent)}
 .hint{font-size:12px;color:var(--danger);margin:7px 4px 0}
 .phone-row{display:grid;gap:16px}
 
@@ -135,7 +135,7 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
 .consent input:checked{background:linear-gradient(90deg,var(--btn-lo),var(--btn-hi));box-shadow:inset 2px 2px 5px rgba(132,61,18,.22),inset -2px -2px 5px rgba(var(--hl),.3)}
 .consent input:checked:after{transform:translateX(20px)}
 .consent input:focus{outline:none}
-.consent input:focus-visible,.toggle:focus-visible{outline:none;box-shadow:var(--pressed-sm),0 0 0 2px color-mix(in srgb,var(--primary) 50%,transparent)}
+.consent input:focus-visible,.toggle:focus-visible{outline:none;box-shadow:var(--pressed-sm),0 0 0 2px rgba(192,98,43,0.50);box-shadow:var(--pressed-sm),0 0 0 2px color-mix(in srgb,var(--primary) 50%,transparent)}
 .req{color:var(--accent);font-weight:700}
 
 /* главная кнопка — объём светом, не глянцем */
@@ -173,7 +173,7 @@ button.rq:active,button.person:active,button.admin-entry:active,button.type:not(
 .steps li i{width:24px;height:24px;border-radius:50%;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--muted);font-style:normal;font-size:12px;font-weight:600;display:grid;place-items:center}
 .steps li.done{color:var(--ink)}
 .steps li.done i{background:linear-gradient(180deg,var(--btn-hi),var(--btn));color:var(--on-btn);box-shadow:var(--raised-sm)}
-.spinner{width:20px;height:20px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--on-btn) 30%,transparent);border-top-color:var(--on-btn);animation:spin .8s linear infinite}
+.spinner{width:20px;height:20px;border-radius:50%;border:2.5px solid rgba(132,61,18,0.30);border:2.5px solid color-mix(in srgb,var(--on-btn) 30%,transparent);border-top-color:var(--on-btn);animation:spin .8s linear infinite}
 .spinner.dark{border-color:var(--hair);border-top-color:var(--primary);width:34px;height:34px;margin:0 auto 16px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .toast{z-index:100;position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,16px);color:var(--ink);padding:12px 20px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:all .22s;max-width:90vw}
@@ -258,7 +258,9 @@ body.wide .app{max-width:860px}
 .pick input{justify-self:end}
 .toggle{appearance:none;-webkit-appearance:none;position:relative;width:50px;height:30px;margin:0;border-radius:999px;cursor:pointer;background:var(--surface);box-shadow:var(--pressed-sm);border:0;transition:background .25s}
 .toggle:after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--surface);box-shadow:3px 3px 6px var(--neu-d),-2px -2px 5px var(--neu-l);transition:transform .25s cubic-bezier(.3,.7,.3,1)}
-.toggle:checked{background:linear-gradient(90deg,var(--btn-lo),var(--btn-hi))}
+.toggle:checked{background:linear-gradient(90deg,var(--btn-lo),var(--btn-hi));box-shadow:inset 2px 2px 5px rgba(132,61,18,.22),inset -2px -2px 5px rgba(var(--hl),.3)}
+.toggle{flex:none}
+.toggle:focus{outline:none}
 .toggle:checked:after{transform:translateX(20px)}
 .sticky{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom));margin-top:18px;z-index:3}
 .result{display:grid;gap:8px;font-size:13.5px}
@@ -327,10 +329,10 @@ body.wide .app{max-width:860px}
 .rq .addr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tags i.me{background:var(--btn);color:var(--on-btn)}
 .plate{display:inline-flex;align-items:center;font-weight:650;letter-spacing:.04em;color:var(--ink);font-size:17px;padding:5px 12px;border-radius:9px;
-  background:var(--surface);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ink) 55%,transparent);text-transform:uppercase;white-space:nowrap}
+  background:var(--surface);box-shadow:inset 0 0 0 1.5px rgba(50,46,41,0.55);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ink) 55%,transparent);text-transform:uppercase;white-space:nowrap}
 /* линия «сейчас» */
 .now{display:flex;align-items:center;gap:10px;margin:2px 4px;color:var(--primary);font-size:12px;font-weight:600}
-.now:after{content:"";flex:1;height:2px;border-radius:2px;background:color-mix(in srgb,var(--primary) 45%,transparent)}
+.now:after{content:"";flex:1;height:2px;border-radius:2px;background:rgba(192,98,43,0.45);background:color-mix(in srgb,var(--primary) 45%,transparent)}
 .now i{width:9px;height:9px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px var(--primary-soft)}
 .skeleton{height:132px;border-radius:26px;background:var(--surface);box-shadow:var(--raised);position:relative;overflow:hidden}
 .skeleton:after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(var(--hl),.35) 50%,transparent 70%);animation:shimmer 1.4s infinite}
@@ -378,7 +380,8 @@ body.wide .app{max-width:860px}
 .driver .who small{font-size:12px;color:var(--muted)}
 .driver .model{color:var(--ink-2);font-size:14px}
 .raw{margin-top:4px;font-size:12.5px;color:var(--muted);white-space:pre-line;word-break:break-word}
-details summary{cursor:pointer;color:var(--muted);font-size:12.5px;list-style:none}
+details summary{cursor:pointer;color:var(--primary);font-size:13px;font-weight:600;list-style:none;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;display:inline-block;padding:4px 0}
+details[open] summary{margin-bottom:6px}
 details summary::-webkit-details-marker{display:none}
 
 /* ===================== ФОТООТЧЁТ ===================== */
@@ -388,11 +391,13 @@ details summary::-webkit-details-marker{display:none}
 .ph.none{background:var(--danger-soft);color:var(--danger)}
 .ph.arrival,.ph.departure{background:var(--warn-soft);color:var(--warn)}
 .ph.full{background:var(--ok-soft);color:var(--ok)}
-.report-bar{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));z-index:4;display:flex;align-items:center;justify-content:space-between;gap:14px;
-  margin-top:22px;padding:12px 12px 12px 20px;border-radius:999px;background:var(--panel);box-shadow:var(--raised-lg)}
+.report-bar{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),488px);bottom:calc(12px + env(safe-area-inset-bottom));z-index:20;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 12px 12px 20px;border-radius:999px;background:var(--panel);box-shadow:var(--raised-lg)}
+.report-space{height:96px}
 .report-bar small{display:block;font-size:11.5px;color:var(--muted)}
 .report-bar b{font-size:14.5px;font-weight:600}
-.report-bar .primary{width:auto;min-height:48px;padding:0 22px;font-size:15px}
+.report-bar .primary{width:auto;min-height:48px;padding:0 22px;font-size:15px;box-shadow:none}
+.report-bar .primary:not(:disabled):active{box-shadow:none}
 .rep-list{display:grid;gap:10px;margin-top:12px}
 .rep-item{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;color:var(--ink-2)}
 .rep-item b{display:block;color:var(--ink);font-weight:600}
@@ -537,7 +542,7 @@ details summary::-webkit-details-marker{display:none}
 
   /* ---------- API ---------- */
   // Эти действия безопасно повторять: чтение или повтор не создаёт дублей (фото и отчёт сервер узнаёт по ID).
-  const RETRY_SAFE = new Set(['boot', 'me', 'requests.list', 'requests.get', 'reports.upload', 'reports.commit', 'admin.staff', 'admin.history', 'admin.matches']);
+  const RETRY_SAFE = new Set(['boot', 'me', 'requests.list', 'requests.get', 'reports.upload', 'reports.uploadInit', 'reports.commit', 'admin.staff', 'admin.history', 'admin.matches']);
   const RETRY_CODES = new Set(['NETWORK', 'BAD_RESPONSE', 'SERVER_ERROR', 'GOOGLE_BUSY']);
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -723,41 +728,74 @@ details summary::-webkit-details-marker{display:none}
   }
 
   /* ---------- helpers ---------- */
-  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const haptic = t => { try { tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred(t); } catch (e) {} };
   // iOS показывает нажатие (:active) только если на странице есть обработчик касаний
   document.addEventListener('touchstart', () => {}, { passive: true });
 
-  /** Телефоны: короткое нажатие — звонок, удержание — номер копируется. */
-  (function phoneLongPress() {
-    let timer = null, fired = false, startX = 0, startY = 0;
-    const copy = text => {
-      const done = () => { haptic('success'); toast('Номер скопирован: ' + text); };
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => fallback());
-      else fallback();
-      function fallback() {
-        const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
-        document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) { toast(text); } ta.remove();
-      }
+  /**
+   * Телефоны: короткое нажатие — звонок, удержание — номер копируется.
+   * Pointer-события (а не мышиные): на iPhone мышиные приходят после касания с задержкой и путали тап с удержанием.
+   * Звонок: Telegram на iPhone не открывает ссылки tel: изнутри приложения, поэтому там номер уходит через
+   * маленькую страницу call.html, которую Telegram открывает в Safari, а Safari сразу предлагает «Позвонить».
+   */
+  function dial(number) {
+    const num = String(number || '').replace(/[^\d+]/g, '');
+    if (!num) return;
+    const platform = (tg && tg.platform) || '';
+    if (!/tdesktop|macos|web/i.test(platform) && tg && tg.openLink) {
+      // iPhone и Android: сначала напрямую; если звонилка не открылась за секунду (окно не теряло фокус) —
+      // через страницу call.html во внешнем браузере (Safari / Chrome), которая сама предложит позвонить
+      let left = false;
+      const onBlur = () => { left = true; };
+      window.addEventListener('blur', onBlur, { once: true });
+      document.addEventListener('visibilitychange', onBlur, { once: true });
+      try { location.href = 'tel:' + num; } catch (e) {}
+      setTimeout(() => {
+        window.removeEventListener('blur', onBlur);
+        if (left) return;
+        try { tg.openLink(new URL('call.html#' + encodeURIComponent(num), location.href).href); } catch (e) { copyText(num, 'Номер скопирован: ' + num); }
+      }, 1100);
+      return;
+    }
+    if (/tdesktop|macos|web/i.test(platform)) return copyText(num, 'Номер скопирован: ' + num); // на компьютере звонить нечем
+    location.href = 'tel:' + num; // вне Telegram
+  }
+  function copyText(text, msg) {
+    const done = () => { haptic('success'); toast(msg || 'Скопировано'); };
+    const fallback = () => {
+      const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+      document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (e) { toast(text); } ta.remove();
     };
-    const start = e => {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+  }
+  (function phoneTapAndHold() {
+    let timer = null, held = false, x0 = 0, y0 = 0, link = null;
+    const telOf = a => decodeURIComponent(a.getAttribute('href') || '').replace(/^tel:/, '');
+    document.addEventListener('pointerdown', e => {
+      link = e.target.closest && e.target.closest('a[href^="tel:"]');
+      if (!link) return;
+      held = false; x0 = e.clientX; y0 = e.clientY;
+      clearTimeout(timer);
+      const a = link;
+      timer = setTimeout(() => { held = true; haptic('success'); }, 550); // копируем при отпускании: браузер разрешает буфер обмена только в момент касания
+    }, { passive: true });
+    document.addEventListener('pointermove', e => { if (link && (Math.abs(e.clientX - x0) > 10 || Math.abs(e.clientY - y0) > 10)) { clearTimeout(timer); link = null; } }, { passive: true });
+    document.addEventListener('pointerup', () => {
+      clearTimeout(timer);
+      if (held && link) { const t = (link.textContent || '').trim() || telOf(link); copyText(t, 'Номер скопирован: ' + t); }
+    }, { passive: true });
+    document.addEventListener('pointercancel', () => { clearTimeout(timer); held = false; }, { passive: true });
+    document.addEventListener('contextmenu', e => { if (e.target.closest && e.target.closest('a[href^="tel:"]')) e.preventDefault(); });
+    // нажатие обрабатываем сами: удержание — уже скопировали, короткое — звоним
+    document.addEventListener('click', e => {
       const a = e.target.closest && e.target.closest('a[href^="tel:"]');
       if (!a) return;
-      fired = false;
-      const p = e.touches ? e.touches[0] : e; startX = p.clientX; startY = p.clientY;
-      clearTimeout(timer);
-      timer = setTimeout(() => { fired = true; copy((a.textContent || '').trim() || a.getAttribute('href').slice(4)); }, 550);
-    };
-    const cancel = () => clearTimeout(timer);
-    const move = e => { const p = e.touches ? e.touches[0] : e; if (Math.abs(p.clientX - startX) > 10 || Math.abs(p.clientY - startY) > 10) cancel(); };
-    document.addEventListener('touchstart', start, { passive: true });
-    document.addEventListener('touchmove', move, { passive: true });
-    document.addEventListener('touchend', cancel, { passive: true });
-    document.addEventListener('mousedown', start);
-    document.addEventListener('mouseup', cancel);
-    document.addEventListener('contextmenu', e => { if (e.target.closest && e.target.closest('a[href^="tel:"]')) e.preventDefault(); });
-    // после удержания не звоним
-    document.addEventListener('click', e => { if (fired && e.target.closest && e.target.closest('a[href^="tel:"]')) { e.preventDefault(); e.stopPropagation(); fired = false; } }, true);
+      e.preventDefault(); e.stopPropagation();
+      if (held) { held = false; return; }
+      haptic('success');
+      dial(telOf(a));
+    }, true);
   })();
 
   function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600); }
@@ -1467,6 +1505,31 @@ details summary::-webkit-details-marker{display:none}
 
   /* =================== ЭКРАН ФОТООТЧЁТА =================== */
   /**
+   * Прямая загрузка фото в Google Диск по одноразовой ссылке, которую выдал сервер (без Apps Script и base64).
+   * onp(доля 0…1) — настоящий прогресс отправки. При любой ошибке — reject с code 'DIRECT' (вызывающий переключится на обычный путь).
+   */
+  function putDirect(url, blob, onp, timeoutMs = 60000) {
+    return new Promise((res, rej) => {
+      const fail = (why, sent) => { const e = new Error('Прямая загрузка: ' + why); e.code = 'DIRECT'; e.sent = sent; rej(e); };
+      let sentAll = false;
+      const x = new XMLHttpRequest();
+      x.open('PUT', url);
+      x.timeout = timeoutMs;
+      x.setRequestHeader('Content-Type', 'image/jpeg');
+      x.upload.onprogress = e => { if (e.lengthComputable) { onp(e.loaded / e.total); if (e.loaded >= e.total) sentAll = true; } };
+      x.onload = () => {
+        if (x.status >= 200 && x.status < 300) { try { const j = JSON.parse(x.responseText || '{}'); if (j.id) return res(j.id); } catch (e) {} }
+        fail('ответ ' + x.status, sentAll);
+      };
+      x.onerror = () => fail('сеть', sentAll);
+      x.ontimeout = () => fail('таймаут', sentAll);
+      x.send(blob);
+    });
+  }
+  const directOk = () => { try { return +(localStorage.getItem('t26-direct-off') || 0) < Date.now(); } catch (e) { return true; } };
+  const directOff = () => { try { localStorage.setItem('t26-direct-off', String(Date.now() + 864e5)); } catch (e) {} }; // сутки грузим обычным путём
+
+  /**
    * Неотправленные отчёты на телефоне (IndexedDB: фото уже сжаты, ~200 КБ каждое).
    * Если приложение закрыли посреди отправки — при следующем открытии предложим доотправить.
    */
@@ -1525,7 +1588,7 @@ details summary::-webkit-details-marker{display:none}
       const ease = (t, tau) => 1 - Math.exp(-t / tau);
       const now = Date.now();
       let running = 0;
-      (s.inflight || new Map()).forEach(t0 => { running += 0.92 * ease(now - t0, 2000); });
+      (s.inflight || new Map()).forEach((t0, q) => { running += q.frac != null ? 0.96 * q.frac : 0.92 * ease(now - t0, 2000); }); // прямая загрузка — настоящий процент
       const commit = s.committing > 0 ? 0.9 * ease(now - s.committing, 1500) : 0;
       return Math.min(0.99, (s.done + running + commit) / (s.total + 1));
     },
@@ -1687,19 +1750,39 @@ details summary::-webkit-details-marker{display:none}
         const locP = s.location ? Promise.resolve(s.location) : getLocation();
         const todo = queue.filter(q => !q.x.fileId);
         let failed = null;
-        const uploadOne = async q => {
-          s.inflight.set(q, Date.now());
+        const again = !!s.resumed || !!s.tried; // повторная попытка — сервер проверит, что уже сохранено
+        s.tried = true;
+        // 1) прямая загрузка: одним запросом получаем ссылки для всех фото
+        s.direct = s.direct || { ok: 0, total: 0 };
+        if (todo.length && directOk() && !demo) {
+          try {
+            const r = await api('reports.uploadInit', { key: s.item.key, day: s.item.day, reportId: s.reportId, origin: location.origin, retry: again,
+              items: todo.map(q => ({ stage: q.st, index: q.i, size: q.x.blob.size, meta: q.x.meta })) }, 30000);
+            (r.items || []).forEach(it => { const q = todo.find(z => z.st === it.stage && z.i === it.index); if (!q) return; if (it.fileId) q.x.fileId = it.fileId; else if (it.url) q.url = it.url; });
+          } catch (e) { /* не вышло — все фото пойдут обычным путём */ }
+          todo.filter(q => q.x.fileId).forEach(() => { s.done++; });
+        }
+        const viaScript = async q => {
           const data = await blobToB64(q.x.blob);
           let lastErr;
+          for (let attempt = 1; attempt <= 2; attempt++) { // api сам повторяет сбои Google; здесь — ещё круг после паузы
+            try {
+              const r = await api('reports.upload', { key: s.item.key, day: s.item.day, reportId: s.reportId, stage: q.st, index: q.i, data, meta: q.x.meta, retry: attempt > 1 || again || !!q.url }, 45000);
+              q.x.fileId = r.fileId; return;
+            } catch (e) { lastErr = e; if (e.code && !['TIMEOUT', 'NETWORK', 'SERVER_ERROR', 'BAD_RESPONSE', 'GOOGLE_BUSY'].includes(e.code)) break; await sleep(attempt * 1500); }
+          }
+          throw lastErr;
+        };
+        const uploadOne = async q => {
+          if (q.x.fileId) return;
+          s.inflight.set(q, Date.now()); q.frac = null;
           try {
-            for (let attempt = 1; attempt <= 2; attempt++) { // api сам повторяет сбои Google; здесь — ещё круг после паузы
-              try {
-                const r = await api('reports.upload', { key: s.item.key, day: s.item.day, reportId: s.reportId, stage: q.st, index: q.i, data, meta: q.x.meta, retry: attempt > 1 || !!s.resumed }, 120000);
-                q.x.fileId = r.fileId; lastErr = null; break;
-              } catch (e) { lastErr = e; if (e.code && !['TIMEOUT', 'NETWORK', 'SERVER_ERROR', 'BAD_RESPONSE', 'GOOGLE_BUSY'].includes(e.code)) break; await sleep(attempt * 2000); }
-            }
+            if (q.url) {
+              s.direct.total++;
+              try { q.x.fileId = await putDirect(q.url, q.x.blob, f => { q.frac = f; }); s.direct.ok++; }
+              catch (e) { if (e.sent) directOff(); q.frac = null; s.inflight.set(q, Date.now()); await viaScript(q); } // запасной путь
+            } else await viaScript(q);
           } finally { s.inflight.delete(q); }
-          if (lastErr) throw lastErr;
           s.done++; this.paintProgress();
         };
         // по 4 фото одновременно: быстрее, и не упираемся в лимит одновременных запусков Google
@@ -1710,7 +1793,8 @@ details summary::-webkit-details-marker{display:none}
         s.committing = Date.now(); this.paintProgress();
         const counts = {}; this.stages().forEach(st => { counts[st] = this.noPhoto(st) ? 0 : s.shots[st].length; });
         const times = {}; this.stages().forEach(st => { times[st] = s.times[st]; });
-        const r = await api('reports.commit', { key: s.item.key, day: s.item.day, reportId: s.reportId, type: s.type, counts, times,
+        const fileIds = {}; this.stages().forEach(st => { fileIds[st] = this.noPhoto(st) ? [] : s.shots[st].map(x => x.fileId).filter(Boolean); });
+        const r = await api('reports.commit', { key: s.item.key, day: s.item.day, reportId: s.reportId, type: s.type, counts, times, fileIds, direct: s.direct,
           noPhoto: { departure: this.noPhoto('departure') }, comment: s.comment, location: s.location }, 90000);
         clearInterval(this.ticker); s.committing = -1; this.paintProgress(); await sleep(250); // полоска доходит до конца
         s.sending = false; s.result = { status: r.status, photos: r.photos || s.total };
@@ -1825,9 +1909,16 @@ details summary::-webkit-details-marker{display:none}
     return { plates, phones, name, model, raw: text };
   }
 
-  function yandexRoute(from, to) {
-    const enc = encodeURIComponent;
-    return 'https://yandex.ru/maps/?rtext=' + (to ? enc(from) + '~' + enc(to) : '~' + enc(from)) + '&rtt=auto';
+  /**
+   * Маршрут в Яндекс Картах: от текущего места через все адреса заявки. Яндекс строит маршрут по координатам
+   * (их присылает сервер); если координат нет — открываем поиск по адресу, чтобы точка хотя бы была на карте.
+   */
+  function yandexRoute(d) {
+    const g = d.geo || {};
+    const pts = ['from', 'mid', 'to'].filter(k => d[k] && g[k]).map(k => g[k].lat.toFixed(6) + ',' + g[k].lon.toFixed(6));
+    if (pts.length) return 'https://yandex.ru/maps/?rtext=~' + pts.join('~') + '&rtt=auto';
+    const addr = String(d.from || d.to || '').split('\n')[0].replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+    return 'https://yandex.ru/maps/?mode=search&text=' + encodeURIComponent(/москв|област|обл\./i.test(addr) ? addr : 'Москва, ' + addr);
   }
   function openExternal(url) {
     try { if (tg && tg.openLink && !demo) return tg.openLink(url); } catch (e) {}
@@ -2044,6 +2135,7 @@ details summary::-webkit-details-marker{display:none}
           ${it.extra ? `<div><div class="k">Дополнительные адреса и контакты</div><div class="v">${esc(it.extra)}</div>${parseContacts(it.extra).some(c => c.href) ? `<div class="contacts">${parseContacts(it.extra).filter(c => c.href).map(c => `<div class="contact"><span>${esc(c.name)}</span><a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a></div>`).join('')}</div>` : ''}</div>` : ''}
         </div>` : ''}
         ${full && it.initiator ? `<p class="sect">Инициатор заявки</p><div class="card glass"><div class="contacts" style="margin:0">${contactRows(it.initiator, 'оформил заявку')}</div></div>` : ''}
+        <div class="report-space"></div>
         <div class="report-bar"><span><small>Фотоотчёт</small><b>${PH_LABEL[it.photo || 'none']}</b></span>
           <button class="primary" data-r="report" ${full ? '' : 'disabled'}>${it.photo === 'full' ? 'Добавить фото' : 'Отчитаться'}</button></div>`;
       this.wire();
@@ -2089,7 +2181,7 @@ details summary::-webkit-details-marker{display:none}
         case 'clear': s.q = ''; s.fp.clear(); s.fu.clear(); s.fph.clear(); s.sheet = false; return this.render();
         case 'admin': return Admin.open();
         case 'profile': return renderProfile();
-        case 'map': return openExternal(yandexRoute(s.detail.from, s.detail.to));
+        case 'map': return openExternal(yandexRoute(s.detail));
         case 'copy': {
           const t = s.detail.from;
           (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Адрес подачи скопирован'), () => toast(t));
