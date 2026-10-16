@@ -173,8 +173,18 @@ button.rq:active,button.person:active,button.admin-entry:active,button.type:not(
 .steps li i{width:24px;height:24px;border-radius:50%;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--muted);font-style:normal;font-size:12px;font-weight:600;display:grid;place-items:center}
 .steps li.done{color:var(--ink)}
 .steps li.done i{background:linear-gradient(180deg,var(--btn-hi),var(--btn));color:var(--on-btn);box-shadow:var(--raised-sm)}
-.spinner{width:20px;height:20px;border-radius:50%;border:2.5px solid rgba(132,61,18,0.30);border:2.5px solid color-mix(in srgb,var(--on-btn) 30%,transparent);border-top-color:var(--on-btn);animation:spin .8s linear infinite}
-.spinner.dark{border-color:var(--hair);border-top-color:var(--primary);width:34px;height:34px;margin:0 auto 16px}
+/* Индикатор загрузки (анимированная пиктограмма) — в фирменном цвете; на оранжевых кнопках — цветом текста кнопки */
+.fl-loader{display:block;flex:none;color:var(--primary)}
+.fl-loader.on{color:var(--on-btn)}
+button .fl-loader,.saving .fl-loader,.moment .fl-loader{display:inline-block;vertical-align:middle}
+.fl-loader path{stroke:currentColor;stroke-width:66;stroke-linecap:round;stroke-linejoin:round;animation:var(--fl-duration,3s) linear infinite}
+.fl-loader .fl-0{animation-name:fl-0;stroke-dasharray:1 1792;stroke-dashoffset:-110}
+.fl-loader .fl-1{animation-name:fl-1;stroke-dasharray:1 1662;stroke-dashoffset:-110}
+.fl-loader .fl-2{animation-name:fl-2;stroke-dasharray:1 594;stroke-dashoffset:-110}
+@media (prefers-reduced-motion:reduce){.fl-loader path{animation:none!important}.fl-loader .fl-0{stroke-dasharray:1562.3 9999!important;stroke-dashoffset:-110!important}.fl-loader .fl-1{stroke-dasharray:1432.2 9999!important;stroke-dashoffset:-110!important}.fl-loader .fl-2{stroke-dasharray:363.9 9999!important;stroke-dashoffset:-110!important}}
+@keyframes fl-0{0%{stroke-dasharray:1 1792;stroke-dashoffset:-110}0.556%{stroke-dasharray:4.8 1792;stroke-dashoffset:-110}1.111%{stroke-dasharray:18.9 1792;stroke-dashoffset:-110}1.667%{stroke-dasharray:41.6 1792;stroke-dashoffset:-110}2.222%{stroke-dasharray:72.5 1792;stroke-dashoffset:-110}2.778%{stroke-dasharray:110.9 1792;stroke-dashoffset:-110}3.333%{stroke-dasharray:156.2 1792;stroke-dashoffset:-110}3.889%{stroke-dasharray:208 1792;stroke-dashoffset:-110}4.444%{stroke-dasharray:265.5 1792;stroke-dashoffset:-110}5%{stroke-dasharray:328.3 1792;stroke-dashoffset:-110}5.556%{stroke-dasharray:395.8 1792;stroke-dashoffset:-110}6.111%{stroke-dasharray:467.3 1792;stroke-dashoffset:-110}6.667%{stroke-dasharray:542.4 1792;stroke-dashoffset:-110}7.222%{stroke-dasharray:620.5 1792;stroke-dashoffset:-110}7.778%{stroke-dasharray:700.9 1792;stroke-dashoffset:-110}8.333%{stroke-dasharray:783.2 1792;stroke-dashoffset:-110}8.889%{stroke-dasharray:866.6 1792;stroke-dashoffset:-110}9.444%{stroke-dasharray:950.8 1792;stroke-dashoffset:-110}10%{stroke-dasharray:1035 1792;stroke-dashoffset:-110}10.556%{stroke-dasharray:1118.8 1792;stroke-dashoffset:-110}11.111%{stroke-dasharray:1201.4 1792;stroke-dashoffset:-110}11.667%{stroke-dasharray:1282.5 1792;stroke-dashoffset:-110}12.222%{stroke-dasharray:1361.4 1792;stroke-dashoffset:-110}12.778%{stroke-dasharray:1437.5 1792;stroke-dashoffset:-110}13.333%{stroke-dasharray:1510.3 1792;stroke-dashoffset:-110}13.889%{stroke-dasharray:1578.2 1792;stroke-dashoffset:-110}14.444%{stroke-dasharray:1621.6 1792;stroke-dashoffset:-110}15%{stroke-dasharray:1638.9 1792;stroke-dashoffset:-110}15.556%{stroke-dasharray:1638.3 1792;stroke-dashoffset:-110}16.111%{stroke-dasharray:1627.2 1792;stroke-dashoffset:-110}16.667%{stroke-dasharray:1611.4 1792;stroke-dashoffset:-110}17.222%{stroke-dasharray:1595.1 1792;stroke-dashoffset:-110}17.778%{stroke-dasharray:1580.8 1792;stroke-dashoffset:-110}18.333%{stroke-dasharray:1569.6 1792;stroke-dashoffset:-110}18.889%{stroke-dasharray:1562 1792;stroke-dashoffset:-110}19.444%{stroke-dasharray:1557.5 1792;stroke-dashoffset:-110}20%{stroke-dasharray:1555.6 1792;stroke-dashoffset:-110}20.556%{stroke-dasharray:1555.3 1792;stroke-dashoffset:-110}21.111%{stroke-dasharray:1556.2 1792;stroke-dashoffset:-110}21.667%{stroke-dasharray:1557.6 1792;stroke-dashoffset:-110}22.222%{stroke-dasharray:1559 1792;stroke-dashoffset:-110}22.778%{stroke-dasharray:1560.4 1792;stroke-dashoffset:-110}23.333%{stroke-dasharray:1561.5 1792;stroke-dashoffset:-110}23.889%{stroke-dasharray:1562.2 1792;stroke-dashoffset:-110}24.444%{stroke-dasharray:1562.7 1792;stroke-dashoffset:-110}25%{stroke-dasharray:1562.3 1792;stroke-dashoffset:-110}25.556%{stroke-dasharray:1561.4 1792;stroke-dashoffset:-110.9}26.111%{stroke-dasharray:1558.6 1792;stroke-dashoffset:-113.7}26.667%{stroke-dasharray:1553.6 1792;stroke-dashoffset:-118.7}27.222%{stroke-dasharray:1546 1792;stroke-dashoffset:-126.3}27.778%{stroke-dasharray:1535.5 1792;stroke-dashoffset:-136.8}28.333%{stroke-dasharray:1521.5 1792;stroke-dashoffset:-150.8}28.889%{stroke-dasharray:1503.3 1792;stroke-dashoffset:-169}29.444%{stroke-dasharray:1480 1792;stroke-dashoffset:-192.3}30%{stroke-dasharray:1450.4 1792;stroke-dashoffset:-221.9}30.556%{stroke-dasharray:1412.8 1792;stroke-dashoffset:-259.5}31.111%{stroke-dasharray:1364.8 1792;stroke-dashoffset:-307.5}31.667%{stroke-dasharray:1303 1792;stroke-dashoffset:-369.3}32.222%{stroke-dasharray:1223.1 1792;stroke-dashoffset:-449.2}32.778%{stroke-dasharray:1120.3 1792;stroke-dashoffset:-552}33.333%{stroke-dasharray:994.8 1792;stroke-dashoffset:-677.5}33.889%{stroke-dasharray:858.8 1792;stroke-dashoffset:-813.5}34.444%{stroke-dasharray:731.4 1792;stroke-dashoffset:-940.9}35%{stroke-dasharray:622.6 1792;stroke-dashoffset:-1049.7}35.556%{stroke-dasharray:532.6 1792;stroke-dashoffset:-1139.7}36.111%{stroke-dasharray:457.9 1792;stroke-dashoffset:-1214.4}36.667%{stroke-dasharray:395.3 1792;stroke-dashoffset:-1277}37.222%{stroke-dasharray:342.2 1792;stroke-dashoffset:-1330.1}37.778%{stroke-dasharray:296.6 1792;stroke-dashoffset:-1375.7}38.333%{stroke-dasharray:257.1 1792;stroke-dashoffset:-1415.1}38.889%{stroke-dasharray:222.7 1792;stroke-dashoffset:-1449.6}39.444%{stroke-dasharray:192.6 1792;stroke-dashoffset:-1479.7}40%{stroke-dasharray:166 1792;stroke-dashoffset:-1506.3}40.556%{stroke-dasharray:142.6 1792;stroke-dashoffset:-1529.7}41.111%{stroke-dasharray:121.9 1792;stroke-dashoffset:-1550.4}41.667%{stroke-dasharray:103.6 1792;stroke-dashoffset:-1568.7}42.222%{stroke-dasharray:87.4 1792;stroke-dashoffset:-1584.9}42.778%{stroke-dasharray:73 1792;stroke-dashoffset:-1599.2}43.333%{stroke-dasharray:60.4 1792;stroke-dashoffset:-1611.9}43.889%{stroke-dasharray:49.4 1792;stroke-dashoffset:-1622.9}44.444%{stroke-dasharray:39.7 1792;stroke-dashoffset:-1632.6}45%{stroke-dasharray:31.4 1792;stroke-dashoffset:-1640.9}45.556%{stroke-dasharray:24.2 1792;stroke-dashoffset:-1648.1}46.111%{stroke-dasharray:18.1 1792;stroke-dashoffset:-1654.2}46.667%{stroke-dasharray:13 1792;stroke-dashoffset:-1659.3}47.222%{stroke-dasharray:8.8 1792;stroke-dashoffset:-1663.5}47.778%{stroke-dasharray:5.5 1792;stroke-dashoffset:-1666.8}48.333%{stroke-dasharray:3 1792;stroke-dashoffset:-1669.3}48.889%{stroke-dasharray:1.3 1792;stroke-dashoffset:-1671}49.444%{stroke-dasharray:1 1792;stroke-dashoffset:-1671.3}50%{stroke-dasharray:1 1792;stroke-dashoffset:-1671.3}50.556%{stroke-dasharray:4.8 1792;stroke-dashoffset:-1667.5}51.111%{stroke-dasharray:18.9 1792;stroke-dashoffset:-1653.4}51.667%{stroke-dasharray:41.6 1792;stroke-dashoffset:-1630.7}52.222%{stroke-dasharray:72.5 1792;stroke-dashoffset:-1599.8}52.778%{stroke-dasharray:110.9 1792;stroke-dashoffset:-1561.4}53.333%{stroke-dasharray:156.2 1792;stroke-dashoffset:-1516.1}53.889%{stroke-dasharray:208 1792;stroke-dashoffset:-1464.3}54.444%{stroke-dasharray:265.5 1792;stroke-dashoffset:-1406.8}55%{stroke-dasharray:328.3 1792;stroke-dashoffset:-1344}55.556%{stroke-dasharray:395.8 1792;stroke-dashoffset:-1276.5}56.111%{stroke-dasharray:467.3 1792;stroke-dashoffset:-1205}56.667%{stroke-dasharray:542.4 1792;stroke-dashoffset:-1129.9}57.222%{stroke-dasharray:620.5 1792;stroke-dashoffset:-1051.8}57.778%{stroke-dasharray:700.9 1792;stroke-dashoffset:-971.4}58.333%{stroke-dasharray:783.2 1792;stroke-dashoffset:-889.1}58.889%{stroke-dasharray:866.6 1792;stroke-dashoffset:-805.7}59.444%{stroke-dasharray:950.8 1792;stroke-dashoffset:-721.5}60%{stroke-dasharray:1035 1792;stroke-dashoffset:-637.3}60.556%{stroke-dasharray:1118.8 1792;stroke-dashoffset:-553.5}61.111%{stroke-dasharray:1201.4 1792;stroke-dashoffset:-470.8}61.667%{stroke-dasharray:1282.5 1792;stroke-dashoffset:-389.8}62.222%{stroke-dasharray:1361.4 1792;stroke-dashoffset:-310.9}62.778%{stroke-dasharray:1437.5 1792;stroke-dashoffset:-234.8}63.333%{stroke-dasharray:1510.3 1792;stroke-dashoffset:-162}63.889%{stroke-dasharray:1578.2 1792;stroke-dashoffset:-94.1}64.444%{stroke-dasharray:1621.6 1792;stroke-dashoffset:-50.7}65%{stroke-dasharray:1638.9 1792;stroke-dashoffset:-33.4}65.556%{stroke-dasharray:1638.3 1792;stroke-dashoffset:-34}66.111%{stroke-dasharray:1627.2 1792;stroke-dashoffset:-45.1}66.667%{stroke-dasharray:1611.4 1792;stroke-dashoffset:-60.9}67.222%{stroke-dasharray:1595.1 1792;stroke-dashoffset:-77.2}67.778%{stroke-dasharray:1580.8 1792;stroke-dashoffset:-91.5}68.333%{stroke-dasharray:1569.6 1792;stroke-dashoffset:-102.6}68.889%{stroke-dasharray:1562 1792;stroke-dashoffset:-110.3}69.444%{stroke-dasharray:1557.5 1792;stroke-dashoffset:-114.8}70%{stroke-dasharray:1555.6 1792;stroke-dashoffset:-116.7}70.556%{stroke-dasharray:1555.3 1792;stroke-dashoffset:-117}71.111%{stroke-dasharray:1556.2 1792;stroke-dashoffset:-116.1}71.667%{stroke-dasharray:1557.6 1792;stroke-dashoffset:-114.7}72.222%{stroke-dasharray:1559 1792;stroke-dashoffset:-113.2}72.778%{stroke-dasharray:1560.4 1792;stroke-dashoffset:-111.9}73.333%{stroke-dasharray:1561.5 1792;stroke-dashoffset:-110.8}73.889%{stroke-dasharray:1562.2 1792;stroke-dashoffset:-110.1}74.444%{stroke-dasharray:1562.7 1792;stroke-dashoffset:-109.6}75%{stroke-dasharray:1562.3 1792;stroke-dashoffset:-110}75.556%{stroke-dasharray:1561.4 1792;stroke-dashoffset:-110}76.111%{stroke-dasharray:1558.6 1792;stroke-dashoffset:-110}76.667%{stroke-dasharray:1553.6 1792;stroke-dashoffset:-110}77.222%{stroke-dasharray:1546 1792;stroke-dashoffset:-110}77.778%{stroke-dasharray:1535.5 1792;stroke-dashoffset:-110}78.333%{stroke-dasharray:1521.5 1792;stroke-dashoffset:-110}78.889%{stroke-dasharray:1503.3 1792;stroke-dashoffset:-110}79.444%{stroke-dasharray:1480 1792;stroke-dashoffset:-110}80%{stroke-dasharray:1450.4 1792;stroke-dashoffset:-110}80.556%{stroke-dasharray:1412.8 1792;stroke-dashoffset:-110}81.111%{stroke-dasharray:1364.8 1792;stroke-dashoffset:-110}81.667%{stroke-dasharray:1303 1792;stroke-dashoffset:-110}82.222%{stroke-dasharray:1223.1 1792;stroke-dashoffset:-110}82.778%{stroke-dasharray:1120.3 1792;stroke-dashoffset:-110}83.333%{stroke-dasharray:994.8 1792;stroke-dashoffset:-110}83.889%{stroke-dasharray:858.8 1792;stroke-dashoffset:-110}84.444%{stroke-dasharray:731.4 1792;stroke-dashoffset:-110}85%{stroke-dasharray:622.6 1792;stroke-dashoffset:-110}85.556%{stroke-dasharray:532.6 1792;stroke-dashoffset:-110}86.111%{stroke-dasharray:457.9 1792;stroke-dashoffset:-110}86.667%{stroke-dasharray:395.3 1792;stroke-dashoffset:-110}87.222%{stroke-dasharray:342.2 1792;stroke-dashoffset:-110}87.778%{stroke-dasharray:296.6 1792;stroke-dashoffset:-110}88.333%{stroke-dasharray:257.1 1792;stroke-dashoffset:-110}88.889%{stroke-dasharray:222.7 1792;stroke-dashoffset:-110}89.444%{stroke-dasharray:192.6 1792;stroke-dashoffset:-110}90%{stroke-dasharray:166 1792;stroke-dashoffset:-110}90.556%{stroke-dasharray:142.6 1792;stroke-dashoffset:-110}91.111%{stroke-dasharray:121.9 1792;stroke-dashoffset:-110}91.667%{stroke-dasharray:103.6 1792;stroke-dashoffset:-110}92.222%{stroke-dasharray:87.4 1792;stroke-dashoffset:-110}92.778%{stroke-dasharray:73 1792;stroke-dashoffset:-110}93.333%{stroke-dasharray:60.4 1792;stroke-dashoffset:-110}93.889%{stroke-dasharray:49.4 1792;stroke-dashoffset:-110}94.444%{stroke-dasharray:39.7 1792;stroke-dashoffset:-110}95%{stroke-dasharray:31.4 1792;stroke-dashoffset:-110}95.556%{stroke-dasharray:24.2 1792;stroke-dashoffset:-110}96.111%{stroke-dasharray:18.1 1792;stroke-dashoffset:-110}96.667%{stroke-dasharray:13 1792;stroke-dashoffset:-110}97.222%{stroke-dasharray:8.8 1792;stroke-dashoffset:-110}97.778%{stroke-dasharray:5.5 1792;stroke-dashoffset:-110}98.333%{stroke-dasharray:3 1792;stroke-dashoffset:-110}98.889%{stroke-dasharray:1.3 1792;stroke-dashoffset:-110}99.444%{stroke-dasharray:1 1792;stroke-dashoffset:-110}100%{stroke-dasharray:1 1792;stroke-dashoffset:-110}}
+@keyframes fl-1{0%{stroke-dasharray:1 1662;stroke-dashoffset:-110}0.556%{stroke-dasharray:4.4 1662;stroke-dashoffset:-110}1.111%{stroke-dasharray:17.3 1662;stroke-dashoffset:-110}1.667%{stroke-dasharray:38.2 1662;stroke-dashoffset:-110}2.222%{stroke-dasharray:66.4 1662;stroke-dashoffset:-110}2.778%{stroke-dasharray:101.6 1662;stroke-dashoffset:-110}3.333%{stroke-dasharray:143.2 1662;stroke-dashoffset:-110}3.889%{stroke-dasharray:190.6 1662;stroke-dashoffset:-110}4.444%{stroke-dasharray:243.4 1662;stroke-dashoffset:-110}5%{stroke-dasharray:301 1662;stroke-dashoffset:-110}5.556%{stroke-dasharray:362.8 1662;stroke-dashoffset:-110}6.111%{stroke-dasharray:428.4 1662;stroke-dashoffset:-110}6.667%{stroke-dasharray:497.3 1662;stroke-dashoffset:-110}7.222%{stroke-dasharray:568.8 1662;stroke-dashoffset:-110}7.778%{stroke-dasharray:642.5 1662;stroke-dashoffset:-110}8.333%{stroke-dasharray:717.9 1662;stroke-dashoffset:-110}8.889%{stroke-dasharray:794.4 1662;stroke-dashoffset:-110}9.444%{stroke-dasharray:871.6 1662;stroke-dashoffset:-110}10%{stroke-dasharray:948.8 1662;stroke-dashoffset:-110}10.556%{stroke-dasharray:1025.6 1662;stroke-dashoffset:-110}11.111%{stroke-dasharray:1101.4 1662;stroke-dashoffset:-110}11.667%{stroke-dasharray:1175.7 1662;stroke-dashoffset:-110}12.222%{stroke-dasharray:1248 1662;stroke-dashoffset:-110}12.778%{stroke-dasharray:1317.8 1662;stroke-dashoffset:-110}13.333%{stroke-dasharray:1384.5 1662;stroke-dashoffset:-110}13.889%{stroke-dasharray:1446.7 1662;stroke-dashoffset:-110}14.444%{stroke-dasharray:1486.5 1662;stroke-dashoffset:-110}15%{stroke-dasharray:1502.4 1662;stroke-dashoffset:-110}15.556%{stroke-dasharray:1501.9 1662;stroke-dashoffset:-110}16.111%{stroke-dasharray:1491.7 1662;stroke-dashoffset:-110}16.667%{stroke-dasharray:1477.2 1662;stroke-dashoffset:-110}17.222%{stroke-dasharray:1462.2 1662;stroke-dashoffset:-110}17.778%{stroke-dasharray:1449.1 1662;stroke-dashoffset:-110}18.333%{stroke-dasharray:1438.9 1662;stroke-dashoffset:-110}18.889%{stroke-dasharray:1431.9 1662;stroke-dashoffset:-110}19.444%{stroke-dasharray:1427.8 1662;stroke-dashoffset:-110}20%{stroke-dasharray:1426 1662;stroke-dashoffset:-110}20.556%{stroke-dasharray:1425.8 1662;stroke-dashoffset:-110}21.111%{stroke-dasharray:1426.6 1662;stroke-dashoffset:-110}21.667%{stroke-dasharray:1427.8 1662;stroke-dashoffset:-110}22.222%{stroke-dasharray:1429.2 1662;stroke-dashoffset:-110}22.778%{stroke-dasharray:1430.4 1662;stroke-dashoffset:-110}23.333%{stroke-dasharray:1431.4 1662;stroke-dashoffset:-110}23.889%{stroke-dasharray:1432.1 1662;stroke-dashoffset:-110}24.444%{stroke-dasharray:1432.5 1662;stroke-dashoffset:-110}25%{stroke-dasharray:1432.2 1662;stroke-dashoffset:-110}25.556%{stroke-dasharray:1431.4 1662;stroke-dashoffset:-110.8}26.111%{stroke-dasharray:1428.8 1662;stroke-dashoffset:-113.4}26.667%{stroke-dasharray:1424.2 1662;stroke-dashoffset:-118}27.222%{stroke-dasharray:1417.3 1662;stroke-dashoffset:-124.9}27.778%{stroke-dasharray:1407.6 1662;stroke-dashoffset:-134.6}28.333%{stroke-dasharray:1394.8 1662;stroke-dashoffset:-147.4}28.889%{stroke-dasharray:1378.1 1662;stroke-dashoffset:-164.1}29.444%{stroke-dasharray:1356.8 1662;stroke-dashoffset:-185.4}30%{stroke-dasharray:1329.6 1662;stroke-dashoffset:-212.5}30.556%{stroke-dasharray:1295.1 1662;stroke-dashoffset:-247}31.111%{stroke-dasharray:1251.1 1662;stroke-dashoffset:-291}31.667%{stroke-dasharray:1194.5 1662;stroke-dashoffset:-347.7}32.222%{stroke-dasharray:1121.2 1662;stroke-dashoffset:-421}32.778%{stroke-dasharray:1027 1662;stroke-dashoffset:-515.2}33.333%{stroke-dasharray:911.9 1662;stroke-dashoffset:-630.2}33.889%{stroke-dasharray:787.3 1662;stroke-dashoffset:-754.9}34.444%{stroke-dasharray:670.4 1662;stroke-dashoffset:-871.7}35%{stroke-dasharray:570.8 1662;stroke-dashoffset:-971.4}35.556%{stroke-dasharray:488.2 1662;stroke-dashoffset:-1053.9}36.111%{stroke-dasharray:419.8 1662;stroke-dashoffset:-1122.4}36.667%{stroke-dasharray:362.4 1662;stroke-dashoffset:-1179.8}37.222%{stroke-dasharray:313.7 1662;stroke-dashoffset:-1228.5}37.778%{stroke-dasharray:271.9 1662;stroke-dashoffset:-1270.3}38.333%{stroke-dasharray:235.7 1662;stroke-dashoffset:-1306.4}38.889%{stroke-dasharray:204.2 1662;stroke-dashoffset:-1338}39.444%{stroke-dasharray:176.5 1662;stroke-dashoffset:-1365.6}40%{stroke-dasharray:152.2 1662;stroke-dashoffset:-1390}40.556%{stroke-dasharray:130.7 1662;stroke-dashoffset:-1411.4}41.111%{stroke-dasharray:111.7 1662;stroke-dashoffset:-1430.4}41.667%{stroke-dasharray:94.9 1662;stroke-dashoffset:-1447.2}42.222%{stroke-dasharray:80.1 1662;stroke-dashoffset:-1462.1}42.778%{stroke-dasharray:67 1662;stroke-dashoffset:-1475.2}43.333%{stroke-dasharray:55.4 1662;stroke-dashoffset:-1486.8}43.889%{stroke-dasharray:45.3 1662;stroke-dashoffset:-1496.9}44.444%{stroke-dasharray:36.4 1662;stroke-dashoffset:-1505.8}45%{stroke-dasharray:28.7 1662;stroke-dashoffset:-1513.4}45.556%{stroke-dasharray:22.1 1662;stroke-dashoffset:-1520}46.111%{stroke-dasharray:16.6 1662;stroke-dashoffset:-1525.6}46.667%{stroke-dasharray:11.9 1662;stroke-dashoffset:-1530.3}47.222%{stroke-dasharray:8.1 1662;stroke-dashoffset:-1534.1}47.778%{stroke-dasharray:5.1 1662;stroke-dashoffset:-1537.1}48.333%{stroke-dasharray:2.8 1662;stroke-dashoffset:-1539.4}48.889%{stroke-dasharray:1.2 1662;stroke-dashoffset:-1541}49.444%{stroke-dasharray:1 1662;stroke-dashoffset:-1541.2}50%{stroke-dasharray:1 1662;stroke-dashoffset:-1541.2}50.556%{stroke-dasharray:4.4 1662;stroke-dashoffset:-1537.8}51.111%{stroke-dasharray:17.3 1662;stroke-dashoffset:-1524.9}51.667%{stroke-dasharray:38.2 1662;stroke-dashoffset:-1504}52.222%{stroke-dasharray:66.4 1662;stroke-dashoffset:-1475.7}52.778%{stroke-dasharray:101.6 1662;stroke-dashoffset:-1440.5}53.333%{stroke-dasharray:143.2 1662;stroke-dashoffset:-1399}53.889%{stroke-dasharray:190.6 1662;stroke-dashoffset:-1351.5}54.444%{stroke-dasharray:243.4 1662;stroke-dashoffset:-1298.8}55%{stroke-dasharray:301 1662;stroke-dashoffset:-1241.2}55.556%{stroke-dasharray:362.8 1662;stroke-dashoffset:-1179.4}56.111%{stroke-dasharray:428.4 1662;stroke-dashoffset:-1113.8}56.667%{stroke-dasharray:497.3 1662;stroke-dashoffset:-1044.9}57.222%{stroke-dasharray:568.8 1662;stroke-dashoffset:-973.4}57.778%{stroke-dasharray:642.5 1662;stroke-dashoffset:-899.6}58.333%{stroke-dasharray:717.9 1662;stroke-dashoffset:-824.2}58.889%{stroke-dasharray:794.4 1662;stroke-dashoffset:-747.7}59.444%{stroke-dasharray:871.6 1662;stroke-dashoffset:-670.6}60%{stroke-dasharray:948.8 1662;stroke-dashoffset:-593.4}60.556%{stroke-dasharray:1025.6 1662;stroke-dashoffset:-516.6}61.111%{stroke-dasharray:1101.4 1662;stroke-dashoffset:-440.8}61.667%{stroke-dasharray:1175.7 1662;stroke-dashoffset:-366.5}62.222%{stroke-dasharray:1248 1662;stroke-dashoffset:-294.2}62.778%{stroke-dasharray:1317.8 1662;stroke-dashoffset:-224.4}63.333%{stroke-dasharray:1384.5 1662;stroke-dashoffset:-157.7}63.889%{stroke-dasharray:1446.7 1662;stroke-dashoffset:-95.5}64.444%{stroke-dasharray:1486.5 1662;stroke-dashoffset:-55.7}65%{stroke-dasharray:1502.4 1662;stroke-dashoffset:-39.8}65.556%{stroke-dasharray:1501.9 1662;stroke-dashoffset:-40.3}66.111%{stroke-dasharray:1491.7 1662;stroke-dashoffset:-50.5}66.667%{stroke-dasharray:1477.2 1662;stroke-dashoffset:-65}67.222%{stroke-dasharray:1462.2 1662;stroke-dashoffset:-79.9}67.778%{stroke-dasharray:1449.1 1662;stroke-dashoffset:-93.1}68.333%{stroke-dasharray:1438.9 1662;stroke-dashoffset:-103.3}68.889%{stroke-dasharray:1431.9 1662;stroke-dashoffset:-110.3}69.444%{stroke-dasharray:1427.8 1662;stroke-dashoffset:-114.4}70%{stroke-dasharray:1426 1662;stroke-dashoffset:-116.2}70.556%{stroke-dasharray:1425.8 1662;stroke-dashoffset:-116.4}71.111%{stroke-dasharray:1426.6 1662;stroke-dashoffset:-115.6}71.667%{stroke-dasharray:1427.8 1662;stroke-dashoffset:-114.3}72.222%{stroke-dasharray:1429.2 1662;stroke-dashoffset:-113}72.778%{stroke-dasharray:1430.4 1662;stroke-dashoffset:-111.7}73.333%{stroke-dasharray:1431.4 1662;stroke-dashoffset:-110.8}73.889%{stroke-dasharray:1432.1 1662;stroke-dashoffset:-110.1}74.444%{stroke-dasharray:1432.5 1662;stroke-dashoffset:-109.7}75%{stroke-dasharray:1432.2 1662;stroke-dashoffset:-110}75.556%{stroke-dasharray:1431.4 1662;stroke-dashoffset:-110}76.111%{stroke-dasharray:1428.8 1662;stroke-dashoffset:-110}76.667%{stroke-dasharray:1424.2 1662;stroke-dashoffset:-110}77.222%{stroke-dasharray:1417.3 1662;stroke-dashoffset:-110}77.778%{stroke-dasharray:1407.6 1662;stroke-dashoffset:-110}78.333%{stroke-dasharray:1394.8 1662;stroke-dashoffset:-110}78.889%{stroke-dasharray:1378.1 1662;stroke-dashoffset:-110}79.444%{stroke-dasharray:1356.8 1662;stroke-dashoffset:-110}80%{stroke-dasharray:1329.6 1662;stroke-dashoffset:-110}80.556%{stroke-dasharray:1295.1 1662;stroke-dashoffset:-110}81.111%{stroke-dasharray:1251.1 1662;stroke-dashoffset:-110}81.667%{stroke-dasharray:1194.5 1662;stroke-dashoffset:-110}82.222%{stroke-dasharray:1121.2 1662;stroke-dashoffset:-110}82.778%{stroke-dasharray:1027 1662;stroke-dashoffset:-110}83.333%{stroke-dasharray:911.9 1662;stroke-dashoffset:-110}83.889%{stroke-dasharray:787.3 1662;stroke-dashoffset:-110}84.444%{stroke-dasharray:670.4 1662;stroke-dashoffset:-110}85%{stroke-dasharray:570.8 1662;stroke-dashoffset:-110}85.556%{stroke-dasharray:488.2 1662;stroke-dashoffset:-110}86.111%{stroke-dasharray:419.8 1662;stroke-dashoffset:-110}86.667%{stroke-dasharray:362.4 1662;stroke-dashoffset:-110}87.222%{stroke-dasharray:313.7 1662;stroke-dashoffset:-110}87.778%{stroke-dasharray:271.9 1662;stroke-dashoffset:-110}88.333%{stroke-dasharray:235.7 1662;stroke-dashoffset:-110}88.889%{stroke-dasharray:204.2 1662;stroke-dashoffset:-110}89.444%{stroke-dasharray:176.5 1662;stroke-dashoffset:-110}90%{stroke-dasharray:152.2 1662;stroke-dashoffset:-110}90.556%{stroke-dasharray:130.7 1662;stroke-dashoffset:-110}91.111%{stroke-dasharray:111.7 1662;stroke-dashoffset:-110}91.667%{stroke-dasharray:94.9 1662;stroke-dashoffset:-110}92.222%{stroke-dasharray:80.1 1662;stroke-dashoffset:-110}92.778%{stroke-dasharray:67 1662;stroke-dashoffset:-110}93.333%{stroke-dasharray:55.4 1662;stroke-dashoffset:-110}93.889%{stroke-dasharray:45.3 1662;stroke-dashoffset:-110}94.444%{stroke-dasharray:36.4 1662;stroke-dashoffset:-110}95%{stroke-dasharray:28.7 1662;stroke-dashoffset:-110}95.556%{stroke-dasharray:22.1 1662;stroke-dashoffset:-110}96.111%{stroke-dasharray:16.6 1662;stroke-dashoffset:-110}96.667%{stroke-dasharray:11.9 1662;stroke-dashoffset:-110}97.222%{stroke-dasharray:8.1 1662;stroke-dashoffset:-110}97.778%{stroke-dasharray:5.1 1662;stroke-dashoffset:-110}98.333%{stroke-dasharray:2.8 1662;stroke-dashoffset:-110}98.889%{stroke-dasharray:1.2 1662;stroke-dashoffset:-110}99.444%{stroke-dasharray:1 1662;stroke-dashoffset:-110}100%{stroke-dasharray:1 1662;stroke-dashoffset:-110}}
+@keyframes fl-2{0%{stroke-dasharray:1 594;stroke-dashoffset:-110}0.556%{stroke-dasharray:1 594;stroke-dashoffset:-110}1.111%{stroke-dasharray:1.6 594;stroke-dashoffset:-110}1.667%{stroke-dasharray:3.6 594;stroke-dashoffset:-110}2.222%{stroke-dasharray:6.6 594;stroke-dashoffset:-110}2.778%{stroke-dasharray:10.6 594;stroke-dashoffset:-110}3.333%{stroke-dasharray:15.5 594;stroke-dashoffset:-110}3.889%{stroke-dasharray:21.6 594;stroke-dashoffset:-110}4.444%{stroke-dasharray:28.7 594;stroke-dashoffset:-110}5%{stroke-dasharray:37.1 594;stroke-dashoffset:-110}5.556%{stroke-dasharray:46.6 594;stroke-dashoffset:-110}6.111%{stroke-dasharray:57.5 594;stroke-dashoffset:-110}6.667%{stroke-dasharray:69.6 594;stroke-dashoffset:-110}7.222%{stroke-dasharray:83.2 594;stroke-dashoffset:-110}7.778%{stroke-dasharray:98.2 594;stroke-dashoffset:-110}8.333%{stroke-dasharray:114.6 594;stroke-dashoffset:-110}8.889%{stroke-dasharray:132.7 594;stroke-dashoffset:-110}9.444%{stroke-dasharray:152.3 594;stroke-dashoffset:-110}10%{stroke-dasharray:173.5 594;stroke-dashoffset:-110}10.556%{stroke-dasharray:196.5 594;stroke-dashoffset:-110}11.111%{stroke-dasharray:221.2 594;stroke-dashoffset:-110}11.667%{stroke-dasharray:247.7 594;stroke-dashoffset:-110}12.222%{stroke-dasharray:276 594;stroke-dashoffset:-110}12.778%{stroke-dasharray:306.2 594;stroke-dashoffset:-110}13.333%{stroke-dasharray:338.4 594;stroke-dashoffset:-110}13.889%{stroke-dasharray:372 594;stroke-dashoffset:-110}14.444%{stroke-dasharray:394.3 594;stroke-dashoffset:-110}15%{stroke-dasharray:403.2 594;stroke-dashoffset:-110}15.556%{stroke-dasharray:402.9 594;stroke-dashoffset:-110}16.111%{stroke-dasharray:397.2 594;stroke-dashoffset:-110}16.667%{stroke-dasharray:389.1 594;stroke-dashoffset:-110}17.222%{stroke-dasharray:380.7 594;stroke-dashoffset:-110}17.778%{stroke-dasharray:373.4 594;stroke-dashoffset:-110}18.333%{stroke-dasharray:367.7 594;stroke-dashoffset:-110}18.889%{stroke-dasharray:363.8 594;stroke-dashoffset:-110}19.444%{stroke-dasharray:361.5 594;stroke-dashoffset:-110}20%{stroke-dasharray:360.5 594;stroke-dashoffset:-110}20.556%{stroke-dasharray:360.3 594;stroke-dashoffset:-110}21.111%{stroke-dasharray:360.8 594;stroke-dashoffset:-110}21.667%{stroke-dasharray:361.5 594;stroke-dashoffset:-110}22.222%{stroke-dasharray:362.3 594;stroke-dashoffset:-110}22.778%{stroke-dasharray:362.9 594;stroke-dashoffset:-110}23.333%{stroke-dasharray:363.5 594;stroke-dashoffset:-110}23.889%{stroke-dasharray:363.9 594;stroke-dashoffset:-110}24.444%{stroke-dasharray:364.1 594;stroke-dashoffset:-110}25%{stroke-dasharray:363.9 594;stroke-dashoffset:-110}25.556%{stroke-dasharray:363.7 594;stroke-dashoffset:-110.2}26.111%{stroke-dasharray:363.1 594;stroke-dashoffset:-110.9}26.667%{stroke-dasharray:361.9 594;stroke-dashoffset:-112}27.222%{stroke-dasharray:360.1 594;stroke-dashoffset:-113.8}27.778%{stroke-dasharray:357.7 594;stroke-dashoffset:-116.2}28.333%{stroke-dasharray:354.4 594;stroke-dashoffset:-119.5}28.889%{stroke-dasharray:350.2 594;stroke-dashoffset:-123.7}29.444%{stroke-dasharray:344.8 594;stroke-dashoffset:-129.2}30%{stroke-dasharray:337.9 594;stroke-dashoffset:-136.1}30.556%{stroke-dasharray:329.1 594;stroke-dashoffset:-144.8}31.111%{stroke-dasharray:317.9 594;stroke-dashoffset:-156}31.667%{stroke-dasharray:303.5 594;stroke-dashoffset:-170.4}32.222%{stroke-dasharray:284.9 594;stroke-dashoffset:-189}32.778%{stroke-dasharray:261 594;stroke-dashoffset:-213}33.333%{stroke-dasharray:231.7 594;stroke-dashoffset:-242.2}33.889%{stroke-dasharray:200 594;stroke-dashoffset:-273.9}34.444%{stroke-dasharray:170.4 594;stroke-dashoffset:-303.6}35%{stroke-dasharray:145 594;stroke-dashoffset:-328.9}35.556%{stroke-dasharray:124.1 594;stroke-dashoffset:-349.9}36.111%{stroke-dasharray:106.7 594;stroke-dashoffset:-367.2}36.667%{stroke-dasharray:92.1 594;stroke-dashoffset:-381.8}37.222%{stroke-dasharray:79.7 594;stroke-dashoffset:-394.2}37.778%{stroke-dasharray:69.1 594;stroke-dashoffset:-404.8}38.333%{stroke-dasharray:59.9 594;stroke-dashoffset:-414}38.889%{stroke-dasharray:51.9 594;stroke-dashoffset:-422}39.444%{stroke-dasharray:44.9 594;stroke-dashoffset:-429.1}40%{stroke-dasharray:38.7 594;stroke-dashoffset:-435.2}40.556%{stroke-dasharray:33.2 594;stroke-dashoffset:-440.7}41.111%{stroke-dasharray:28.4 594;stroke-dashoffset:-445.5}41.667%{stroke-dasharray:24.1 594;stroke-dashoffset:-449.8}42.222%{stroke-dasharray:20.3 594;stroke-dashoffset:-453.6}42.778%{stroke-dasharray:17 594;stroke-dashoffset:-456.9}43.333%{stroke-dasharray:14.1 594;stroke-dashoffset:-459.8}43.889%{stroke-dasharray:11.5 594;stroke-dashoffset:-462.4}44.444%{stroke-dasharray:9.3 594;stroke-dashoffset:-464.7}45%{stroke-dasharray:7.3 594;stroke-dashoffset:-466.6}45.556%{stroke-dasharray:5.6 594;stroke-dashoffset:-468.3}46.111%{stroke-dasharray:4.2 594;stroke-dashoffset:-469.7}46.667%{stroke-dasharray:3 594;stroke-dashoffset:-470.9}47.222%{stroke-dasharray:2 594;stroke-dashoffset:-471.9}47.778%{stroke-dasharray:1.3 594;stroke-dashoffset:-472.6}48.333%{stroke-dasharray:1 594;stroke-dashoffset:-472.9}48.889%{stroke-dasharray:1 594;stroke-dashoffset:-472.9}49.444%{stroke-dasharray:1 594;stroke-dashoffset:-472.9}50%{stroke-dasharray:1 594;stroke-dashoffset:-472.9}50.556%{stroke-dasharray:1 594;stroke-dashoffset:-472.9}51.111%{stroke-dasharray:1.6 594;stroke-dashoffset:-472.3}51.667%{stroke-dasharray:3.6 594;stroke-dashoffset:-470.3}52.222%{stroke-dasharray:6.6 594;stroke-dashoffset:-467.3}52.778%{stroke-dasharray:10.6 594;stroke-dashoffset:-463.3}53.333%{stroke-dasharray:15.5 594;stroke-dashoffset:-458.4}53.889%{stroke-dasharray:21.6 594;stroke-dashoffset:-452.3}54.444%{stroke-dasharray:28.7 594;stroke-dashoffset:-445.2}55%{stroke-dasharray:37.1 594;stroke-dashoffset:-436.9}55.556%{stroke-dasharray:46.6 594;stroke-dashoffset:-427.3}56.111%{stroke-dasharray:57.5 594;stroke-dashoffset:-416.5}56.667%{stroke-dasharray:69.6 594;stroke-dashoffset:-404.3}57.222%{stroke-dasharray:83.2 594;stroke-dashoffset:-390.7}57.778%{stroke-dasharray:98.2 594;stroke-dashoffset:-375.7}58.333%{stroke-dasharray:114.6 594;stroke-dashoffset:-359.3}58.889%{stroke-dasharray:132.7 594;stroke-dashoffset:-341.3}59.444%{stroke-dasharray:152.3 594;stroke-dashoffset:-321.6}60%{stroke-dasharray:173.5 594;stroke-dashoffset:-300.4}60.556%{stroke-dasharray:196.5 594;stroke-dashoffset:-277.4}61.111%{stroke-dasharray:221.2 594;stroke-dashoffset:-252.8}61.667%{stroke-dasharray:247.7 594;stroke-dashoffset:-226.3}62.222%{stroke-dasharray:276 594;stroke-dashoffset:-197.9}62.778%{stroke-dasharray:306.2 594;stroke-dashoffset:-167.7}63.333%{stroke-dasharray:338.4 594;stroke-dashoffset:-135.5}63.889%{stroke-dasharray:372 594;stroke-dashoffset:-101.9}64.444%{stroke-dasharray:394.3 594;stroke-dashoffset:-79.6}65%{stroke-dasharray:403.2 594;stroke-dashoffset:-70.8}65.556%{stroke-dasharray:402.9 594;stroke-dashoffset:-71.1}66.111%{stroke-dasharray:397.2 594;stroke-dashoffset:-76.8}66.667%{stroke-dasharray:389.1 594;stroke-dashoffset:-84.8}67.222%{stroke-dasharray:380.7 594;stroke-dashoffset:-93.2}67.778%{stroke-dasharray:373.4 594;stroke-dashoffset:-100.5}68.333%{stroke-dasharray:367.7 594;stroke-dashoffset:-106.2}68.889%{stroke-dasharray:363.8 594;stroke-dashoffset:-110.1}69.444%{stroke-dasharray:361.5 594;stroke-dashoffset:-112.4}70%{stroke-dasharray:360.5 594;stroke-dashoffset:-113.5}70.556%{stroke-dasharray:360.3 594;stroke-dashoffset:-113.6}71.111%{stroke-dasharray:360.8 594;stroke-dashoffset:-113.1}71.667%{stroke-dasharray:361.5 594;stroke-dashoffset:-112.4}72.222%{stroke-dasharray:362.3 594;stroke-dashoffset:-111.7}72.778%{stroke-dasharray:362.9 594;stroke-dashoffset:-111}73.333%{stroke-dasharray:363.5 594;stroke-dashoffset:-110.4}73.889%{stroke-dasharray:363.9 594;stroke-dashoffset:-110}74.444%{stroke-dasharray:364.1 594;stroke-dashoffset:-109.8}75%{stroke-dasharray:363.9 594;stroke-dashoffset:-110}75.556%{stroke-dasharray:363.7 594;stroke-dashoffset:-110}76.111%{stroke-dasharray:363.1 594;stroke-dashoffset:-110}76.667%{stroke-dasharray:361.9 594;stroke-dashoffset:-110}77.222%{stroke-dasharray:360.1 594;stroke-dashoffset:-110}77.778%{stroke-dasharray:357.7 594;stroke-dashoffset:-110}78.333%{stroke-dasharray:354.4 594;stroke-dashoffset:-110}78.889%{stroke-dasharray:350.2 594;stroke-dashoffset:-110}79.444%{stroke-dasharray:344.8 594;stroke-dashoffset:-110}80%{stroke-dasharray:337.9 594;stroke-dashoffset:-110}80.556%{stroke-dasharray:329.1 594;stroke-dashoffset:-110}81.111%{stroke-dasharray:317.9 594;stroke-dashoffset:-110}81.667%{stroke-dasharray:303.5 594;stroke-dashoffset:-110}82.222%{stroke-dasharray:284.9 594;stroke-dashoffset:-110}82.778%{stroke-dasharray:261 594;stroke-dashoffset:-110}83.333%{stroke-dasharray:231.7 594;stroke-dashoffset:-110}83.889%{stroke-dasharray:200 594;stroke-dashoffset:-110}84.444%{stroke-dasharray:170.4 594;stroke-dashoffset:-110}85%{stroke-dasharray:145 594;stroke-dashoffset:-110}85.556%{stroke-dasharray:124.1 594;stroke-dashoffset:-110}86.111%{stroke-dasharray:106.7 594;stroke-dashoffset:-110}86.667%{stroke-dasharray:92.1 594;stroke-dashoffset:-110}87.222%{stroke-dasharray:79.7 594;stroke-dashoffset:-110}87.778%{stroke-dasharray:69.1 594;stroke-dashoffset:-110}88.333%{stroke-dasharray:59.9 594;stroke-dashoffset:-110}88.889%{stroke-dasharray:51.9 594;stroke-dashoffset:-110}89.444%{stroke-dasharray:44.9 594;stroke-dashoffset:-110}90%{stroke-dasharray:38.7 594;stroke-dashoffset:-110}90.556%{stroke-dasharray:33.2 594;stroke-dashoffset:-110}91.111%{stroke-dasharray:28.4 594;stroke-dashoffset:-110}91.667%{stroke-dasharray:24.1 594;stroke-dashoffset:-110}92.222%{stroke-dasharray:20.3 594;stroke-dashoffset:-110}92.778%{stroke-dasharray:17 594;stroke-dashoffset:-110}93.333%{stroke-dasharray:14.1 594;stroke-dashoffset:-110}93.889%{stroke-dasharray:11.5 594;stroke-dashoffset:-110}94.444%{stroke-dasharray:9.3 594;stroke-dashoffset:-110}95%{stroke-dasharray:7.3 594;stroke-dashoffset:-110}95.556%{stroke-dasharray:5.6 594;stroke-dashoffset:-110}96.111%{stroke-dasharray:4.2 594;stroke-dashoffset:-110}96.667%{stroke-dasharray:3 594;stroke-dashoffset:-110}97.222%{stroke-dasharray:2 594;stroke-dashoffset:-110}97.778%{stroke-dasharray:1.3 594;stroke-dashoffset:-110}98.333%{stroke-dasharray:1 594;stroke-dashoffset:-110}98.889%{stroke-dasharray:1 594;stroke-dashoffset:-110}99.444%{stroke-dasharray:1 594;stroke-dashoffset:-110}100%{stroke-dasharray:1 594;stroke-dashoffset:-110}}
 @keyframes spin{to{transform:rotate(360deg)}}
 .toast{z-index:100;position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,16px);color:var(--ink);padding:12px 20px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:all .22s;max-width:90vw}
 .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -334,9 +344,13 @@ body.wide .app{max-width:860px}
 .now{display:flex;align-items:center;gap:10px;margin:2px 4px;color:var(--primary);font-size:12px;font-weight:600}
 .now:after{content:"";flex:1;height:2px;border-radius:2px;background:rgba(192,98,43,0.45);background:color-mix(in srgb,var(--primary) 45%,transparent)}
 .now i{width:9px;height:9px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px var(--primary-soft)}
-.skeleton{height:132px;border-radius:26px;background:var(--surface);box-shadow:var(--raised);position:relative;overflow:hidden}
-.skeleton:after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(var(--hl),.35) 50%,transparent 70%);animation:shimmer 1.4s infinite}
-@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+/* Заглушка карточки, пока грузятся заявки: без переливания, в углу «Момент» и пиктограмма загрузки */
+.skeleton{height:132px;border-radius:26px;background:var(--surface);box-shadow:var(--raised);position:relative;overflow:hidden;padding:18px 20px}
+.skeleton i{display:block;height:12px;border-radius:6px;background:var(--hair);margin:0 0 14px}
+.skeleton i:nth-of-type(1){width:34%;height:14px}
+.skeleton i:nth-of-type(2){width:62%;height:16px;margin-top:18px}
+.skeleton i:nth-of-type(3){width:80%}
+.moment{position:absolute;top:14px;right:16px;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:650;color:var(--primary)}
 /* нижняя шторка фильтров */
 .sheet-bg{position:fixed;inset:0;z-index:20;background:rgba(30,24,18,.28);animation:fadein .2s both}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;max-height:82vh;overflow:auto;background:var(--panel);border-radius:30px 30px 0 0;
@@ -395,7 +409,6 @@ details summary::-webkit-details-marker{display:none}
   display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 12px 12px 20px;border-radius:999px;background:var(--panel);box-shadow:var(--raised-lg)}
 .report-space{height:96px}
 .saving{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:999px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);font-weight:600}
-.saving .spinner{width:18px;height:18px}
 /* кнопка «Отправить» на экране отчёта — всегда внизу экрана */
 .send-bar{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),488px);bottom:calc(12px + env(safe-area-inset-bottom));z-index:20}
 .send-space{height:84px}
@@ -448,6 +461,14 @@ details summary::-webkit-details-marker{display:none}
 .input.time{width:124px;min-height:44px;padding:0 14px;text-align:center;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
 .input.time::-webkit-date-and-time-value{text-align:center}
 .input.time::-webkit-calendar-picker-indicator{display:none}
+/* Пустое поле времени: iPhone не рисует в нём ничего — показываем свою подсказку «--:--» и пунктирную рамку */
+.time-wrap{position:relative;display:inline-block}
+.time-hint{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:6px;pointer-events:none;
+  font-size:17px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.time-wrap.empty .time-hint{display:flex}
+.time-wrap.empty .input.time{color:transparent;box-shadow:none;outline:1.5px dashed var(--primary);outline-offset:-1.5px}
+.time-wrap.empty .input.time:focus{color:inherit}
+.time-wrap.empty .input.time:focus + .time-hint{display:none}
 .now-btn{white-space:nowrap}
 .no-photo{padding:14px 16px;border-radius:20px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);font-size:13.5px;line-height:1.45}
 .no-photo-btn{margin-top:12px}
@@ -460,6 +481,8 @@ details summary::-webkit-details-marker{display:none}
 .pending-bar{padding:14px 16px;border-radius:22px;margin:0 0 16px;background:var(--panel);box-shadow:var(--raised-sm)}
 .pending-bar b{display:block;font-size:14.5px;color:var(--primary)}
 .pending-bar small{display:block;color:var(--muted);font-size:12.5px;margin:2px 0 12px}
+.pending-bar .pb-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pending-bar.err b{color:var(--danger)}
 .big-status{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px}
 </style>
 </head>
@@ -524,6 +547,15 @@ details summary::-webkit-details-marker{display:none}
    * Перерисовать экран, не трогая поле, в котором человек сейчас печатает.
    * Если пересоздать поле, iOS сбрасывает клавиатуру (с цифр на буквы) — поэтому меняем всё вокруг него.
    */
+  /** Какой экран сейчас открыт: фоновые ответы сервера перерисовывают только свой экран (иначе админку «скидывало» на заявки). */
+  let screen = '';
+
+  /** Анимированная пиктограмма загрузки. tone 'on' — на оранжевой кнопке. */
+  const LOADER_PATHS = '<path class="fl-0" d="M295.62 244.45 A136.15 136.15 0 0 0 80.16 293.37 A136.15 136.15 0 0 0 194.81 482.24 L194.83 483.75 A135.9 135.9 0 0 0 90.67 693.49 A135.9 135.9 0 0 0 324.61 682.98 L330.15 686.19 A136.38 136.38 0 0 0 499.45 884.5 A136.38 136.38 0 0 0 470.56 625.36"/><path class="fl-1" d="M722.34 753.32 A137.24 137.24 0 0 0 697.68 483.99 L697.6 481.82 A136 136 0 0 0 802.41 272.49 A136 136 0 0 0 568.47 281.42 L561.96 277.57 A136.17 136.17 0 0 0 394.17 78.31 A136.17 136.17 0 0 0 422.14 337.3"/><path class="fl-2" d="M519.56 470.57 C519.13 465.95 518.25 461.35 516.92 456.86 C515.59 452.37 513.81 447.99 511.61 443.81 C509.41 439.63 506.79 435.64 503.79 431.93 C500.8 428.22 497.42 424.8 493.73 421.72 C490.04 418.64 486.03 415.91 481.78 413.59 C477.52 411.27 473.03 409.36 468.37 407.9 C463.72 406.44 458.9 405.43 454.02 404.9 C449.13 404.37 444.18 404.31 439.26 404.74 C434.34 405.18 429.44 406.09 424.67 407.48 C419.89 408.87 415.24 410.72 410.81 413.02 C406.37 415.32 402.15 418.07 398.22 421.2 C394.3 424.33 390.68 427.85 387.42 431.71 C384.17 435.56 381.28 439.74 378.83 444.16 C376.37 448.59 374.35 453.26 372.79 458.1 C371.24 462.93 370.16 467.93 369.57 472.99 C368.98 478.05 368.89 483.17 369.3 488.26 C369.7 493.35 370.61 498.41 372 503.33 C373.39 508.26 375.26 513.05 377.58 517.62 C379.91 522.19 382.68 526.53 385.84 530.56 C389.01 534.6 392.58 538.33 396.47 541.67 C400.36 545.02 404.59 547.99 409.06 550.51 C413.53 553.04 418.24 555.13 423.12 556.75 C427.99 558.36 433.03 559.49 438.12 560.13 C443.21 560.77 448.36 560.9 453.48 560.54 C458.59 560.17 463.66 559.31 468.6 557.96 C473.54 556.62 478.34 554.79 482.92 552.51 C487.49 550.23 491.84 547.51 495.87 544.4 C499.91 541.29 503.64 537.78 506.98 533.96 C510.33 530.13 513.29 525.98 515.83 521.6 C518.36 517.21 520.45 512.58 522.08 507.8 C523.7 503.02 524.86 498.09 525.52 493.11 C526.19 488.13 526.36 483.09 526.04 478.1 C525.73 473.11 524.93 468.16 523.65 463.34 C522.38 458.53 520.64 453.86 518.47 449.41 C516.3 444.96 513.7 440.74 510.72 436.82 C507.75 432.9 504.4 429.28 500.74 426.04 C497.09 422.8 493.12 419.92 488.94 417.47 C484.75 415.01 480.34 412.98 475.79 411.4 C471.24 409.82 466.55 408.69 461.82 408.03"/>';
+  function loader(size = 24, tone = '', style = '') {
+    return `<svg class="fl-loader ${tone}" viewBox="-6 30 904 904" width="${size}" height="${size}" fill="none" role="img" aria-label="Загрузка"${style ? ` style="${style}"` : ''}>${LOADER_PATHS}</svg>`;
+  }
+
   function setApp(html) {
     const cur = document.activeElement;
     if (!cur || !cur.id || !app.contains(cur) || !/^(INPUT|TEXTAREA)$/.test(cur.tagName)) { app.innerHTML = html; return; }
@@ -545,6 +577,60 @@ details summary::-webkit-details-marker{display:none}
     })(app, tpl);
   }
 
+  /* ---------- МОНИТОРИНГ ---------- */
+  const APP_VER = '9';
+  /** Тип системы телефона — всё, что нужно знать об устройстве для мониторинга. */
+  const OS = (() => {
+    const p = String((tg && tg.platform) || '').toLowerCase(), ua = navigator.userAgent || '';
+    if (p === 'ios') return 'iOS';
+    if (p.indexOf('android') === 0) return 'Android';
+    if (/iPhone|iPad|iPod/.test(ua)) return 'iOS';           // Telegram Web в браузере телефона
+    if (/Android/.test(ua)) return 'Android';
+    if (/tdesktop|macos|web|unigram/.test(p) || /Windows|Macintosh|Linux|CrOS/.test(ua)) return 'Компьютер';
+    return 'Другое';
+  })();
+  const netType = () => { try { const c = navigator.connection; return c ? (c.effectiveType || c.type || '') : ''; } catch (e) { return ''; } }; // есть только на Android
+
+  /**
+   * Время и результат каждого действия копятся на телефоне и уходят пачкой: раз в минуту, при 25 записях
+   * и когда приложение сворачивают. Без связи — ждут (до 300 записей). Лист «Мониторинг» на сервере.
+   */
+  const Metrics = {
+    KEY: 't26-metrics', buf: [], sending: false,
+    init() {
+      try { this.buf = JSON.parse(localStorage.getItem(this.KEY) || '[]') || []; } catch (e) { this.buf = []; }
+      setInterval(() => this.flush(), 60000);
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') this.flush(true); });
+      window.addEventListener('online', () => this.flush());
+      setTimeout(() => this.flush(), 8000); // то, что не успело уйти в прошлый раз
+    },
+    add(a, ms, r, n) {
+      if (demo) return;
+      this.buf.push({ t: Date.now(), a, ms: Math.round(ms), r: r || 'ok', n: n || 1, net: netType() });
+      if (this.buf.length > 300) this.buf.splice(0, this.buf.length - 300);
+      this.save();
+      if (this.buf.length >= 25) this.flush();
+    },
+    save() { try { localStorage.setItem(this.KEY, JSON.stringify(this.buf)); } catch (e) {} },
+    body(batch) { return JSON.stringify({ action: 'metrics.push', initData: tg.initData, os: OS, v: APP_VER, items: batch }); },
+    async flush(leaving) {
+      if (demo || !this.buf.length || this.sending || !API_RE.test(API_URL) || navigator.onLine === false || !(tg && tg.initData)) return;
+      const batch = this.buf.slice(0, 100), body = this.body(batch);
+      // приложение закрывают: sendBeacon дойдёт, даже если страница уже выгружается
+      if (leaving && navigator.sendBeacon) {
+        try { if (navigator.sendBeacon(API_URL, new Blob([body], { type: 'text/plain' }))) { this.buf.splice(0, batch.length); this.save(); } } catch (e) {}
+        return;
+      }
+      this.sending = true;
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body, keepalive: body.length < 60000 });
+        const d = JSON.parse(await res.text());
+        if (d.ok || d.error === 'BAD_ACTION') { this.buf.splice(0, batch.length); this.save(); } // старый сервер без мониторинга — не копим
+      } catch (e) { /* попробуем позже */ }
+      this.sending = false;
+    },
+  };
+
   /* ---------- API ---------- */
   // Эти действия безопасно повторять: чтение или повтор не создаёт дублей (фото и отчёт сервер узнаёт по ID).
   const RETRY_SAFE = new Set(['boot', 'me', 'requests.list', 'requests.get', 'reports.upload', 'reports.uploadInit', 'reports.commit', 'admin.staff', 'admin.history', 'admin.matches']);
@@ -560,10 +646,15 @@ details summary::-webkit-details-marker{display:none}
     // Google иногда кратковременно отвечает своей служебной страницей вместо ответа скрипта
     // (сбой, лимит одновременных запусков). Это проходит за секунды — повторяем сами, человек не видит ошибку.
     const tries = RETRY_SAFE.has(action) ? 3 : 1;
-    let last;
-    for (let a = 1; a <= tries; a++) {
+    const t0 = Date.now();
+    let last, a;
+    if (navigator.onLine === false) { // телефон сам знает, что связи нет — не ждём таймаута
+      const x = new Error('Нет интернета. Проверьте связь и попробуйте ещё раз.'); x.code = 'OFFLINE';
+      Metrics.add(action, 0, 'OFFLINE', 0); throw x;
+    }
+    for (a = 1; a <= tries; a++) {
       const used = API_URL;
-      try { return await apiOnce(action, a > 1 ? { ...payload, _retry: true } : payload, timeoutMs); } // повтор помечаем: сервер проверит, не сохранено ли уже
+      try { const r = await apiOnce(action, a > 1 ? { ...payload, _retry: true } : payload, timeoutMs); Metrics.add(action, Date.now() - t0, 'ok', a); return r; } // повтор помечаем: сервер проверит, не сохранено ли уже
       catch (e) {
         last = e;
         // адрес сервера в config.js поменяли (новое развёртывание), а на телефоне был старый — повторяем по новому
@@ -572,6 +663,7 @@ details summary::-webkit-details-marker{display:none}
         await sleep(400 * a * a + 100); // 0,5 с, 1,7 с
       }
     }
+    Metrics.add(action, Date.now() - t0, navigator.onLine === false ? 'OFFLINE' : last.code || 'ERROR', Math.min(a, tries));
     throw last;
   }
 
@@ -807,18 +899,28 @@ details summary::-webkit-details-marker{display:none}
 
   function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600); }
   function digits(s) { return String(s || '').replace(/\D/g, ''); }
-  function normPhone(s) {
+  /**
+   * Цифры телефона в одном виде «7XXXXXXXXXX», как бы его ни ввели: 8…, +7…, 9…, «+7 8926…»,
+   * вставка поверх уже набранного «+7», лишняя цифра в конце, автозаполнение.
+   * Раньше в памяти могло остаться 12 цифр, а на экране — обрезанные 11, и верный на вид номер считался неверным.
+   */
+  function phoneDigits(s) {
     let d = digits(s);
+    if (/^789/.test(d)) d = d.slice(1);             // «+7» в поле + набрали 8926… — восьмёрка лишняя (8 12… Питера не трогаем)
+    if (d.length > 11) d = /^9/.test(d.slice(-10)) ? '7' + d.slice(-10) : d.slice(0, 11); // вставили номер целиком поверх «+7»
+    if (d[0] === '8') d = '7' + d.slice(1);
+    if (d[0] === '9') d = '7' + d;
+    return d.slice(0, 11);
+  }
+  function normPhone(s) {
+    let d = phoneDigits(s);
     if (d.length === 11 && (d[0] === '8' || d[0] === '7')) d = '7' + d.slice(1);
     else if (d.length === 10 && d[0] === '9') d = '7' + d;
     return d.length === 11 && d[0] === '7' ? '+' + d : '';
   }
   function fmtPhone(s) {
-    let d = digits(s);
+    const d = phoneDigits(s);
     if (!d) return '';
-    if (d[0] === '8') d = '7' + d.slice(1);
-    if (d[0] === '9') d = '7' + d;
-    d = d.slice(0, 11);
     const p = [d.slice(1,4), d.slice(4,7), d.slice(7,9), d.slice(9,11)];
     let out = '+7';
     if (p[0]) out += ' (' + p[0];
@@ -858,11 +960,12 @@ details summary::-webkit-details-marker{display:none}
   };
 
   /* ---------- screens ---------- */
-  function renderLoading(text = 'Проверяем доступ…') {
-    app.innerHTML = header() + `<div class="center"><div class="spinner dark"></div><p class="lead">${esc(text)}</p></div>`;
+  function renderLoading(text = 'Проверяем доступ…') { // экран не меняет: это заглушка того экрана, который открывается
+    app.innerHTML = header() + `<div class="center">${loader(48, '', 'margin:0 auto 16px')}<p class="lead">${esc(text)}</p></div>`;
   }
 
   function renderOutside() {
+    screen = 'other';
     app.innerHTML = header() + `<div class="center">
       <div class="badge wait glass">${ICON.send}</div>
       <h1>Откройте через Telegram</h1>
@@ -872,6 +975,7 @@ details summary::-webkit-details-marker{display:none}
   }
 
   function renderError(err) {
+    screen = 'other';
     app.innerHTML = header() + `<div class="center">
       <div class="badge bad glass">${ICON.alert}</div>
       <h1>Не получилось</h1>
@@ -881,6 +985,7 @@ details summary::-webkit-details-marker{display:none}
   }
 
   function renderForm(errors = {}) {
+    screen = 'other';
     const f = state.form;
     const canContact = !demo && tg && tg.isVersionAtLeast && tg.isVersionAtLeast('6.9') && typeof tg.requestContact === 'function';
     app.innerHTML = header() + `
@@ -909,20 +1014,22 @@ details summary::-webkit-details-marker{display:none}
         <label class="consent"><input type="checkbox" id="writeAccess" ${f.writeAccess ? 'checked' : ''}><span>Разрешаю боту присылать мне уведомления о заявках и отчётах <b class="req">*</b></span></label>
         ${errors.writeAccess ? `<div class="hint">${esc(errors.writeAccess)}</div>` : ''}
         </div>
-        <button class="primary" id="submit" type="submit" ${state.sending ? 'disabled' : ''}>${state.sending ? '<span class="spinner"></span>Отправляем…' : 'Зарегистрироваться'}</button>
+        <button class="primary" id="submit" type="submit" ${state.sending ? 'disabled' : ''}>${state.sending ? loader(20, 'on') + 'Отправляем…' : 'Зарегистрироваться'}</button>
         <p class="note">После отправки администратор подтвердит доступ — бот пришлёт сообщение.</p>
       </form>`;
 
     ['lastName','firstName','middleName'].forEach(k => document.getElementById(k).addEventListener('input', e => { f[k] = e.target.value; e.target.classList.remove('err'); }));
     const phone = document.getElementById('phone');
-    phone.addEventListener('input', e => {
+    const onPhone = e => {
       if (state.phoneVerified) return;
       const caretEnd = e.target.selectionStart === e.target.value.length;
-      f.phone = digits(e.target.value);
+      f.phone = phoneDigits(e.target.value); // в памяти ровно то, что видно на экране
       e.target.value = fmtPhone(f.phone);
-      if (caretEnd) e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+      if (caretEnd) try { e.target.setSelectionRange(e.target.value.length, e.target.value.length); } catch (x) {}
       e.target.classList.remove('err');
-    });
+    };
+    phone.addEventListener('input', onPhone);
+    phone.addEventListener('change', onPhone); // автозаполнение на части Android шлёт только change
     document.getElementById('consent').onchange = e => { f.consent = e.target.checked; };
     document.getElementById('writeAccess').onchange = e => {
       if (!e.target.checked) { f.writeAccess = false; return; }
@@ -965,7 +1072,15 @@ details summary::-webkit-details-marker{display:none}
     });
   }
 
+  /** Автозаполнение iOS/Android иногда не сообщает о вставке — перед проверкой берём значения прямо из полей. */
+  function syncForm() {
+    const f = state.form, v = id => { const el = document.getElementById(id); return el ? el.value : null; };
+    ['lastName','firstName','middleName'].forEach(k => { const x = v(k); if (x !== null) f[k] = x; });
+    const ph = v('phone'); if (ph !== null && !state.phoneVerified) f.phone = phoneDigits(ph);
+  }
+
   function validate() {
+    syncForm();
     const f = state.form, e = {};
     if (!nameOk(f.lastName)) e.lastName = 'Укажите фамилию буквами';
     if (!nameOk(f.firstName)) e.firstName = 'Укажите имя буквами';
@@ -1009,6 +1124,7 @@ details summary::-webkit-details-marker{display:none}
   }
 
   function renderPending(p) {
+    screen = 'other';
     app.innerHTML = header() + `
       <div class="center" style="padding-top:2vh"><div class="badge wait glass">${ICON.clock}</div>
       <h1>Заявка на доступ отправлена</h1>
@@ -1030,6 +1146,7 @@ details summary::-webkit-details-marker{display:none}
   }
 
   function renderActive(p, res = {}) {
+    screen = 'other';
     app.innerHTML = header() + `
       <div class="center" style="padding-top:2vh"><div class="badge ok glass">${ICON.check}</div>
       <p class="eyebrow">Доступ открыт</p>
@@ -1043,6 +1160,7 @@ details summary::-webkit-details-marker{display:none}
   }
 
   function renderRejected(p) {
+    screen = 'other';
     app.innerHTML = header() + `
       <div class="center" style="padding-top:2vh"><div class="badge bad glass">${ICON.alert}</div>
       <h1>Регистрация не подтверждена</h1>
@@ -1058,6 +1176,7 @@ details summary::-webkit-details-marker{display:none}
   }
 
   function renderBlocked() {
+    screen = 'other';
     app.innerHTML = header() + `<div class="center"><div class="badge bad glass">${ICON.lock}</div>
       <h1>Доступ закрыт</h1><p class="lead">Если это ошибка — обратитесь к администратору.</p></div>`;
   }
@@ -1106,6 +1225,7 @@ details summary::-webkit-details-marker{display:none}
     },
 
     async open() {
+      screen = 'admin';
       this.st.open = true;
       clearInterval(this.timer); this.timer = setInterval(() => this.refresh(), 45000); // раз в 45 с, пока админка открыта
       document.body.classList.add('wide');
@@ -1126,7 +1246,7 @@ details summary::-webkit-details-marker{display:none}
       } catch (e) { if (saved && saved.staff && e.code !== 'FORBIDDEN') { this.st.stale = false; toast('Не удалось обновить: ' + e.message); } else this.fail(e); }
     },
     close() {
-      this.st.open = false; clearInterval(this.timer);
+      this.st.open = false; clearInterval(this.timer); screen = '';
       document.body.classList.remove('wide');
       setBack(null);
       start();
@@ -1160,6 +1280,7 @@ details summary::-webkit-details-marker{display:none}
     },
 
     render() {
+      if (screen !== 'admin') return;
       this.setBack();
       const s = this.st;
       let html;
@@ -1212,7 +1333,7 @@ details summary::-webkit-details-marker{display:none}
       if (x.status === 'pending' || x.status === 'rejected') actions = s.reject ? '' : `<div class="btn-row two"><button class="primary" data-a="approve">Утвердить</button><button class="secondary" data-a="rejectOpen">Отклонить</button></div>`;
       if (x.status === 'active') actions = `<div class="btn-row ${self ? '' : 'two'}"><button class="secondary" data-a="write">Написать</button>${self ? '' : `<button class="secondary danger" data-a="blockOpen">Заблокировать</button>`}</div>`;
       if (x.status === 'blocked') actions = `<div class="btn-row"><button class="primary" data-a="approve">Разблокировать</button></div>`;
-      if (s.busy) actions = `<div class="saving"><span class="spinner dark"></span>Сохраняем…</div>`;
+      if (s.busy) actions = `<div class="saving">${loader(20)}Сохраняем…</div>`;
       const reasonBox = s.reject ? `<div class="card glass reasonbox">
           <p class="sect">${s.reject === 'block' ? 'Причина блокировки' : 'Причина отказа'}<small>${s.reject === 'block' ? 'необязательно' : 'увидит сотрудник'}</small></p>
           <textarea class="input area" id="reason" placeholder="${s.reject === 'block' ? 'Например: больше не работает в компании' : 'Например: не нашли вас в заявках — укажите рабочий номер'}">${esc(s.reason)}</textarea>
@@ -1232,7 +1353,7 @@ details summary::-webkit-details-marker{display:none}
         ${actions}${reasonBox}
         <div style="height:22px"></div>
         <p class="sect">Найденные заявки<small>последние ${m && m.items ? m.items.length : '…'}</small></p>
-        <div class="card glass">${!m ? `<div class="spinner dark" style="margin:10px auto"></div>` : `
+        <div class="card glass">${!m ? loader(32, '', 'margin:10px auto') : `
           <div class="counts"><div><strong>${m.byPhone}</strong><span>по телефону</span></div><div><strong>${m.byName}</strong><span>по ФИО</span></div><div><strong>${m.byAlias}</strong><span>по вариантам</span></div></div>
           ${m.window ? `<p class="note" style="margin:8px 0 0">Заявки с ${shortDate(m.window.from)} по ${shortDate(m.window.to)}</p>` : ''}
           ${items.map(i => `<div class="match"><div class="t">${esc(i.no || 'без №')}<span>${esc(String(i.date).slice(0,16))}</span></div>
@@ -1295,7 +1416,7 @@ details summary::-webkit-details-marker{display:none}
           <label class="consent" style="padding-bottom:0"><input type="checkbox" id="withButton" ${s.withButton ? 'checked' : ''}><span>Добавить кнопку «Открыть приложение»</span></label>
         </div>
         <p class="note" style="margin:-8px 8px 18px;text-align:left">Сотрудник увидит: «Сообщение от администратора», ваш текст и подпись «— ${esc(state.profile ? state.profile.fio : '')}».</p>
-        <button class="primary" data-a="send" ${s.busy ? 'disabled' : ''}>${s.busy ? '<span class="spinner"></span>Отправляем…' : 'Отправить' + (rec.length ? ' · ' + rec.length : '')}</button>
+        <button class="primary" data-a="send" ${s.busy ? 'disabled' : ''}>${s.busy ?  loader(20, 'on') + 'Отправляем…' : 'Отправить' + (rec.length ? ' · ' + rec.length : '')}</button>
         ${s.result ? `<div class="card glass" style="margin-top:22px"><div class="result">
           <div class="big">Доставлено ${s.result.sent} из ${s.result.total}</div>
           ${s.result.results.filter(r => !r.ok).map(r => `<div class="logi"><div class="t"><b>${esc(r.fio || r.tgId)}</b></div><div class="e">${esc(r.error)}</div></div>`).join('')}
@@ -1324,7 +1445,7 @@ details summary::-webkit-details-marker{display:none}
     viewLog() {
       const s = this.st, h = s.history;
       const seg = `<div class="seg"><button class="${s.logTab === 'log' ? 'on' : ''}" data-a="logTab" data-v="log">Действия</button><button class="${s.logTab === 'msg' ? 'on' : ''}" data-a="logTab" data-v="msg">Сообщения</button></div>`;
-      if (!h) return seg + `<div class="spinner dark" style="margin:30px auto"></div>`;
+      if (!h) return seg + loader(36, '', 'margin:30px auto');
       const label = a => ({ 'admin.status':'Смена статуса', 'admin.update':'Изменение данных', 'admin.send':'Рассылка', 'register':'Регистрация', 'status':'Статус изменён в таблице' })[a] || a;
       const rows = s.logTab === 'log'
         ? h.log.map(l => `<div class="logi"><div class="t"><b>${esc(label(l.action))}${l.result ? ' · ' + esc(l.result) : ''}</b><span>${fmtDate(l.time)}</span></div><div class="d">${esc(l.by)} — ${esc(l.details)}</div></div>`)
@@ -1586,8 +1707,13 @@ details summary::-webkit-details-marker{display:none}
       const it = s.item;
       return this.run('readwrite', st => st.put({ id: s.reportId, uid: myId(), at: Date.now(),
         item: { key: it.key, day: it.day, no: it.no, time: it.time, vehicle: it.vehicle, photo: it.photo },
-        type: s.type, times: s.times, noPhoto: s.noPhoto, comment: s.comment,
+        type: s.type, times: s.times, noPhoto: s.noPhoto, comment: s.comment, location: s.location || null, pressedAt: s.pressedAt || Date.now(),
         shots: { arrival: s.shots.arrival.filter(x => x.blob).map(pick), departure: s.shots.departure.filter(x => x.blob).map(pick) } }, s.reportId));
+    },
+    /** Запись очереди: запомнить ID уже загруженных фото (после обрыва их не грузим снова). */
+    saveRaw(p, s) {
+      ['arrival', 'departure'].forEach(st => (p.shots[st] || []).forEach((x, i) => { const y = s.shots[st][i]; if (y && y.fileId) x.fileId = y.fileId; }));
+      return this.run('readwrite', t => t.put(p, p.id));
     },
     del(id) { if (id) return this.run('readwrite', st => st.delete(id)); },
     async list() {
@@ -1595,6 +1721,160 @@ details summary::-webkit-details-marker{display:none}
       const week = Date.now() - 7 * 864e5;
       all.filter(r => r.at < week).forEach(r => this.del(r.id)); // старше недели — уже неактуально
       return all.filter(r => r.uid === myId() && r.at >= week);
+    },
+  };
+
+
+  /* ========== ОТПРАВКА ОТЧЁТА: общий движок для экрана отчёта и фоновой очереди ========== */
+  const stagesOf = s => s.type === 'full' ? ['arrival', 'departure'] : [s.type];
+  const noPhotoOf = (s, k) => k === 'departure' && s.type === 'full' && !!s.noPhoto;
+  // временные сбои: связь, Google задумался — отчёт остаётся в очереди и уходит сам
+  const TRANSIENT = new Set(['NETWORK', 'OFFLINE', 'TIMEOUT', 'BAD_RESPONSE', 'SERVER_ERROR', 'GOOGLE_BUSY', 'BUSY']);
+  const transientErr = e => !e || !e.code || TRANSIENT.has(e.code) || navigator.onLine === false;
+  const sendingIds = new Set();
+
+  /**
+   * Загрузить фото и сохранить отчёт. s — состояние отчёта (экран или запись очереди);
+   * в s же копится прогресс: total/done/inflight/committing и ID загруженных файлов (повтор не грузит их снова).
+   */
+  async function runSend(s, hooks = {}) {
+    if (sendingIds.has(s.reportId)) { const e = new Error('Этот отчёт уже отправляется'); e.code = 'BUSY'; throw e; }
+    sendingIds.add(s.reportId);
+    const tick = hooks.tick || (() => {});
+    const t0 = Date.now();
+    try {
+      const queue = [];
+      stagesOf(s).forEach(st => { if (!noPhotoOf(s, st)) s.shots[st].forEach((x, i) => queue.push({ st, i: i + 1, x })); });
+      s.total = queue.length; s.done = queue.filter(q => q.x.fileId).length;
+      s.inflight = new Map(); s.committing = 0; tick();
+      // геопозицию ищем параллельно с загрузкой; у отчёта из очереди она уже снята в момент нажатия
+      const locP = s.location || s.skipLocation ? Promise.resolve(s.location || null) : getLocation();
+      const todo = queue.filter(q => !q.x.fileId);
+      let failed = null;
+      const again = !!s.resumed || !!s.tried; // повторная попытка — сервер проверит, что уже сохранено
+      s.tried = true;
+      // 1) прямая загрузка: одним запросом получаем ссылки для всех фото
+      s.direct = s.direct || { ok: 0, total: 0 };
+      if (todo.length && directOk() && !demo) {
+        try {
+          const r = await api('reports.uploadInit', { key: s.item.key, day: s.item.day, reportId: s.reportId, origin: location.origin, retry: again,
+            items: todo.map(q => ({ stage: q.st, index: q.i, size: q.x.blob.size, meta: q.x.meta })) }, 30000);
+          (r.items || []).forEach(it => { const q = todo.find(z => z.st === it.stage && z.i === it.index); if (!q) return; if (it.fileId) q.x.fileId = it.fileId; else if (it.url) q.url = it.url; });
+        } catch (e) { if (e.code === 'OFFLINE' || navigator.onLine === false) throw e; /* иначе все фото пойдут обычным путём */ }
+        todo.filter(q => q.x.fileId).forEach(() => { s.done++; });
+      }
+      const viaScript = async q => {
+        const data = await blobToB64(q.x.blob);
+        let lastErr;
+        for (let attempt = 1; attempt <= 2; attempt++) { // api сам повторяет сбои Google; здесь — ещё круг после паузы
+          try {
+            const r = await api('reports.upload', { key: s.item.key, day: s.item.day, reportId: s.reportId, stage: q.st, index: q.i, data, meta: q.x.meta, retry: attempt > 1 || again || !!q.url }, 45000);
+            q.x.fileId = r.fileId; return;
+          } catch (e) { lastErr = e; if (e.code === 'OFFLINE' || (e.code && !['TIMEOUT', 'NETWORK', 'SERVER_ERROR', 'BAD_RESPONSE', 'GOOGLE_BUSY'].includes(e.code))) break; await sleep(attempt * 1500); }
+        }
+        throw lastErr;
+      };
+      const uploadOne = async q => {
+        if (q.x.fileId) return;
+        s.inflight.set(q, Date.now()); q.frac = null;
+        try {
+          if (q.url) {
+            s.direct.total++;
+            const p0 = Date.now();
+            try { q.x.fileId = await putDirect(q.url, q.x.blob, f => { q.frac = f; }); s.direct.ok++; Metrics.add('photo.direct', Date.now() - p0, 'ok', 1); }
+            catch (e) {
+              Metrics.add('photo.direct', Date.now() - p0, navigator.onLine === false ? 'OFFLINE' : 'DIRECT', 1);
+              if (navigator.onLine === false) throw Object.assign(new Error('Пропала связь'), { code: 'OFFLINE' });
+              if (e.sent) directOff(); q.frac = null; s.inflight.set(q, Date.now()); await viaScript(q); // запасной путь
+            }
+          } else await viaScript(q);
+        } finally { s.inflight.delete(q); }
+        s.done++; tick();
+        if (hooks.saved) hooks.saved(); // ID загруженного фото — в память телефона, чтобы не грузить его снова
+      };
+      // по 4 фото одновременно: быстрее, и не упираемся в лимит одновременных запусков Google
+      const worker = async () => { while (todo.length && !failed) { const q = todo.shift(); try { await uploadOne(q); } catch (e) { failed = failed || e; } } };
+      await Promise.all([worker(), worker(), worker(), worker()]);
+      if (failed) throw failed;
+      s.location = await locP;
+      s.committing = Date.now(); tick();
+      const counts = {}, times = {}, fileIds = {};
+      stagesOf(s).forEach(st => {
+        counts[st] = noPhotoOf(s, st) ? 0 : s.shots[st].length;
+        times[st] = s.times[st];
+        fileIds[st] = noPhotoOf(s, st) ? [] : s.shots[st].map(x => x.fileId).filter(Boolean);
+      });
+      const r = await api('reports.commit', { key: s.item.key, day: s.item.day, reportId: s.reportId, type: s.type, counts, times, fileIds, direct: s.direct,
+        noPhoto: { departure: noPhotoOf(s, 'departure') }, comment: s.comment, location: s.location, pressedAt: s.pressedAt || 0 }, 90000);
+      Metrics.add(hooks.queued ? 'report.queued' : 'report.send', Date.now() - t0, 'ok', 1);
+      return r;
+    } catch (e) {
+      Metrics.add(hooks.queued ? 'report.queued' : 'report.send', Date.now() - t0, navigator.onLine === false ? 'OFFLINE' : e.code || 'ERROR', 1);
+      throw e;
+    } finally { sendingIds.delete(s.reportId); }
+  }
+
+  /**
+   * Очередь отчётов на телефоне. Всё, что нажали «Отправить», но не дошло (нет связи, закрыли приложение),
+   * отправляется само: при открытии, когда появляется сеть, при возвращении в приложение и раз в минуту.
+   */
+  const Outbox = {
+    busy: false, st: {}, // id → { state: 'wait' | 'send' | 'err', done, total, msg, fails }
+    init() {
+      window.addEventListener('online', () => { this.kick(); if (screen === 'req' && Req.st.err) Req.load(false); }); // связь вернулась — подтягиваем и список
+      window.addEventListener('offline', () => this.paint());
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') this.kick(); });
+      setInterval(() => this.kick(), 60000);
+    },
+    soon() { setTimeout(() => this.kick(), 1500); },
+    paint() { if (screen === 'req' && Req.st.view === 'list') Req.render(); },
+    /** Отчёт ушёл с экрана — отметить в списке заявок. */
+    sent(key, status) { const li = Req.st.data && Req.st.data.items.find(x => x.key === key); if (li) li.photo = status; },
+    async kick(force) {
+      if (this.busy || demo || !state.me || state.me.status !== 'active') return;
+      this.busy = true;
+      try {
+        const list = await Pending.list();
+        Req.st.pending = list;
+        for (const p of list) {
+          const cur = this.st[p.id] || (this.st[p.id] = { state: 'wait', done: 0, total: 0, fails: 0 });
+          if (Report.st && Report.st.reportId === p.id && (Report.st.sending || !Report.st.result)) continue; // открыт на экране отчёта
+          if (cur.state === 'err' && cur.fails >= 3 && !force) continue; // постоянная ошибка — ждём решения человека
+          if (navigator.onLine === false) { cur.state = 'wait'; continue; }
+          const s = this.fromPending(p);
+          cur.state = 'send'; cur.done = s.shots.arrival.filter(x => x.fileId).length + s.shots.departure.filter(x => x.fileId).length;
+          cur.total = s.shots.arrival.length + s.shots.departure.length; this.paint();
+          try {
+            const r = await runSend(s, { queued: true, tick: () => { if (cur.done !== s.done) { cur.done = s.done; cur.total = s.total; this.paint(); } }, saved: () => Pending.saveRaw(p, s) });
+            Pending.del(p.id); delete this.st[p.id];
+            this.sent(p.item.key, r.status);
+            Req.st.pending = (Req.st.pending || []).filter(x => x.id !== p.id);
+            toast('Фотоотчёт по заявке ' + (p.item.no || '') + ' отправлен');
+            haptic('success');
+          } catch (e) {
+            if (e.code === 'BUSY') { cur.state = 'send'; continue; }
+            cur.msg = e.message;
+            if (transientErr(e)) { cur.state = 'wait'; break; } // нет связи — остальные тоже не уйдут, ждём
+            cur.state = 'err'; cur.fails++;
+          }
+          this.paint();
+        }
+      } finally { this.busy = false; this.paint(); }
+    },
+    /** Запись очереди → состояние для движка (фото уже сжаты, загруженные помнят свой ID). */
+    fromPending(p) {
+      const wrap = x => ({ blob: x.blob, meta: x.meta, fileId: x.fileId || '' });
+      return { item: p.item, type: p.type, times: p.times || {}, noPhoto: !!p.noPhoto, comment: p.comment || '', reportId: p.id, resumed: true,
+        location: p.location || null, skipLocation: true, pressedAt: p.pressedAt || p.at,
+        shots: { arrival: p.shots.arrival.map(wrap), departure: p.shots.departure.map(wrap) } };
+    },
+    label(p) {
+      const c = this.st[p.id] || { state: 'wait' };
+      const n = p.shots.arrival.length + p.shots.departure.length;
+      if (c.state === 'send') return { t: 'Отправляем фотоотчёт…', sub: c.total ? 'фото ' + c.done + ' из ' + c.total : 'сохраняем', busy: true };
+      if (c.state === 'err' && c.fails >= 3) return { t: 'Фотоотчёт не отправился', sub: c.msg || 'Ошибка', err: true };
+      if (navigator.onLine === false) return { t: 'Ждёт связи', sub: n + ' фото · отправится сам, когда появится интернет' };
+      return { t: 'В очереди на отправку', sub: n + ' фото · ' + (c.msg ? 'повторим через минуту: ' + c.msg : 'отправится сам через несколько секунд') };
     },
   };
 
@@ -1607,6 +1887,7 @@ details summary::-webkit-details-marker{display:none}
       this.st = { item, type: has === 'arrival' ? 'departure' : has === 'departure' ? 'arrival' : 'full',
         shots: { arrival: [], departure: [] }, times: { arrival: '', departure: '' }, noPhoto: false,
         comment: '', sending: false, done: 0, total: 0, error: '', result: null };
+      screen = 'report';
       window.scrollTo(0, 0);
       setBack(() => this.close());
       this.render();
@@ -1635,18 +1916,6 @@ details summary::-webkit-details-marker{display:none}
       if (ttl) ttl.textContent = s.done < s.total ? 'Отправляем фото' : 'Сохраняем отчёт…';
     },
 
-    /** Доотправить сохранённый отчёт (приложение закрыли посреди отправки). */
-    resume(p) {
-      const wrap = x => ({ ...x, url: URL.createObjectURL(x.blob) });
-      this.st = { item: p.item, type: p.type, shots: { arrival: p.shots.arrival.map(wrap), departure: p.shots.departure.map(wrap) },
-        times: p.times || { arrival: '', departure: '' }, noPhoto: !!p.noPhoto, comment: p.comment || '', reportId: p.id, resumed: true,
-        sending: false, done: 0, total: 0, error: '', result: null };
-      Req.st.detailKey = p.item.key; Req.st.day = p.item.day;
-      window.scrollTo(0, 0);
-      setBack(() => this.close());
-      this.render();
-      this.send();
-    },
     close() {
       const s = this.st;
       if (s && s.sending) return toast('Дождитесь окончания отправки');
@@ -1671,6 +1940,7 @@ details summary::-webkit-details-marker{display:none}
     ready() { return !this.missing(); },
 
     render() {
+      if (screen !== 'report' || !this.st) return;
       const s = this.st, it = s.item;
       if (s.result) return this.renderDone();
       const has = it.photo || 'none';
@@ -1678,13 +1948,13 @@ details summary::-webkit-details-marker{display:none}
       const shotsHtml = st => {
         const list = s.shots[st];
         return `<div class="shots">${list.map((x, i) => `<div class="shot">${x.url ? `<img src="${x.url}" alt="">` : ''}
-            ${x.busy ? '<div class="busy"><span class="spinner dark" style="width:24px;height:24px;margin:0"></span></div>' : ''}
+            ${x.busy ? '<div class="busy">' + loader(28) + '</div>' : ''}
             ${x.meta && x.meta.lat != null ? '<span class="geo">GPS</span>' : ''}
             ${s.sending ? '' : `<button class="x" data-p="rm" data-v="${st}:${i}" aria-label="Удалить фото">×</button>`}</div>`).join('')}
           ${list.length < 10 && !s.sending ? `<button class="add" data-p="add" data-v="${st}"><span class="add-in">${ICON.plus}<b>${list.length ? 'Ещё фото' : 'Добавить фото'}</b></span></button>` : ''}</div>`;
       };
       const timeRow = st => `<div class="time-row"><label for="t_${st}"><b>${st === 'arrival' ? 'Прибыл' : 'Убыл'}</b><small>время по факту</small></label>
-          <div class="time-box"><input class="input time" type="time" id="t_${st}" data-t="${st}" value="${esc(s.times[st] || '')}" ${s.sending ? 'disabled' : ''}>
+          <div class="time-box"><span class="time-wrap ${s.times[st] ? '' : 'empty'}"><input class="input time" type="time" id="t_${st}" data-t="${st}" value="${esc(s.times[st] || '')}" ${s.sending ? 'disabled' : ''} aria-label="${st === 'arrival' ? 'Время прибытия' : 'Время убытия'}"><span class="time-hint" aria-hidden="true">--:--</span></span>
           ${s.times[st] || s.sending ? '' : `<button class="chip now-btn" data-p="now" data-v="${st}">Сейчас</button>`}</div></div>`;
       const section = st => {
         const canNo = st === 'departure' && s.type === 'full';
@@ -1724,6 +1994,15 @@ details summary::-webkit-details-marker{display:none}
 
     renderDone() {
       const s = this.st, r = s.result, it = s.item;
+      if (r.queued) {
+        app.innerHTML = `<div class="center" style="padding-top:4vh"><div class="badge glass" style="color:var(--primary)">${ICON.clock || ICON.check}</div>
+            <p class="eyebrow">Нет связи</p><h1>Отчёт сохранён на телефоне</h1>
+            <p class="lead">Он отправится сам, как только появится интернет. Можно продолжать работу: статус виден над списком заявок.
+            Если закрыть приложение, отправка продолжится при следующем открытии.</p></div>
+          <div class="card glass"><div class="big-status"><span>Заявка ${esc(it.no || '')}</span><span class="ph none">в очереди</span></div></div>
+          <button class="primary" data-p="back">Вернуться к заявке</button>`;
+        return this.wire();
+      }
       app.innerHTML = `<div class="center" style="padding-top:4vh"><div class="badge ok glass">${ICON.check}</div>
           <p class="eyebrow">Готово</p><h1>Фотоотчёт отправлен</h1>
           <p class="lead">${r.photos ? r.photos + ' ' + plural(r.photos, 'фотография сохранена', 'фотографии сохранены', 'фотографий сохранено') + ' в папку заявки ' + esc(it.no || '') + '.' : 'Отчёт сохранён.'}</p></div>
@@ -1736,7 +2015,7 @@ details summary::-webkit-details-marker{display:none}
     wire() {
       app.onclick = e => { const b = e.target.closest('[data-p]'); if (b && !b.disabled) this.act(b.dataset.p, b.dataset.v); };
       const c = document.getElementById('pComment'); if (c) c.oninput = e => { this.st.comment = e.target.value; };
-      document.querySelectorAll('input[data-t]').forEach(t => { t.onchange = t.oninput = e => { this.st.times[e.target.dataset.t] = e.target.value; this.render(); }; });
+      document.querySelectorAll('input[data-t]').forEach(t => { t.onchange = t.oninput = e => { this.st.times[e.target.dataset.t] = e.target.value; e.target.parentNode.classList.toggle('empty', !e.target.value); this.render(); }; });
     },
 
     pick(stage) {
@@ -1770,77 +2049,36 @@ details summary::-webkit-details-marker{display:none}
       if (!this.ready() || s.sending) return;
       s.sending = true; s.error = '';
       s.reportId = s.reportId || newReportId();
-      const queue = [];
-      this.stages().forEach(st => { if (!this.noPhoto(st)) s.shots[st].forEach((x, i) => queue.push({ st, i: i + 1, x })); });
-      s.total = queue.length; s.done = queue.filter(q => q.x.fileId).length;
-      s.inflight = new Map(); s.committing = 0;
-      clearInterval(this.ticker); this.ticker = setInterval(() => this.paintProgress(), 150);
-      // Закрыть приложение во время отправки — Telegram переспросит. Отчёт сохраняется на телефоне,
-      // чтобы его можно было доотправить при следующем открытии (сервер не создаст дублей).
+      s.pressedAt = s.pressedAt || Date.now();
+      // Закрыть приложение во время отправки — Telegram переспросит. Отчёт сохраняется на телефоне:
+      // если связь пропала или приложение закрыли, он отправится сам (очередь), сервер не создаст дублей.
       try { tg && tg.enableClosingConfirmation && tg.enableClosingConfirmation(); } catch (e) {}
-      Pending.save(s);
+      const closeOk = () => { try { tg && tg.disableClosingConfirmation && tg.disableClosingConfirmation(); } catch (e) {} };
+      s.total = 0; s.done = 0; s.committing = 0;
       this.render();
+      if (navigator.onLine === false) { // связи нет совсем — сразу в очередь (место берём сейчас, пока человек на точке)
+        s.location = s.location || await getLocation();
+        await Pending.save(s); closeOk();
+        s.sending = false; s.result = { queued: true }; haptic('warning'); this.render(); Outbox.soon();
+        return;
+      }
+      await Pending.save(s);
+      clearInterval(this.ticker); this.ticker = setInterval(() => this.paintProgress(), 150);
       try {
-        // геопозицию ищем параллельно с загрузкой (раньше отправка ждала её до 9 секунд)
-        const locP = s.location ? Promise.resolve(s.location) : getLocation();
-        const todo = queue.filter(q => !q.x.fileId);
-        let failed = null;
-        const again = !!s.resumed || !!s.tried; // повторная попытка — сервер проверит, что уже сохранено
-        s.tried = true;
-        // 1) прямая загрузка: одним запросом получаем ссылки для всех фото
-        s.direct = s.direct || { ok: 0, total: 0 };
-        if (todo.length && directOk() && !demo) {
-          try {
-            const r = await api('reports.uploadInit', { key: s.item.key, day: s.item.day, reportId: s.reportId, origin: location.origin, retry: again,
-              items: todo.map(q => ({ stage: q.st, index: q.i, size: q.x.blob.size, meta: q.x.meta })) }, 30000);
-            (r.items || []).forEach(it => { const q = todo.find(z => z.st === it.stage && z.i === it.index); if (!q) return; if (it.fileId) q.x.fileId = it.fileId; else if (it.url) q.url = it.url; });
-          } catch (e) { /* не вышло — все фото пойдут обычным путём */ }
-          todo.filter(q => q.x.fileId).forEach(() => { s.done++; });
-        }
-        const viaScript = async q => {
-          const data = await blobToB64(q.x.blob);
-          let lastErr;
-          for (let attempt = 1; attempt <= 2; attempt++) { // api сам повторяет сбои Google; здесь — ещё круг после паузы
-            try {
-              const r = await api('reports.upload', { key: s.item.key, day: s.item.day, reportId: s.reportId, stage: q.st, index: q.i, data, meta: q.x.meta, retry: attempt > 1 || again || !!q.url }, 45000);
-              q.x.fileId = r.fileId; return;
-            } catch (e) { lastErr = e; if (e.code && !['TIMEOUT', 'NETWORK', 'SERVER_ERROR', 'BAD_RESPONSE', 'GOOGLE_BUSY'].includes(e.code)) break; await sleep(attempt * 1500); }
-          }
-          throw lastErr;
-        };
-        const uploadOne = async q => {
-          if (q.x.fileId) return;
-          s.inflight.set(q, Date.now()); q.frac = null;
-          try {
-            if (q.url) {
-              s.direct.total++;
-              try { q.x.fileId = await putDirect(q.url, q.x.blob, f => { q.frac = f; }); s.direct.ok++; }
-              catch (e) { if (e.sent) directOff(); q.frac = null; s.inflight.set(q, Date.now()); await viaScript(q); } // запасной путь
-            } else await viaScript(q);
-          } finally { s.inflight.delete(q); }
-          s.done++; this.paintProgress();
-        };
-        // по 4 фото одновременно: быстрее, и не упираемся в лимит одновременных запусков Google
-        const worker = async () => { while (todo.length && !failed) { const q = todo.shift(); try { await uploadOne(q); } catch (e) { failed = failed || e; } } };
-        await Promise.all([worker(), worker(), worker(), worker()]);
-        if (failed) throw failed;
-        s.location = await locP;
-        s.committing = Date.now(); this.paintProgress();
-        const counts = {}; this.stages().forEach(st => { counts[st] = this.noPhoto(st) ? 0 : s.shots[st].length; });
-        const times = {}; this.stages().forEach(st => { times[st] = s.times[st]; });
-        const fileIds = {}; this.stages().forEach(st => { fileIds[st] = this.noPhoto(st) ? [] : s.shots[st].map(x => x.fileId).filter(Boolean); });
-        const r = await api('reports.commit', { key: s.item.key, day: s.item.day, reportId: s.reportId, type: s.type, counts, times, fileIds, direct: s.direct,
-          noPhoto: { departure: this.noPhoto('departure') }, comment: s.comment, location: s.location }, 90000);
+        const r = await runSend(s, { tick: () => this.paintProgress(), saved: () => Pending.save(s) });
         clearInterval(this.ticker); s.committing = -1; this.paintProgress(); await sleep(250); // полоска доходит до конца
         s.sending = false; s.result = { status: r.status, photos: r.photos || s.total };
-        Pending.del(s.reportId);
-        try { tg && tg.disableClosingConfirmation && tg.disableClosingConfirmation(); } catch (e) {}
-        const li = Req.st.data && Req.st.data.items.find(x => x.key === s.item.key); if (li) li.photo = r.status;
+        Pending.del(s.reportId); closeOk();
+        Outbox.sent(s.item.key, r.status);
         haptic('success'); this.render();
       } catch (e) {
-        clearInterval(this.ticker);
-        s.sending = false; s.error = e.message || 'Нет связи'; haptic('error'); this.render();
-        try { tg && tg.disableClosingConfirmation && tg.disableClosingConfirmation(); } catch (e2) {}
+        clearInterval(this.ticker); closeOk();
+        s.sending = false;
+        if (transientErr(e)) { // связь пропала по дороге — отчёт (с уже загруженными фото) ждёт в очереди и уйдёт сам
+          if (!s.location) s.location = await Promise.race([getLocation(), sleep(4000).then(() => null)]); // место — на точке, а не там, где появится связь
+          await Pending.save(s);
+          s.result = { queued: true, why: e.message }; haptic('warning'); this.render(); Outbox.soon();
+        } else { s.error = e.message || 'Ошибка'; haptic('error'); this.render(); }
       }
     },
 
@@ -1966,7 +2204,7 @@ details summary::-webkit-details-marker{display:none}
 
     /** opts.wait — список уже грузится стартовым запросом (boot), отдельный запрос не нужен */
     open(day, opts = {}) {
-      app.onclick = null;
+      app.onclick = null; screen = 'req';
       document.body.classList.remove('wide');
       this.st.view = 'list';
       if (day) this.st.day = day;
@@ -2030,10 +2268,11 @@ details summary::-webkit-details-marker{display:none}
     head() {
       const me = state.me || {}, p = state.profile || {};
       const initials = ((p.lastName || '')[0] || '') + ((p.firstName || '')[0] || '');
-      const sub = this.st.stale && this.st.loading ? ' · обновляем…' : this.st.stale && this.st.err ? ' · сохранённые данные' : '';
+      const off = this.st.err && this.st.err.code === 'OFFLINE';
+      const sub = this.st.stale && this.st.loading ? ' · обновляем…' : this.st.stale && this.st.err ? (off ? ' · нет связи, сохранённые данные' : ' · сохранённые данные') : '';
       return `<div class="home-head"><div><h1>Заявки</h1><small>${longDate(this.st.day)}${sub}</small></div>
         <div class="head-btns">
-          <button class="round ${this.st.refreshing ? 'spin' : ''}" data-r="refresh" aria-label="Обновить" ${this.st.refreshing ? 'disabled' : ''}>${ICON.refresh}</button>
+          <button class="round" data-r="refresh" aria-label="Обновить" ${this.st.refreshing ? 'disabled' : ''}>${this.st.refreshing ? loader(22) : ICON.refresh}</button>
           ${me.isAdmin ? `<button class="round" data-r="admin" aria-label="Админ-панель">${ICON.shield}${me.adminPending ? `<span class="dot">${me.adminPending}</span>` : ''}</button>` : ''}
           <button class="round avatar" data-r="profile" aria-label="Профиль">${esc(initials.toUpperCase() || '·')}</button>
         </div></div>`;
@@ -2064,6 +2303,7 @@ details summary::-webkit-details-marker{display:none}
     },
 
     render() {
+      if (screen !== 'req') return; // открыта админка/отчёт/профиль — фоновые ответы не перебивают экран
       if (this.st.view === 'detail') return this.renderDetail();
       const s = this.st, data = s.data, canAll = !data || data.canSeeAll;
       const items = data ? data.items : [];
@@ -2073,7 +2313,7 @@ details summary::-webkit-details-marker{display:none}
       let body;
       if (s.err && !data) body = `<div class="empty">${esc(s.err.message)}<br><br><button class="secondary small" data-r="reload">Повторить</button></div>`;
       if (s.err && data && !s.errShown) { s.errShown = true; setTimeout(() => toast('Не удалось обновить: ' + s.err.message), 0); }
-      else if (!data) body = `<div class="list"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>`;
+      else if (!data) body = `<div class="list">${('<div class="skeleton"><span class="moment">Момент' + loader(24) + '</span><i></i><i></i><i></i></div>').repeat(3)}</div>`;
       else if (!list.length) {
         const why = s.q || s.fp.size || s.fu.size || s.fph.size ? 'По этим условиям заявок нет.'
           : s.scope === 'mine' ? 'В этот день вас нет в заявках.' : 'На этот день заявок нет.';
@@ -2097,9 +2337,10 @@ details summary::-webkit-details-marker{display:none}
            <button class="round" data-r="filters" aria-label="Фильтры">${ICON.filter}${s.fp.size + s.fu.size + s.fph.size ? `<span class="dot">${s.fp.size + s.fu.size + s.fph.size}</span>` : ''}</button></div>`
         + (filt ? `<div class="active-filters">${filt}</div>` : '')
         + `<div style="height:16px"></div>`
-        + (s.pending && s.pending.length ? s.pending.map(p => `<div class="pending-bar glass"><div><b>Фотоотчёт не отправлен до конца</b>
-            <small>Заявка ${esc(p.item.no || '')} · ${shortDate(p.item.day)} · ${p.shots.arrival.length + p.shots.departure.length} фото</small></div>
-            <div class="btn-row two"><button class="secondary small" data-r="dropPending" data-v="${esc(p.id)}">Удалить</button><button class="primary small" data-r="resume" data-v="${esc(p.id)}">Отправить</button></div></div>`).join('') : '')
+        + (s.pending && s.pending.length ? s.pending.map(p => { const l = Outbox.label(p); return `<div class="pending-bar glass ${l.err ? 'err' : ''}">
+            <div class="pb-head"><b>${l.t}</b>${l.busy ? loader(20) : ''}</div>
+            <small>Заявка ${esc(p.item.no || '')} · ${shortDate(p.item.day)} · ${esc(l.sub)}</small>
+            ${l.busy ? '' : `<div class="btn-row two"><button class="secondary small" data-r="dropPending" data-v="${esc(p.id)}">Удалить</button><button class="primary small" data-r="sendNow" data-v="${esc(p.id)}">${l.err ? 'Повторить' : 'Отправить сейчас'}</button></div>`}</div>`; }).join('') : '')
         + body
         + (s.sheet ? this.sheetHtml() : ''));
       this.wire();
@@ -2119,6 +2360,7 @@ details summary::-webkit-details-marker{display:none}
     },
 
     async openDetail(key, fresh) {
+      screen = 'req';
       const s = this.st, base = ((s.data && s.data.items) || []).find(i => i.key === key);
       const seen = !fresh && local.get('item:' + s.day + ':' + key);
       s.view = 'detail'; s.detailKey = key; s.detail = seen ? { ...seen, photo: base ? base.photo : seen.photo } : base ? { ...base, partial: true } : null;
@@ -2129,18 +2371,18 @@ details summary::-webkit-details-marker{display:none}
         const r = await api('requests.get', { key, date: s.day });
         local.set('item:' + s.day + ':' + key, r.item);
         if (s.detailKey === key) { s.detail = r.item; if (s.view === 'detail') this.render(); }
-      } catch (e) { toast(e.message); if (!s.detail) this.closeDetail(); }
+      } catch (e) { if (!(e.code === 'OFFLINE' && s.detail)) toast(e.message); if (!s.detail) this.closeDetail(); }
     },
     closeDetail() { this.st.view = 'list'; setBack(null); this.render(); },
 
     renderDetail() {
       const it = this.st.detail;
-      if (!it) { app.innerHTML = `<div class="spinner dark" style="margin:30vh auto"></div>`; return; }
+      if (!it) { app.innerHTML = loader(48, '', 'margin:30vh auto'); return; }
       const full = !it.partial, drv = parseDriver(it.transport);
       // role — подпись под именем: кто этот человек в заявке
       const contactRows = (text, role) => parseContacts(text).map(c => `<div class="contact"><span class="who"><b>${esc(c.name || 'Без имени')}</b>${role ? `<small>${role}</small>` : ''}</span>${c.href ? `<a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a>` : ''}</div>`).join('');
       const stop = (k, addr, contact, end, role) => addr || contact ? `<div class="stop ${end ? 'end' : ''}"><div class="k">${k}</div><div class="addr">${esc(addr || 'Адрес не указан')}</div>${contact ? `<div class="contacts">${contactRows(contact, role)}</div>` : ''}</div>` : '';
-      const loadingLine = `<div class="spinner dark" style="width:22px;height:22px;margin:4px 0"></div>`;
+      const loadingLine = loader(22, '', 'margin:4px 0');
       app.innerHTML = `<div class="topbar"><button class="round" data-r="back" aria-label="Назад">${ICON.back}</button>
           <div class="grow"><h2>${it.no ? 'Заявка ' + esc(it.no) : 'Заявка без номера'}</h2><small>${shortDate(it.day)}${it.time ? ', ' + esc(it.time) : ''}</small></div></div>
         <div class="card glass hero">
@@ -2189,9 +2431,13 @@ details summary::-webkit-details-marker{display:none}
         case 'day': return this.setDay(v);
         case 'scope': s.scope = v; store.set('t26-scope', v); return this.render();
         case 'open': return this.openDetail(v);
-        case 'resume': { const p = (s.pending || []).find(x => x.id === v); if (p) { s.pending = s.pending.filter(x => x !== p); Report.resume(p); } return; }
-        case 'dropPending': if (!window.confirm('Удалить неотправленный отчёт? Фото останутся в галерее телефона.')) return;
-          Pending.del(v); s.pending = (s.pending || []).filter(x => x.id !== v); return this.render();
+        case 'sendNow':
+          if (navigator.onLine === false) return toast('Нет интернета — отчёт уйдёт сам, когда появится связь');
+          if (Outbox.st[v]) Outbox.st[v].fails = 0;
+          haptic('success'); return Outbox.kick(true);
+        case 'dropPending': if (sendingIds.has(v)) return toast('Отчёт сейчас отправляется');
+          if (!window.confirm('Удалить неотправленный отчёт? Фото останутся в галерее телефона.')) return;
+          Pending.del(v); delete Outbox.st[v]; s.pending = (s.pending || []).filter(x => x.id !== v); return this.render();
         case 'back': return this.closeDetail();
         case 'refresh': {
           if (s.refreshing) return;
@@ -2232,6 +2478,7 @@ details summary::-webkit-details-marker{display:none}
   }
 
   function renderProfile() {
+    screen = 'other';
     const p = state.profile || {}, me = state.me || {};
     setBack(() => Req.open());
     app.onclick = null;
@@ -2278,7 +2525,7 @@ details summary::-webkit-details-marker{display:none}
         else if (Req.st.view === 'list') Req.render(); // могли обновиться права и счётчик админки
         if (r.list) Req.receive(r.list);
         else { Req.st.err = new Error(r.listError || 'Не удалось загрузить заявки'); Req.st.loading = false; if (Req.st.view === 'list') Req.render(); }
-        Pending.list().then(l => { Req.st.pending = l; if (l.length && Req.st.view === 'list' && !Report.st) Req.render(); });
+        Outbox.kick(); // неотправленные отчёты уходят сами
       } else {
         route(r); // статус изменился (заблокирован, ждёт подтверждения…) — показываем нужный экран
       }
@@ -2289,6 +2536,8 @@ details summary::-webkit-details-marker{display:none}
     }
   }
 
+  Metrics.init();
+  Outbox.init();
   start();
 })();
 </script>
