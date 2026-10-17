@@ -430,6 +430,19 @@ details summary::-webkit-details-marker{display:none}
   display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 12px 12px 20px;border-radius:999px;background:var(--panel);box-shadow:var(--raised-lg)}
 .report-space{height:96px}
 body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клавиатура открыта — нижняя кнопка не перекрывает поле */
+.logist-btn{margin:-6px 0 22px;display:flex;align-items:center;justify-content:center;gap:10px}
+.logist-btn svg,.logist svg{width:18px;height:18px}
+.logists{padding:6px 16px}
+.logist{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 0}
+.logist + .logist{border-top:1px solid var(--hair)}
+.logist .ava{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--surface);box-shadow:var(--raised-sm);font-weight:650;font-size:14px;color:var(--ink-2)}
+.logist .who b{display:block;font-size:15px;font-weight:600;line-height:1.25}
+.logist .who small{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);margin-top:2px}
+.logist .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);opacity:.5;flex:none}
+.logist.on .dot{background:var(--ok);opacity:1;box-shadow:0 0 0 3px var(--ok-soft)}
+.logist.on .who small{color:var(--ok)}
+.logist .primary,.logist .secondary{width:auto;margin:0;min-height:40px;padding:0 14px;font-size:14px;display:inline-flex;align-items:center;gap:6px}
+.logist .na{font-size:12px;color:var(--muted);text-align:right;max-width:90px}
 .all-bar{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),488px);bottom:calc(14px + env(safe-area-inset-bottom));z-index:20}
 .all-bar .secondary{width:100%;margin:0;background:var(--panel)}
 .saving{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:999px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);font-weight:600}
@@ -941,6 +954,7 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
     return new Promise((r, j) => setTimeout(() => {
       if (action.indexOf('requests.') === 0 || action.indexOf('reports.') === 0) { r(demoReq(action, p)); return; }
       if (action.indexOf('admin.') === 0) { try { r(demoAdmin(action, p)); } catch (e) { j(e); } return; }
+      if (action === 'logists.list') { r({ ok:true, at:'12:00', items:[{ name:'Иванов Пётр', onShift:true, inApp:true, username:'example_logist' }, { name:'Петрова Анна', onShift:false, inApp:true, phone:'+79990000000' }, { name:'Сидоров Олег', onShift:false, inApp:false }] }); return; }
       if (action === 'me' || action === 'boot') {
         const me = demoStore ? { ok:true, ...demoStore } : { ok:true, status:'new', telegram:{ firstName:'Алина', lastName:'', username:'alina_k' } };
         if (action === 'boot' && me.status === 'active') me.list = demoReq('requests.list', { date: p.date || todayIso() });
@@ -1086,6 +1100,7 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
     camera:svg('<path d="M4 8.5h3l1.6-2.5h6.8L17 8.5h3v10.5H4z"/><circle cx="12" cy="13.5" r="3.5"/>'),
     cal:   svg('<rect x="4" y="5.5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3.5v4M15 3.5v4"/>'),
     plus:svg('<path d="M12 5v14M5 12h14"/>'),
+    chat:svg('<path d="M20 12a7.5 7.5 0 0 1-11 6.6L4 20l1.4-4.6A7.5 7.5 0 1 1 20 12z"/>'),
     refresh:svg('<path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 20v-4h-4"/>'),
   };
 
@@ -1900,6 +1915,75 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
   };
 
 
+
+  /* =================== ЛОГИСТЫ =================== */
+  /**
+   * Кому написать по заявке: логисты из табеля, «в смене» / «не в смене».
+   * «Написать» открывает личный чат в Telegram, сообщение уже начинается с номера заявки.
+   */
+  const Logists = {
+    st: null,
+    open(item) {
+      screen = 'logists';
+      const saved = local.get('logists');
+      this.st = { item, data: saved || null, stale: !!saved, err: null };
+      setBack(() => this.close());
+      window.scrollTo(0, 0);
+      this.render();
+      this.load();
+    },
+    close() { this.st = null; Req.openDetail(Req.st.detailKey); },
+    async load() {
+      const s = this.st;
+      try { const r = await api('logists.list', {}); if (this.st !== s) return; s.data = r; s.stale = false; s.err = null; local.set('logists', r); }
+      catch (e) { if (this.st !== s) return; s.err = e; }
+      this.render();
+    },
+    text() {
+      const it = this.st.item || {};
+      return 'Заявка ' + (it.no ? '№ ' + it.no : '') + ' (' + shortDate(it.day) + (it.time ? ', ' + it.time : '') + (it.vehicle ? ', ' + it.vehicle : '') + '): ';
+    },
+    write(i) {
+      const x = ((this.st.data || {}).items || [])[+i]; if (!x) return;
+      const text = this.text();
+      const open = url => { try { tg.openTelegramLink(url); } catch (e) { window.open(url, '_blank'); } };
+      haptic('success');
+      if (x.username) return open('https://t.me/' + x.username + '?text=' + encodeURIComponent(text));
+      // без username Telegram не даёт подставить текст — копируем его, а чат открываем по номеру
+      copyText(text, 'Номер заявки скопирован — вставьте его в чат');
+      if (x.phone) return setTimeout(() => open('https://t.me/' + x.phone.replace(/[^+\d]/g, '')), 400);
+      toast('У логиста не указан Telegram — позвоните ему или напишите через общий чат');
+    },
+    render() {
+      if (screen !== 'logists' || !this.st) return;
+      const s = this.st, it = s.item || {}, d = s.data;
+      const card = (x, i) => {
+        const init = (x.name || '?').split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase();
+        return `<div class="logist ${x.onShift ? 'on' : ''}"><span class="ava">${esc(init)}</span>
+          <span class="who"><b>${esc(x.name)}</b><small><i class="dot"></i>${x.onShift ? 'сейчас в смене' : 'не в смене'}</small></span>
+          ${x.inApp && (x.username || x.phone) ? `<button class="${x.onShift ? 'primary' : 'secondary'} small" data-l="write" data-v="${i}">${ICON.chat}Написать</button>`
+            : '<span class="na">нет в Telegram-боте</span>'}</div>`;
+      };
+      const items = d && d.items || [];
+      const on = items.map((x, i) => [x, i]).filter(([x]) => x.onShift), off = items.map((x, i) => [x, i]).filter(([x]) => !x.onShift);
+      let body;
+      if (!d && s.err) body = `<div class="empty">${esc(s.err.message)}<br><br><button class="secondary small" data-l="reload">Повторить</button></div>`;
+      else if (!d) body = `<div class="mid-load">${loader(40)}</div>`;
+      else body = (on.length ? `<p class="sect">Сейчас в смене<small>${on.length}</small></p><div class="card glass logists">${on.map(([x, i]) => card(x, i)).join('')}</div>`
+          : `<div class="card glass"><div class="flag">Сейчас в смене никого нет по табелю — можно написать любому логисту.</div></div>`)
+        + (off.length ? `<p class="sect">Не в смене<small>${off.length}</small></p><div class="card glass logists">${off.map(([x, i]) => card(x, i)).join('')}</div>` : '')
+        + (d.error ? `<p class="note">${esc(d.error)} — статус смены может быть неточным</p>` : '');
+      setApp(`<div class="topbar"><button class="round" data-l="back" aria-label="Назад">${ICON.back}</button>
+          <div class="grow"><h2>Логисты</h2><small>${it.no ? 'по заявке ' + esc(it.no) : ''}${s.stale ? ' · обновляем…' : d && d.at ? ' · на ' + esc(d.at) : ''}</small></div></div>
+        <p class="note" style="margin:0 8px 18px;text-align:left">Сообщение откроется в Telegram и уже будет начинаться с номера заявки — допишите вопрос и отправьте.</p>
+        ${body}`);
+      app.onclick = e => { const b = e.target.closest('[data-l]'); if (!b) return;
+        if (b.dataset.l === 'back') return this.close();
+        if (b.dataset.l === 'reload') { s.err = null; this.render(); return this.load(); }
+        if (b.dataset.l === 'write') return this.write(b.dataset.v); };
+    },
+  };
+
   /* ========== ОТПРАВКА ОТЧЁТА: общий движок для экрана отчёта и фоновой очереди ========== */
   const stagesOf = s => s.type === 'full' ? ['arrival', 'departure'] : [s.type];
   const noPhotoOf = (s, k) => k === 'departure' && s.type === 'full' && !!s.noPhoto;
@@ -2609,6 +2693,7 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
           <div class="sub">${esc([it.project, it.purpose].filter(Boolean).join(' — '))}${it.cargo ? `<br>${/работа по месту/i.test(it.cargo) ? 'Работа по месту' : 'Что везём: ' + esc(it.cargo)}` : ''}</div>
           ${it.roles && it.roles.length ? `<div class="tags">${it.roles.map(r => `<i class="me">вы ${esc(r.replace(/^указан/, 'указаны'))}</i>`).join('')}</div>` : ''}
         </div>
+        <button class="secondary logist-btn" data-r="logists">${ICON.chat}Связаться с логистом</button>
         ${full && it.reports && it.reports.length ? `<p class="sect">Фотоотчёты<small>${it.reports.length}</small></p><div class="card glass"><div class="rep-list">${it.reports.map(r => `<div class="rep-item"><span><b>${esc(r.stage)}${r.time ? ' в ' + esc(r.time) : ''} · ${r.photos ? r.photos + ' фото' : 'без фото'}</b><small>${esc(r.fio)}</small></span><span>${fmtDate(r.at)}</span></div>`).join('')}</div></div>` : ''}
         <p class="sect">Маршрут</p>
         <div class="card glass">
@@ -2702,6 +2787,7 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
         case 'fph': s.fph.has(v) ? s.fph.delete(v) : s.fph.add(v); haptic('select'); return this.paintSheet();
         case 'unfph': s.fph.delete(v); return this.render();
         case 'report': return Report.open(s.detail);
+        case 'logists': return Logists.open(s.detail);
         case 'unfp': s.fp.delete(v); return this.render();
         case 'unfu': s.fu.delete(v); return this.render();
         case 'clear': s.q = ''; s.fp.clear(); s.fu.clear(); s.fph.clear(); s.sheet = false; return this.render();
