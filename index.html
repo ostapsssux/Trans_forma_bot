@@ -154,7 +154,7 @@ button.rq:active,button.person:active,button.admin-entry:active,button.type:not(
 .chip.on:active,.chip.on:not(:disabled):active{box-shadow:none;background:var(--btn-lo)}
 .secondary:not(:disabled):active,.round:active,.chip:active,.day:active{box-shadow:var(--pressed-sm)}
 .call{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
-.round.spin svg{animation:spin .8s linear infinite}
+.round.spin svg{animation:spin .8s linear infinite reverse} /* стрелки значка смотрят против часовой */
 .primary:disabled{opacity:1;cursor:default;background:var(--surface);color:var(--muted);box-shadow:var(--raised-sm)}
 .note{font-size:12px;color:var(--muted);text-align:center;margin:14px 8px 0;line-height:1.5}
 
@@ -212,6 +212,10 @@ body.wide .app{max-width:860px}
 .seg button.on{background:var(--surface);color:var(--ink);box-shadow:3px 3px 7px var(--neu-d),-3px -3px 7px var(--neu-l)}
 .seg.slide{position:relative}
 .seg.slide button,.seg.slide button.on{background:transparent;box-shadow:none;position:relative;z-index:1}
+.seg.slider{position:relative}
+.seg.slider > button,.seg.slider > button.on{background:transparent;box-shadow:none;position:relative;z-index:1}
+.seg.slider > .knob{position:absolute;top:5px;bottom:5px;left:0;width:0;border-radius:999px;background:var(--surface);
+  box-shadow:3px 3px 7px var(--neu-d),-3px -3px 7px var(--neu-l);transition:transform .24s cubic-bezier(.3,.7,.3,1),width .24s cubic-bezier(.3,.7,.3,1)}
 .seg.slide .knob{position:absolute;top:5px;bottom:5px;left:5px;width:calc(50% - 7px);border-radius:999px;background:var(--surface);
   box-shadow:3px 3px 7px var(--neu-d),-3px -3px 7px var(--neu-l);transition:transform .22s cubic-bezier(.3,.7,.3,1)}
 .seg.slide.right .knob{transform:translateX(calc(100% + 4px))}
@@ -382,7 +386,7 @@ body.wide .app{max-width:860px}
 .stops:before{content:"";position:absolute;left:6px;top:10px;bottom:10px;width:2px;border-radius:2px;background:var(--hair)}
 .stops.one:before{display:none}
 .mid-load{display:grid;place-items:center;min-height:calc(100vh - 330px)}
-.stop-load{margin-left:-28px;height:22px} /* значок загрузки — на одной вертикали с точкой адреса */
+.stop-load{margin:16px 0 0 -4px;height:22px} /* под линией маршрута, а не на ней; центр — на вертикали точек */ /* значок загрузки — на одной вертикали с точкой адреса */
 .stop{position:relative}
 .stop:before{content:"";position:absolute;left:-24px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--surface);box-shadow:inset 0 0 0 3px var(--muted)}
 .stop.end:before{background:var(--primary);box-shadow:0 0 0 4px var(--primary-soft)}
@@ -424,6 +428,7 @@ details summary::-webkit-details-marker{display:none}
 .report-bar{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),488px);bottom:calc(12px + env(safe-area-inset-bottom));z-index:20;
   display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 12px 12px 20px;border-radius:999px;background:var(--panel);box-shadow:var(--raised-lg)}
 .report-space{height:96px}
+body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клавиатура открыта — нижняя кнопка не перекрывает поле */
 .all-bar{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),488px);bottom:calc(14px + env(safe-area-inset-bottom));z-index:20}
 .all-bar .secondary{width:100%;margin:0;background:var(--panel)}
 .saving{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:999px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);font-weight:600}
@@ -471,25 +476,23 @@ details summary::-webkit-details-marker{display:none}
 .progress i{display:block;height:100%;border-radius:999px;background:var(--btn);transition:width .35s linear;
   background-image:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);background-size:200% 100%;animation:shine 1.4s linear infinite}
 @keyframes shine{from{background-position:200% 0}to{background-position:-200% 0}}
-.time-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:12px;margin:0 0 14px;min-height:48px} /* те же колонки, что у фото */
-.time-box{display:contents}
-.time-row label{display:grid;gap:1px;min-width:0}
-.time-row label small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.time-row label b{font-size:15px;font-weight:650}
-.time-row label small{font-size:12px;color:var(--muted)}
-.input.time{display:block;width:100%;height:46px;min-height:0;line-height:46px;padding:0 6px;text-align:center;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
-.input.time::-webkit-date-and-time-value{text-align:center}
+.time-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:12px;margin:0 0 12px} /* те же колонки, что у фото */
+.time-row .time-wrap{grid-column:span 2}
+.time-wrap > svg{position:absolute;left:16px;top:50%;width:18px;height:18px;margin-top:-9px;color:var(--muted);pointer-events:none;z-index:1}
+.time-wrap.t-empty > svg{color:var(--primary)}
+.input.time{display:block;width:100%;height:46px;min-height:0;line-height:46px;padding:0 14px 0 40px;text-align:left;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+.input.time::-webkit-date-and-time-value{text-align:left}
 .input.time::-webkit-calendar-picker-indicator{display:none}
 /* Пустое поле времени: iPhone не рисует в нём ничего — показываем свою подсказку «--:--» и пунктирную рамку */
 .time-wrap{position:relative;display:block;width:100%;height:46px} /* iPhone растягивает пустое поле времени — размер задаём жёстко */
-.time-hint{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:6px;pointer-events:none;
-  font-size:17px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.time-hint{position:absolute;inset:0 0 0 40px;display:none;align-items:center;pointer-events:none;
+  font-size:15px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden}
 .time-wrap.t-empty .time-hint{display:flex}
 .time-wrap.t-empty .input.time{color:transparent}
 .time-wrap.t-empty .time-hint{color:var(--primary)}
 .time-wrap.t-empty .input.time:focus{color:inherit}
 .time-wrap.t-empty .input.time:focus + .time-hint{display:none}
-.now-btn{white-space:nowrap;width:100%;min-height:42px;justify-content:center;padding:0 8px}
+.now-btn{white-space:nowrap;width:100%;min-height:46px;justify-content:center;padding:0 8px}
 .no-photo{padding:14px 16px;border-radius:20px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);font-size:13.5px;line-height:1.45}
 .no-photo-btn{margin-top:12px}
 .no-photo-btn.on{color:var(--primary)}
@@ -609,6 +612,80 @@ details summary::-webkit-details-marker{display:none}
   }
 
   function setApp(html) {
+    segsRemember(); setAppRaw(html); segsEnhance();
+    if (!/^(INPUT|TEXTAREA)$/.test((document.activeElement || {}).tagName || '')) document.body.classList.remove('kb');
+  }
+
+  /**
+   * Переключатели-«таблетки» (вкладки админки, Действия/Сообщения, роли) работают как ползунок «Мои/Все»:
+   * подложка плавно переезжает к выбранной кнопке, её можно тащить пальцем — отпустили, выбралась ближайшая.
+   * «Мои/Все» устроен отдельно (.seg.slide), его не трогаем.
+   */
+  const SEG_LAST = {};
+  const segKey = seg => [...seg.querySelectorAll(':scope > button')].map(b => (b.dataset.a || '') + ':' + b.dataset.v).join('|');
+  /** Перед перерисовкой запоминаем, где подложка СЕЙЧАС (в том числе посреди анимации) — новая продолжит оттуда. */
+  function segsRemember() {
+    document.querySelectorAll('#app .seg.slider').forEach(seg => {
+      const k = seg.querySelector(':scope > .knob'); if (!k || !k.offsetWidth) return;
+      const sr = seg.getBoundingClientRect(), kr = k.getBoundingClientRect();
+      SEG_LAST[segKey(seg)] = { x: kr.left - sr.left, w: kr.width };
+    });
+  }
+  function segsEnhance() {
+    document.querySelectorAll('#app .seg:not(.slide)').forEach(seg => {
+      const btns = [...seg.querySelectorAll(':scope > button')];
+      if (btns.length < 2 || !seg.offsetWidth) return;
+      seg.classList.add('slider');
+      let knob = seg.querySelector(':scope > .knob');
+      if (!knob) { knob = document.createElement('i'); knob.className = 'knob'; seg.prepend(knob); }
+      const key = segKey(seg);
+      const on = btns.find(b => b.classList.contains('on'));
+      if (!on) { knob.style.opacity = '0'; return; }
+      const to = { x: on.offsetLeft, w: on.offsetWidth };
+      const place = (p, anim) => { knob.style.transition = anim ? '' : 'none'; knob.style.width = p.w + 'px'; knob.style.transform = `translateX(${p.x}px)`; };
+      const from = SEG_LAST[key];
+      place(from || to, false);
+      if (from && (Math.abs(from.x - to.x) > 0.5 || Math.abs(from.w - to.w) > 0.5)) { void knob.offsetWidth; place(to, true); }
+      SEG_LAST[key] = to;
+      if (seg.__slider) return; seg.__slider = 1;
+      // жест: подложка едет за пальцем
+      hSwipe(seg, {
+        move: dx => {
+          const cur = SEG_LAST[key] || to, first = btns[0], last = btns[btns.length - 1];
+          const x = Math.max(first.offsetLeft, Math.min(last.offsetLeft + last.offsetWidth - cur.w, cur.x + dx));
+          knob.style.transition = 'none'; knob.style.transform = `translateX(${x}px)`;
+        },
+        end: (dx) => {
+          const cur = SEG_LAST[key] || to, mid = cur.x + cur.w / 2 + dx;
+          const pick = btns.reduce((a, b) => Math.abs(b.offsetLeft + b.offsetWidth / 2 - mid) < Math.abs(a.offsetLeft + a.offsetWidth / 2 - mid) ? b : a);
+          if (pick.classList.contains('on') || pick.disabled) { place(cur, true); return; }
+          haptic('select');
+          seg.__swiped = 0; pick.click(); seg.__swiped = Date.now();
+        },
+      });
+      // настоящий «клик» после жеста — не нажатие
+      seg.addEventListener('click', e => { if (e.isTrusted && seg.__swiped && Date.now() - seg.__swiped < 400) { e.stopPropagation(); e.preventDefault(); } }, true);
+    });
+  }
+
+  /**
+   * Клавиатура не должна закрывать поле ввода: пока поле в фокусе, нижняя закреплённая кнопка прячется,
+   * а поле подъезжает в видимую часть экрана (и ещё раз — когда клавиатура доехала и экран сжался).
+   */
+  function keyboardLift(el) {
+    if (el.__kb) return; el.__kb = 1;
+    const lift = () => { try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { el.scrollIntoView(); } };
+    const vv = window.visualViewport;
+    const onVV = () => { if (document.activeElement === el) lift(); };
+    el.addEventListener('focus', () => {
+      document.body.classList.add('kb');
+      setTimeout(lift, 120); setTimeout(lift, 450); // iOS/Android открывают клавиатуру с анимацией
+      if (vv) vv.addEventListener('resize', onVV);
+    });
+    el.addEventListener('blur', () => { document.body.classList.remove('kb'); if (vv) vv.removeEventListener('resize', onVV); });
+  }
+
+  function setAppRaw(html) {
     const cur = document.activeElement;
     if (!cur || !cur.id || !app.contains(cur) || !/^(INPUT|TEXTAREA)$/.test(cur.tagName)) { app.innerHTML = html; return; }
     const tpl = document.createElement('div');
@@ -2005,13 +2082,13 @@ details summary::-webkit-details-marker{display:none}
             ${s.sending ? '' : `<button class="x" data-p="rm" data-v="${st}:${i}" aria-label="Удалить фото">×</button>`}</div>`).join('')}
           ${list.length < 10 && !s.sending ? `<button class="add" data-p="add" data-v="${st}"><span class="add-in">${ICON.plus}<b>${list.length ? 'Ещё фото' : 'Добавить фото'}</b></span></button>` : ''}</div>`;
       };
-      const timeRow = st => `<div class="time-row"><label for="t_${st}"><b>${st === 'arrival' ? 'Прибыл' : 'Убыл'}</b><small>по факту</small></label>
-          <div class="time-box"><span class="time-wrap ${s.times[st] ? '' : 't-empty'}"><input class="input time" type="time" id="t_${st}" data-t="${st}" value="${esc(s.times[st] || '')}" ${s.sending ? 'disabled' : ''} aria-label="${st === 'arrival' ? 'Время прибытия' : 'Время убытия'}"><span class="time-hint" aria-hidden="true">--:--</span></span>
-          <button class="chip now-btn" data-p="now" data-v="${st}" ${s.sending ? 'disabled' : ''}>Сейчас</button></div></div>`;
+      // время по факту: поле на две колонки сетки фото + «Сейчас» в третьей — края совпадают с плитками
+      const timeRow = st => `<div class="time-row"><span class="time-wrap ${s.times[st] ? '' : 't-empty'}">${ICON.clock}<input class="input time" type="time" id="t_${st}" data-t="${st}" value="${esc(s.times[st] || '')}" ${s.sending ? 'disabled' : ''} aria-label="${st === 'arrival' ? 'Время прибытия' : 'Время убытия'}"><span class="time-hint" aria-hidden="true">${st === 'arrival' ? 'Время прибытия' : 'Время убытия'}</span></span>
+          <button class="chip now-btn" data-p="now" data-v="${st}" ${s.sending ? 'disabled' : ''}>Сейчас</button></div>`;
       const section = st => {
         const canNo = st === 'departure' && s.type === 'full';
         const off = this.noPhoto(st);
-        return `<p class="sect">${s.type === 'full' ? (st === 'arrival' ? 'Прибытие' : 'Убытие') : st === 'arrival' ? 'Прибытие' : 'Убытие'}<small>${off ? 'без фото' : 'фото: минимум 1'}</small></p>
+        return `<p class="sect">${s.type === 'full' ? (st === 'arrival' ? 'Прибытие' : 'Убытие') : st === 'arrival' ? 'Прибытие' : 'Убытие'}${off ? '<small>без фото</small>' : ''}</p>
         <div class="card glass">${timeRow(st)}
           ${off ? `<div class="no-photo">Фото убытия нет — машина уехала раньше, чем удалось снять. Укажите время убытия; отчёт уйдёт на проверку.</div>` : shotsHtml(st)}
           ${canNo && !s.sending ? `<button class="chip no-photo-btn ${off ? 'on' : ''}" data-p="nophoto">${off ? '✓ Нет фото — вернуть фото' : 'Нет фото'}</button>` : ''}
@@ -2067,7 +2144,7 @@ details summary::-webkit-details-marker{display:none}
 
     wire() {
       app.onclick = e => { const b = e.target.closest('[data-p]'); if (b && !b.disabled) this.act(b.dataset.p, b.dataset.v); };
-      const c = document.getElementById('pComment'); if (c) c.oninput = e => { this.st.comment = e.target.value; };
+      const c = document.getElementById('pComment'); if (c) { c.oninput = e => { this.st.comment = e.target.value; }; keyboardLift(c); }
       document.querySelectorAll('input[data-t]').forEach(t => { t.onchange = t.oninput = e => { this.st.times[e.target.dataset.t] = e.target.value; e.target.parentNode.classList.toggle('t-empty', !e.target.value); this.render(); }; });
     },
 
@@ -2493,8 +2570,8 @@ details summary::-webkit-details-marker{display:none}
             ${stop(it.to ? 'Подача' : 'Место работы', it.from, full ? it.fromContact : '', !it.to, it.to ? 'встречает на подаче' : 'встречает на месте работы')}
             ${full ? stop('Промежуточный адрес', it.mid, it.midContact, false, 'встречает на промежуточном адресе') : ''}
             ${it.to ? stop('Конечный адрес', it.to, full ? it.toContact : '', true, 'встречает на конечном адресе') : ''}
-            ${full ? '' : loadingLine}
           </div>
+          ${full ? '' : loadingLine}
           ${it.from ? `<div class="map-btns"><button class="secondary small" data-r="map">${ICON.map}Маршрут</button><button class="secondary small" data-r="copy">${ICON.copy}Адрес</button></div>` : ''}
         </div>
         <p class="sect">Машина и водитель</p>
