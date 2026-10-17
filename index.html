@@ -11,27 +11,28 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ===== Палитра (из таблицы цветов) =====
+/* ===== Палитра: кобальт на нейтральном, чуть холодном фоне (17.10.2026). Прежняя тёплая — в истории версий =====
+   Исходная таблица цветов:
    лён #e5dbcf · камень #d9d2ca · шалфей #a8b29f · шалфей-2 #8ca086
    мох #48694a · лес #344531 · глина #b3715c · терракота #9d4939
    охра #cb8d3f · сланец #627b95 · графит #3a3c39 · умбра #322e29 */
 :root{
-  --bg-top:#ede5db; --bg:#e7dfd4; --bg-2:#dfd5ca;
-  --glass:linear-gradient(155deg,rgba(255,252,246,.58) 0%,rgba(255,250,243,.30) 55%,rgba(255,248,240,.22) 100%);
-  --glass-solid:#f3ede4;
+  --bg-top:#ebecee; --bg:#e5e6e9; --bg-2:#dcdee2;
+  --glass:linear-gradient(155deg,rgba(255,255,255,.58) 0%,rgba(255,255,255,.30) 55%,rgba(255,255,255,.22) 100%);
+  --glass-solid:#eff0f2;
   --glass-edge:rgba(var(--hl),.55);
   --glass-hi:inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 1px rgba(255,255,255,.18);
-  --lift:0 1px 2px rgba(50,46,41,.06),0 14px 34px -12px rgba(50,46,41,.22);
+  --lift:0 1px 2px rgba(37,39,44,.06),0 14px 34px -12px rgba(37,39,44,.22);
   /* неоморфизм: тёмная тень снизу-справа + светлая сверху-слева, поверхность одного цвета */
-  --surface:#ebe4da; --surface-focus:#f3ede5; --neu-d:#cbbcaa; --neu-l:#fbf5ec; --hl:250,241,231;
-  --panel:#ebe4da;
-  --glow-a:rgba(214,138,80,.056); --glow-b:rgba(168,178,159,.072);
-  --ink:#322e29; --ink-2:#5a534b; --muted:#857c71; --hair:rgba(50,46,41,.09);
-  --primary:#c0622b; --primary-hi:#d47a3f; --primary-lo:#a8521f; --on-primary:#fbf3ea;
-  --primary-glow:rgba(141,56,41,.42); --primary-soft:rgba(157,73,57,.12);
-  /* лицо главной кнопки — бледная глина, текст — глубокая терракота */
-  --btn-hi:#f5caa6; --btn:#efb88f; --btn-lo:#e5a57c; --on-btn:#843d12;
-  --accent:#c0622b; --danger:#91273b; --danger-soft:rgba(145,39,59,.10);
+  --surface:#e7e8eb; --surface-focus:#f0f1f3; --neu-d:#c3c6cc; --neu-l:#fbfbfc; --hl:248,249,251;
+  --panel:#e7e8eb;
+  --glow-a:rgba(47,91,176,0.05); --glow-b:rgba(127,163,235,.04);
+  --ink:#25272c; --ink-2:#4a4d55; --muted:#7a7d85; --hair:rgba(37,39,44,.09);
+  --primary:#2f5bb0; --primary-hi:#396aca; --primary-lo:#274c94; --on-primary:#f3f6fd;
+  --primary-glow:rgba(30,60,120,.35); --primary-soft:rgba(47,91,176,0.12);
+  /* лицо главной кнопки — бледный кобальт, текст — тёмно-синий */
+  --btn-hi:#c6d5f1; --btn:#b2c6ec; --btn-lo:#9eb7e7; --on-btn:#18336d;
+  --accent:#2f5bb0; --danger:#91273b; --danger-soft:rgba(145,39,59,.10);
   --warn:#cb8d3f; --warn-soft:rgba(203,141,63,.16); --ok:#5f7458; --ok-soft:rgba(140,160,134,.28); --info:#627b95;
     --raised-sm:4px 4px 9px var(--neu-d),-4px -4px 9px var(--neu-l);
   --raised:8px 8px 18px var(--neu-d),-8px -8px 18px var(--neu-l);
@@ -41,20 +42,20 @@
   color-scheme:light;
 }
 :root[data-theme="dark"]{
-  --bg-top:#433e38; --bg:#3c3833; --bg-2:#35312d;
-  --glass:linear-gradient(155deg,rgba(255,250,240,.11) 0%,rgba(255,250,240,.05) 60%,rgba(255,250,240,.035) 100%);
-  --glass-solid:#363230;
+  --bg-top:#36383d; --bg:#303236; --bg-2:#2a2c30;
+  --glass:linear-gradient(155deg,rgba(240,244,255,.10) 0%,rgba(240,244,255,.05) 60%,rgba(240,244,255,.035) 100%);
+  --glass-solid:#34363a;
   --glass-edge:rgba(255,255,255,.10);
   --glass-hi:inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 1px rgba(255,255,255,.03);
   --lift:0 1px 2px rgba(0,0,0,.25),0 18px 40px -14px rgba(0,0,0,.55);
-  --surface:#443f3a; --surface-focus:#4a453f; --neu-d:rgba(20,16,12,.5); --neu-l:rgba(255,236,215,.09); --hl:226,196,176;
-  --panel:#443f3a;
-  --glow-a:rgba(214,138,80,.056); --glow-b:rgba(140,160,134,.04);
-  --ink:#f1e9de; --ink-2:#d3c9bc; --muted:#a99f93; --hair:rgba(255,236,215,.10);
-  --primary:#d9874a; --primary-hi:#e09035; --primary-lo:#b86a3c; --on-primary:#fbf3ea;
-  --primary-glow:rgba(0,0,0,.45); --primary-soft:rgba(198,134,117,.16);
-  --btn-hi:#c47a48; --btn:#b86c3c; --btn-lo:#a85f32; --on-btn:#fff4ea;
-  --accent:#e8a066; --danger:#e07a8a; --danger-soft:rgba(224,122,138,.13);
+  --surface:#3a3c41; --surface-focus:#414349; --neu-d:rgba(8,9,12,.5); --neu-l:rgba(225,230,240,.08); --hl:205,210,220;
+  --panel:#3a3c41;
+  --glow-a:rgba(127,163,235,0.05); --glow-b:rgba(127,163,235,.03);
+  --ink:#eceef1; --ink-2:#c8cbd1; --muted:#9a9ea6; --hair:rgba(225,230,240,.10);
+  --primary:#7fa3eb; --primary-hi:#9eb9f0; --primary-lo:#608de6; --on-primary:#f3f6fd;
+  --primary-glow:rgba(0,0,0,.45); --primary-soft:rgba(127,163,235,0.16);
+  --btn-hi:#416abb; --btn:#3a5fa8; --btn-lo:#335495; --on-btn:#eef3ff;
+  --accent:#7fa3eb; --danger:#e07a8a; --danger-soft:rgba(224,122,138,.13);
   --warn:#d6a35a; --warn-soft:rgba(214,163,90,.14); --ok:#a8b29f; --ok-soft:rgba(140,160,134,.18); --info:#8ea3bd;
   color-scheme:dark;
 }
@@ -103,7 +104,7 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
 .input{width:100%;min-height:54px;border:0;background:var(--surface);box-shadow:var(--pressed);
   border-radius:999px;padding:0 22px;font-size:16px;outline:0;color:var(--ink);transition:background .2s,box-shadow .2s}
 .input::placeholder{color:var(--muted);opacity:.75}
-.input:focus{background:var(--surface-focus);box-shadow:var(--pressed),0 0 0 2px rgba(192,98,43,0.55);box-shadow:var(--pressed),0 0 0 2px color-mix(in srgb,var(--primary) 55%,transparent)}
+.input:focus{background:var(--surface-focus);box-shadow:var(--pressed),0 0 0 2px rgba(47,91,176,0.55);box-shadow:var(--pressed),0 0 0 2px color-mix(in srgb,var(--primary) 55%,transparent)}
 .input.err{box-shadow:var(--pressed),0 0 0 2px rgba(145,39,59,0.60);box-shadow:var(--pressed),0 0 0 2px color-mix(in srgb,var(--danger) 60%,transparent)}
 .input[readonly]{color:var(--ok);box-shadow:var(--pressed-sm),0 0 0 2px rgba(76,110,72,0.40);box-shadow:var(--pressed-sm),0 0 0 2px color-mix(in srgb,var(--ok) 40%,transparent)}
 .hint{font-size:12px;color:var(--danger);margin:7px 4px 0}
@@ -132,10 +133,10 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
   background:var(--surface);box-shadow:var(--pressed-sm);border:0;transition:background .25s}
 .consent input:after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;
   background:var(--surface);box-shadow:3px 3px 6px var(--neu-d),-2px -2px 5px var(--neu-l);transition:transform .25s cubic-bezier(.3,.7,.3,1)}
-.consent input:checked{background:linear-gradient(90deg,var(--btn-lo),var(--btn-hi));box-shadow:inset 2px 2px 5px rgba(132,61,18,.22),inset -2px -2px 5px rgba(var(--hl),.3)}
+.consent input:checked{background:linear-gradient(90deg,var(--btn-lo),var(--btn-hi));box-shadow:inset 2px 2px 5px rgba(24,51,109,.22),inset -2px -2px 5px rgba(var(--hl),.3)}
 .consent input:checked:after{transform:translateX(20px)}
 .consent input:focus{outline:none}
-.consent input:focus-visible,.toggle:focus-visible{outline:none;box-shadow:var(--pressed-sm),0 0 0 2px rgba(192,98,43,0.50);box-shadow:var(--pressed-sm),0 0 0 2px color-mix(in srgb,var(--primary) 50%,transparent)}
+.consent input:focus-visible,.toggle:focus-visible{outline:none;box-shadow:var(--pressed-sm),0 0 0 2px rgba(47,91,176,0.50);box-shadow:var(--pressed-sm),0 0 0 2px color-mix(in srgb,var(--primary) 50%,transparent)}
 .req{color:var(--accent);font-weight:700}
 
 /* главная кнопка — объём светом, не глянцем */
@@ -281,7 +282,7 @@ body.wide .app{max-width:860px}
 .pick input{justify-self:end}
 .toggle{appearance:none;-webkit-appearance:none;position:relative;width:50px;height:30px;margin:0;border-radius:999px;cursor:pointer;background:var(--surface);box-shadow:var(--pressed-sm);border:0;transition:background .25s}
 .toggle:after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--surface);box-shadow:3px 3px 6px var(--neu-d),-2px -2px 5px var(--neu-l);transition:transform .25s cubic-bezier(.3,.7,.3,1)}
-.toggle:checked{background:linear-gradient(90deg,var(--btn-lo),var(--btn-hi));box-shadow:inset 2px 2px 5px rgba(132,61,18,.22),inset -2px -2px 5px rgba(var(--hl),.3)}
+.toggle:checked{background:linear-gradient(90deg,var(--btn-lo),var(--btn-hi));box-shadow:inset 2px 2px 5px rgba(24,51,109,.22),inset -2px -2px 5px rgba(var(--hl),.3)}
 .toggle{flex:none}
 .toggle:focus{outline:none}
 .toggle:checked:after{transform:translateX(20px)}
@@ -352,10 +353,10 @@ body.wide .app{max-width:860px}
 .rq .addr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tags i.me{background:var(--btn);color:var(--on-btn)}
 .plate{display:inline-flex;align-items:center;font-weight:650;letter-spacing:.04em;color:var(--ink);font-size:17px;padding:5px 12px;border-radius:9px;
-  background:var(--surface);box-shadow:inset 0 0 0 1.5px rgba(50,46,41,0.55);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ink) 55%,transparent);text-transform:uppercase;white-space:nowrap}
+  background:var(--surface);box-shadow:inset 0 0 0 1.5px rgba(37,39,44,0.55);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ink) 55%,transparent);text-transform:uppercase;white-space:nowrap}
 /* линия «сейчас» */
 .now{display:flex;align-items:center;gap:10px;margin:2px 4px;color:var(--primary);font-size:12px;font-weight:600}
-.now:after{content:"";flex:1;height:2px;border-radius:2px;background:rgba(192,98,43,0.45);background:color-mix(in srgb,var(--primary) 45%,transparent)}
+.now:after{content:"";flex:1;height:2px;border-radius:2px;background:rgba(47,91,176,0.45);background:color-mix(in srgb,var(--primary) 45%,transparent)}
 .now i{width:9px;height:9px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px var(--primary-soft)}
 /* Заглушка карточки, пока грузятся заявки: без переливания, в углу «Момент» и пиктограмма загрузки */
 .skeleton{height:132px;border-radius:26px;background:var(--surface);box-shadow:var(--raised);position:relative;overflow:hidden;padding:18px 20px}
@@ -365,11 +366,11 @@ body.wide .app{max-width:860px}
 .skeleton i:nth-of-type(3){width:80%}
 .moment{position:absolute;top:14px;right:16px;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--muted)}
 /* нижняя шторка фильтров */
-.sheet-bg{position:fixed;inset:0;z-index:20;background:rgba(30,24,18,.28);transition:opacity .22s}
+.sheet-bg{position:fixed;inset:0;z-index:20;background:rgba(20,22,28,.28);transition:opacity .22s}
 .sheet-bg.enter{animation:fadein .2s both}
 .sheet-bg.closing{opacity:0}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;max-height:82vh;overflow:auto;background:var(--panel);border-radius:30px 30px 0 0;
-  padding:12px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(30,24,18,.18);max-width:620px;margin:0 auto;overscroll-behavior:contain;touch-action:pan-y}
+  padding:12px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(20,22,28,.18);max-width:620px;margin:0 auto;overscroll-behavior:contain;touch-action:pan-y}
 .sheet.enter{animation:up .28s cubic-bezier(.3,.7,.3,1) both}
 .sheet.closing{transition:transform .22s ease-in;transform:translateY(105%)!important}
 .sheet.dragging{transition:none}
@@ -463,9 +464,9 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
 .shot{position:relative;aspect-ratio:1;border-radius:18px;overflow:hidden;background:var(--surface);box-shadow:var(--raised-sm)}
 .shot img{width:100%;height:100%;object-fit:cover;display:block}
 .shot .x{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;
-  background:rgba(30,24,18,.55);color:#fbf3ea;font-size:15px;line-height:1}
+  background:rgba(20,22,28,.55);color:#fbf3ea;font-size:15px;line-height:1}
 .shot .busy{position:absolute;inset:0;display:grid;place-items:center;background:rgba(var(--hl),.55)}
-.shot .geo{position:absolute;left:6px;bottom:6px;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:rgba(30,24,18,.55);color:#fbf3ea}
+.shot .geo{position:absolute;left:6px;bottom:6px;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:rgba(20,22,28,.55);color:#fbf3ea}
 .add{aspect-ratio:1;border:0;cursor:pointer;border-radius:18px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);
   display:flex;align-items:center;justify-content:center;padding:8px;text-align:center}
 .add .add-in{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
@@ -497,7 +498,7 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
 .no-photo-btn{margin-top:12px}
 .no-photo-btn.on{color:var(--primary)}
 /* окно отправки — по центру экрана поверх формы */
-.send-overlay{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:24px;background:rgba(40,34,28,.28);
+.send-overlay{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:24px;background:rgba(25,28,34,.28);
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:fadeIn .18s ease}
 .send-box{width:min(100%,380px);padding:22px 22px 20px;border-radius:28px;background:var(--panel);box-shadow:var(--lift)}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -551,7 +552,7 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
       : tg && tg.colorScheme ? tg.colorScheme === 'dark'
       : window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-    try { const c = dark ? '#433e38' : '#ede5db'; tg.setHeaderColor(c); tg.setBackgroundColor(c); } catch (e) {}
+    try { const c = dark ? '#36383d' : '#ebecee'; tg.setHeaderColor(c); tg.setBackgroundColor(c); } catch (e) {}
     const btn = document.querySelector('[data-theme-toggle]');
     if (btn) btn.innerHTML = dark ? ICON.sun : ICON.moon;
   }
@@ -1319,6 +1320,51 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
     try { if (tg && tg.BackButton) fn ? tg.BackButton.show() : tg.BackButton.hide(); } catch (e) {}
   }
 
+  /**
+   * «Назад» жестом: ведём пальцем от левого края экрана вправо — экран едет за пальцем,
+   * отпустили дальше чем на треть (или резко) — шаг назад, как кнопкой «Назад». iOS и Android одинаково.
+   */
+  (function edgeBack() {
+    const EDGE = 24;
+    let x0 = null, y0 = 0, t0 = 0, mode = '', dx = 0;
+    const reset = anim => {
+      app.style.transition = anim ? 'transform .22s ease, opacity .22s ease' : '';
+      app.style.transform = ''; app.style.opacity = '';
+      if (anim) setTimeout(() => { app.style.transition = ''; }, 240);
+    };
+    document.addEventListener('touchstart', e => {
+      x0 = null;
+      if (!backAction || e.touches.length !== 1) return;
+      if (document.querySelector('.sheet, .send-overlay')) return; // открыта шторка или идёт отправка
+      const t = e.touches[0];
+      if (t.clientX > EDGE) return;
+      x0 = t.clientX; y0 = t.clientY; t0 = Date.now(); mode = ''; dx = 0;
+    }, { passive: true });
+    document.addEventListener('touchmove', e => {
+      if (x0 === null) return;
+      const t = e.touches[0], ddx = t.clientX - x0, ddy = t.clientY - y0;
+      if (!mode) { if (Math.abs(ddx) < 8 && Math.abs(ddy) < 8) return; mode = ddx > 0 && Math.abs(ddx) > Math.abs(ddy) * 1.2 ? 'back' : 'no'; }
+      if (mode !== 'back') return;
+      dx = Math.max(0, ddx);
+      app.style.transition = 'none';
+      app.style.transform = `translateX(${dx}px)`;
+      app.style.opacity = String(Math.max(0.55, 1 - dx / (innerWidth * 1.4)));
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+    const end = () => {
+      if (x0 === null) return; x0 = null;
+      if (mode !== 'back') return;
+      const fast = dx > 40 && dx / Math.max(1, Date.now() - t0) > 0.6;
+      if ((dx > innerWidth / 3 || fast) && backAction) {
+        haptic('select');
+        app.style.transition = 'transform .16s ease-out, opacity .16s ease-out';
+        app.style.transform = `translateX(${innerWidth}px)`; app.style.opacity = '0';
+        setTimeout(() => { const fn = backAction; app.style.transition = 'none'; app.style.transform = ''; app.style.opacity = ''; if (fn) fn(); }, 160);
+      } else reset(true);
+    };
+    document.addEventListener('touchend', end); document.addEventListener('touchcancel', end);
+  })();
+
   /* =================== АДМИН-ПАНЕЛЬ =================== */
   const STATUS_RU = { pending:'Ожидает', active:'Активен', rejected:'Отклонён', blocked:'Заблокирован' };
   const TEMPLATES = [
@@ -1934,7 +1980,7 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
         fileIds[st] = noPhotoOf(s, st) ? [] : s.shots[st].map(x => x.fileId).filter(Boolean);
       });
       const r = await api('reports.commit', { key: s.item.key, day: s.item.day, reportId: s.reportId, type: s.type, counts, times, fileIds, direct: s.direct,
-        noPhoto: { departure: noPhotoOf(s, 'departure') }, comment: s.comment, location: s.location, pressedAt: s.pressedAt || 0 }, 90000);
+        noPhoto: { departure: noPhotoOf(s, 'departure') }, comment: s.comment, location: s.location, pressedAt: s.pressedAt || 0, clientNow: Date.now(), os: OS }, 90000);
       Metrics.add(hooks.queued ? 'report.queued' : 'report.send', Date.now() - t0, 'ok', 1);
       return r;
     } catch (e) {
@@ -2715,7 +2761,7 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
     if (saved && saved.status === 'active') { state.profile = saved.profile; state.me = saved; Req.open(day, { wait: true }); shown = true; }
     else renderLoading();
     try {
-      const r = await api('boot', { date: day });
+      const r = await api('boot', { date: day, clientNow: Date.now(), os: OS }); // часы телефона сверяются с сервером (журнал сдвигов)
       const me = { ...r }; delete me.list; delete me.listError;
       local.set('me', me);
       if (r.status === 'active') {
