@@ -142,15 +142,16 @@ h1{font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:650;margin
 .primary{width:100%;min-height:56px;border:0;border-radius:999px;cursor:pointer;color:var(--on-btn);font-weight:600;font-size:16px;letter-spacing:.005em;
   display:flex;align-items:center;justify-content:center;gap:10px;
   background:var(--btn);
-  box-shadow:var(--raised);
-  transition:transform .12s,box-shadow .12s,opacity .15s}
-.primary:active{transform:scale(.995);box-shadow:var(--raised-sm)}
+  box-shadow:none; /* цветные кнопки — плоские: светлая/тёмная неоморфная тень на оранжевом выглядит грязно */
+  transition:transform .12s,background-color .12s,opacity .15s}
+.primary:active{transform:scale(.995)}
 /* ===== нажатие: кнопки «вжимаются» (iOS включает :active только при обработчике touchstart — он добавлен в скрипте) ===== */
 button,a,.rq,.person,.admin-entry,.type,.chip,.day,.call{-webkit-tap-highlight-color:transparent}
 button:not(:disabled),.call,.rq,.person,.admin-entry{transition:transform .12s ease,box-shadow .12s ease,background-color .12s}
 button:not(:disabled):active,.call:active{transform:scale(.96)}
 button.rq:active,button.person:active,button.admin-entry:active,button.type:not(:disabled):active,.add:active{transform:scale(.985)}
-.primary:not(:disabled):active{transform:scale(.97);box-shadow:var(--pressed-sm);background:var(--btn-lo)}
+.primary:not(:disabled):active{transform:scale(.97);box-shadow:none;background:var(--btn-lo)}
+.chip.on:active,.chip.on:not(:disabled):active{box-shadow:none;background:var(--btn-lo)}
 .secondary:not(:disabled):active,.round:active,.chip:active,.day:active{box-shadow:var(--pressed-sm)}
 .call{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .round.spin svg{animation:spin .8s linear infinite}
@@ -158,6 +159,7 @@ button.rq:active,button.person:active,button.admin-entry:active,button.type:not(
 .note{font-size:12px;color:var(--muted);text-align:center;margin:14px 8px 0;line-height:1.5}
 
 .center{text-align:center;padding-top:5vh}
+.center.mid{min-height:70vh;display:flex;flex-direction:column;justify-content:center;padding-top:0}
 .center h1,.center .lead{margin-left:auto;margin-right:auto;max-width:400px}
 /* бейдж статуса — выпуклая «таблетка» с тонкой иконкой */
 .badge{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;margin:0 auto 24px}
@@ -174,7 +176,7 @@ button.rq:active,button.person:active,button.admin-entry:active,button.type:not(
 .steps li.done{color:var(--ink)}
 .steps li.done i{background:linear-gradient(180deg,var(--btn-hi),var(--btn));color:var(--on-btn);box-shadow:var(--raised-sm)}
 /* Индикатор загрузки (анимированная пиктограмма) — в фирменном цвете; на оранжевых кнопках — цветом текста кнопки */
-.fl-loader{display:block;flex:none;color:var(--primary)}
+.fl-loader{display:block;flex:none;color:var(--primary);overflow:visible}
 .fl-loader.on{color:var(--on-btn)}
 .fl-loader.thick path{stroke-width:96!important}  /* мелкий значок (≤ 32 px) — линия толще, иначе почти не видно */
 button .fl-loader,.saving .fl-loader,.moment .fl-loader{display:inline-block;vertical-align:middle}
@@ -208,10 +210,15 @@ body.wide .app{max-width:860px}
 .seg button{flex:1;min-height:40px;border:0;border-radius:999px;background:transparent;color:var(--muted);font-weight:600;font-size:13.5px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 10px;white-space:nowrap;transition:all .2s}
 .seg button:disabled{opacity:.4;cursor:default}
 .seg button.on{background:var(--surface);color:var(--ink);box-shadow:3px 3px 7px var(--neu-d),-3px -3px 7px var(--neu-l)}
+.seg.slide{position:relative}
+.seg.slide button,.seg.slide button.on{background:transparent;box-shadow:none;position:relative;z-index:1}
+.seg.slide .knob{position:absolute;top:5px;bottom:5px;left:5px;width:calc(50% - 7px);border-radius:999px;background:var(--surface);
+  box-shadow:3px 3px 7px var(--neu-d),-3px -3px 7px var(--neu-l);transition:transform .22s cubic-bezier(.3,.7,.3,1)}
+.seg.slide.right .knob{transform:translateX(calc(100% + 4px))}
 .seg .n{min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--btn);color:var(--on-btn);font-size:11.5px;display:inline-grid;place-items:center}
 .chips{display:flex;flex-wrap:wrap;gap:10px;padding:2px 2px 6px;margin:0 0 14px}
 .chip{flex:none;min-height:36px;padding:0 14px;border-radius:999px;border:0;background:var(--surface);box-shadow:var(--raised-sm);color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-.chip.on{background:var(--btn);color:var(--on-btn)}
+.chip.on{background:var(--btn);color:var(--on-btn);box-shadow:none}
 .chip .c{opacity:.7;font-weight:500}
 .search{position:relative;margin-bottom:14px}
 .search svg{position:absolute;left:18px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--muted);stroke-width:1.8}
@@ -233,6 +240,7 @@ body.wide .app{max-width:860px}
 .pill.blocked{background:var(--hair);color:var(--muted)}
 .pill.role{background:transparent;box-shadow:var(--pressed-sm);color:var(--ink-2)}
 .empty{text-align:center;color:var(--muted);padding:36px 10px;font-size:14px}
+.sect,.note,.lead,.eyebrow,.center h1,.empty{position:relative;z-index:1} /* светлая тень соседней карточки не засвечивает текст */
 .sect{font-size:12.5px;font-weight:600;color:var(--ink-2);margin:0 10px 10px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .sect small{font-weight:400;color:var(--muted)}
 .notes{display:grid;gap:8px;font-size:13.5px;line-height:1.45}
@@ -361,7 +369,6 @@ body.wide .app{max-width:860px}
 .sheet.enter{animation:up .28s cubic-bezier(.3,.7,.3,1) both}
 .sheet.closing{transition:transform .22s ease-in;transform:translateY(105%)!important}
 .sheet.dragging{transition:none}
-.sheet .grab{padding:10px 0;margin-top:-10px;background-clip:content-box;box-sizing:content-box}
 .sheet .grab{width:40px;height:5px;border-radius:5px;background:var(--hair);margin:0 auto 14px}
 .sheet h3{font-size:19px;font-weight:650;margin:0 4px 16px;letter-spacing:-.02em}
 @keyframes up{from{transform:translateY(100%)}to{transform:none}}
@@ -374,6 +381,8 @@ body.wide .app{max-width:860px}
 .stops{position:relative;display:grid;gap:18px;padding-left:24px}
 .stops:before{content:"";position:absolute;left:6px;top:10px;bottom:10px;width:2px;border-radius:2px;background:var(--hair)}
 .stops.one:before{display:none}
+.mid-load{display:grid;place-items:center;min-height:calc(100vh - 330px)}
+.stop-load{margin-left:-28px;height:22px} /* значок загрузки — на одной вертикали с точкой адреса */
 .stop{position:relative}
 .stop:before{content:"";position:absolute;left:-24px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--surface);box-shadow:inset 0 0 0 3px var(--muted)}
 .stop.end:before{background:var(--primary);box-shadow:0 0 0 4px var(--primary-soft)}
@@ -415,6 +424,8 @@ details summary::-webkit-details-marker{display:none}
 .report-bar{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),488px);bottom:calc(12px + env(safe-area-inset-bottom));z-index:20;
   display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 12px 12px 20px;border-radius:999px;background:var(--panel);box-shadow:var(--raised-lg)}
 .report-space{height:96px}
+.all-bar{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),488px);bottom:calc(14px + env(safe-area-inset-bottom));z-index:20}
+.all-bar .secondary{width:100%;margin:0;background:var(--panel)}
 .saving{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:999px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);font-weight:600}
 /* кнопка «Отправить» на экране отчёта — всегда внизу экрана */
 .send-bar{position:fixed;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),488px);bottom:calc(12px + env(safe-area-inset-bottom));z-index:20}
@@ -460,24 +471,25 @@ details summary::-webkit-details-marker{display:none}
 .progress i{display:block;height:100%;border-radius:999px;background:var(--btn);transition:width .35s linear;
   background-image:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);background-size:200% 100%;animation:shine 1.4s linear infinite}
 @keyframes shine{from{background-position:200% 0}to{background-position:-200% 0}}
-.time-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;margin:0 0 14px;min-height:48px}
+.time-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:12px;margin:0 0 14px;min-height:48px} /* те же колонки, что у фото */
+.time-box{display:contents}
 .time-row label{display:grid;gap:1px;min-width:0}
 .time-row label small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .time-row label b{font-size:15px;font-weight:650}
 .time-row label small{font-size:12px;color:var(--muted)}
-.time-box{display:flex;align-items:center;gap:8px}
-.input.time{display:block;width:100%;height:46px;min-height:0;line-height:46px;padding:0 14px;text-align:center;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+.input.time{display:block;width:100%;height:46px;min-height:0;line-height:46px;padding:0 6px;text-align:center;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
 .input.time::-webkit-date-and-time-value{text-align:center}
 .input.time::-webkit-calendar-picker-indicator{display:none}
 /* Пустое поле времени: iPhone не рисует в нём ничего — показываем свою подсказку «--:--» и пунктирную рамку */
-.time-wrap{position:relative;display:block;width:108px;height:46px;flex:none} /* iPhone растягивает пустое поле времени — размер задаём жёстко */
+.time-wrap{position:relative;display:block;width:100%;height:46px} /* iPhone растягивает пустое поле времени — размер задаём жёстко */
 .time-hint{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:6px;pointer-events:none;
   font-size:17px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
 .time-wrap.t-empty .time-hint{display:flex}
-.time-wrap.t-empty .input.time{color:transparent;box-shadow:none;outline:1.5px dashed var(--primary);outline-offset:-1.5px}
+.time-wrap.t-empty .input.time{color:transparent}
+.time-wrap.t-empty .time-hint{color:var(--primary)}
 .time-wrap.t-empty .input.time:focus{color:inherit}
 .time-wrap.t-empty .input.time:focus + .time-hint{display:none}
-.now-btn{white-space:nowrap;min-width:84px;justify-content:center}
+.now-btn{white-space:nowrap;width:100%;min-height:42px;justify-content:center;padding:0 8px}
 .no-photo{padding:14px 16px;border-radius:20px;background:var(--surface);box-shadow:var(--pressed-sm);color:var(--ink-2);font-size:13.5px;line-height:1.45}
 .no-photo-btn{margin-top:12px}
 .no-photo-btn.on{color:var(--primary)}
@@ -494,7 +506,7 @@ details summary::-webkit-details-marker{display:none}
 .big-status{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px}
 .big-status.center{justify-content:center;font-size:16px}
 .big-status.center span{color:var(--muted);font-variant-numeric:tabular-nums}
-.send-loader{display:grid;place-items:center;padding:8px 0 16px}
+.send-loader{display:grid;place-items:center;padding:26px 0 8px}
 .send-pct{text-align:center;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:4px}
 </style>
 </head>
@@ -570,24 +582,25 @@ details summary::-webkit-details-marker{display:none}
    */
   function hSwipe(el, h) {
     if (el.__hswipe) return; el.__hswipe = 1;
-    let x0, y0, t0, mode = '', dx = 0;
-    el.addEventListener('touchstart', e => { if (e.touches.length !== 1) return; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now(); mode = ''; dx = 0; }, { passive: true });
-    el.addEventListener('touchmove', e => {
-      if (x0 == null) return;
-      const ddx = e.touches[0].clientX - x0, ddy = e.touches[0].clientY - y0;
-      if (!mode) { if (Math.abs(ddx) < 8 && Math.abs(ddy) < 8) return; mode = Math.abs(ddx) > Math.abs(ddy) ? 'h' : 'v'; }
+    el.style.touchAction = 'pan-y';
+    let x0 = null, y0, t0, mode = '', dx = 0, id = null;
+    el.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button) return; x0 = e.clientX; y0 = e.clientY; t0 = Date.now(); mode = ''; dx = 0; id = e.pointerId; });
+    el.addEventListener('pointermove', e => {
+      if (x0 === null || e.pointerId !== id) return;
+      const ddx = e.clientX - x0, ddy = e.clientY - y0;
+      if (!mode) { if (Math.abs(ddx) < 8 && Math.abs(ddy) < 8) return; mode = Math.abs(ddx) > Math.abs(ddy) ? 'h' : 'v'; if (mode === 'h') try { el.setPointerCapture(id); } catch (x) {} }
       if (mode !== 'h') return;
       dx = ddx; h.move(dx);
-      if (e.cancelable) e.preventDefault();
-    }, { passive: false });
-    const end = () => {
-      if (x0 == null) return; const m = mode; x0 = null;
+    });
+    const end = e => {
+      if (x0 === null || (e && e.pointerId !== id)) return; const m = mode; x0 = null;
       if (m !== 'h') return;
       el.__swiped = Date.now(); // клик после жеста не считается нажатием
       h.end(dx, dx / Math.max(1, Date.now() - t0));
     };
-    el.addEventListener('touchend', end); el.addEventListener('touchcancel', end);
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
   }
+
 
   /** Анимированная пиктограмма загрузки. tone 'on' — на оранжевой кнопке. */
   const LOADER_PATHS = '<path class="fl-0" d="M295.62 244.45 A136.15 136.15 0 0 0 80.16 293.37 A136.15 136.15 0 0 0 194.81 482.24 L194.83 483.75 A135.9 135.9 0 0 0 90.67 693.49 A135.9 135.9 0 0 0 324.61 682.98 L330.15 686.19 A136.38 136.38 0 0 0 499.45 884.5 A136.38 136.38 0 0 0 470.56 625.36"/><path class="fl-1" d="M722.34 753.32 A137.24 137.24 0 0 0 697.68 483.99 L697.6 481.82 A136 136 0 0 0 802.41 272.49 A136 136 0 0 0 568.47 281.42 L561.96 277.57 A136.17 136.17 0 0 0 394.17 78.31 A136.17 136.17 0 0 0 422.14 337.3"/><path class="fl-2" d="M519.56 470.57 C519.13 465.95 518.25 461.35 516.92 456.86 C515.59 452.37 513.81 447.99 511.61 443.81 C509.41 439.63 506.79 435.64 503.79 431.93 C500.8 428.22 497.42 424.8 493.73 421.72 C490.04 418.64 486.03 415.91 481.78 413.59 C477.52 411.27 473.03 409.36 468.37 407.9 C463.72 406.44 458.9 405.43 454.02 404.9 C449.13 404.37 444.18 404.31 439.26 404.74 C434.34 405.18 429.44 406.09 424.67 407.48 C419.89 408.87 415.24 410.72 410.81 413.02 C406.37 415.32 402.15 418.07 398.22 421.2 C394.3 424.33 390.68 427.85 387.42 431.71 C384.17 435.56 381.28 439.74 378.83 444.16 C376.37 448.59 374.35 453.26 372.79 458.1 C371.24 462.93 370.16 467.93 369.57 472.99 C368.98 478.05 368.89 483.17 369.3 488.26 C369.7 493.35 370.61 498.41 372 503.33 C373.39 508.26 375.26 513.05 377.58 517.62 C379.91 522.19 382.68 526.53 385.84 530.56 C389.01 534.6 392.58 538.33 396.47 541.67 C400.36 545.02 404.59 547.99 409.06 550.51 C413.53 553.04 418.24 555.13 423.12 556.75 C427.99 558.36 433.03 559.49 438.12 560.13 C443.21 560.77 448.36 560.9 453.48 560.54 C458.59 560.17 463.66 559.31 468.6 557.96 C473.54 556.62 478.34 554.79 482.92 552.51 C487.49 550.23 491.84 547.51 495.87 544.4 C499.91 541.29 503.64 537.78 506.98 533.96 C510.33 530.13 513.29 525.98 515.83 521.6 C518.36 517.21 520.45 512.58 522.08 507.8 C523.7 503.02 524.86 498.09 525.52 493.11 C526.19 488.13 526.36 483.09 526.04 478.1 C525.73 473.11 524.93 468.16 523.65 463.34 C522.38 458.53 520.64 453.86 518.47 449.41 C516.3 444.96 513.7 440.74 510.72 436.82 C507.75 432.9 504.4 429.28 500.74 426.04 C497.09 422.8 493.12 419.92 488.94 417.47 C484.75 415.01 480.34 412.98 475.79 411.4 C471.24 409.82 466.55 408.69 461.82 408.03"/>';
@@ -1000,7 +1013,7 @@ details summary::-webkit-details-marker{display:none}
 
   /* ---------- screens ---------- */
   function renderLoading(text = 'Проверяем доступ…') { // экран не меняет: это заглушка того экрана, который открывается
-    app.innerHTML = header() + `<div class="center">${loader(48, '', 'margin:0 auto 16px')}<p class="lead">${esc(text)}</p></div>`;
+    app.innerHTML = header() + `<div class="center mid">${loader(48, '', 'margin:0 auto 16px')}<p class="lead">${esc(text)}</p></div>`;
   }
 
   function renderOutside() {
@@ -1484,7 +1497,7 @@ details summary::-webkit-details-marker{display:none}
     viewLog() {
       const s = this.st, h = s.history;
       const seg = `<div class="seg"><button class="${s.logTab === 'log' ? 'on' : ''}" data-a="logTab" data-v="log">Действия</button><button class="${s.logTab === 'msg' ? 'on' : ''}" data-a="logTab" data-v="msg">Сообщения</button></div>`;
-      if (!h) return seg + loader(36, '', 'margin:30px auto');
+      if (!h) return seg + `<div class="mid-load">${loader(40)}</div>`;
       const label = a => ({ 'admin.status':'Смена статуса', 'admin.update':'Изменение данных', 'admin.send':'Рассылка', 'register':'Регистрация', 'status':'Статус изменён в таблице' })[a] || a;
       const rows = s.logTab === 'log'
         ? h.log.map(l => `<div class="logi"><div class="t"><b>${esc(label(l.action))}${l.result ? ' · ' + esc(l.result) : ''}</b><span>${fmtDate(l.time)}</span></div><div class="d">${esc(l.by)} — ${esc(l.details)}</div></div>`)
@@ -2312,7 +2325,7 @@ details summary::-webkit-details-marker{display:none}
       const sub = this.st.stale && this.st.loading ? ' · обновляем…' : this.st.stale && this.st.err ? (off ? ' · нет связи, сохранённые данные' : ' · сохранённые данные') : '';
       return `<div class="home-head"><div><h1>Заявки</h1><small>${longDate(this.st.day)}${sub}</small></div>
         <div class="head-btns">
-          <button class="round" data-r="refresh" aria-label="Обновить" ${this.st.refreshing ? 'disabled' : ''}>${this.st.refreshing ? loader(22) : ICON.refresh}</button>
+          <button class="round ${this.st.refreshing ? 'spin' : ''}" data-r="refresh" aria-label="Обновить" ${this.st.refreshing ? 'disabled' : ''}>${ICON.refresh}</button>
           ${me.isAdmin ? `<button class="round" data-r="admin" aria-label="Админ-панель">${ICON.shield}${me.adminPending ? `<span class="dot">${me.adminPending}</span>` : ''}</button>` : ''}
           <button class="round avatar" data-r="profile" aria-label="Профиль">${esc(initials.toUpperCase() || '·')}</button>
         </div></div>`;
@@ -2353,13 +2366,14 @@ details summary::-webkit-details-marker{display:none}
       let body;
       if (s.err && !data) body = `<div class="empty">${esc(s.err.message)}<br><br><button class="secondary small" data-r="reload">Повторить</button></div>`;
       if (s.err && data && !s.errShown) { s.errShown = true; setTimeout(() => toast('Не удалось обновить: ' + s.err.message), 0); }
-      else if (!data) body = `<div class="list">${('<div class="skeleton"><span class="moment">Момент' + loader(24) + '</span><i></i><i></i><i></i></div>').repeat(3)}</div>`;
+      else if (!data) body = `<div class="list">${['Момент', 'Чуть-чуть', 'Подождать'].map(t => '<div class="skeleton"><span class="moment">' + t + loader(24) + '</span><i></i><i></i><i></i></div>').join('')}</div>`;
       else if (!list.length) {
         const why = s.q || s.fp.size || s.fu.size || s.fph.size ? 'По этим условиям заявок нет.'
           : s.scope === 'mine' ? 'В этот день вас нет в заявках.' : 'На этот день заявок нет.';
-        const act = s.q || s.fp.size || s.fu.size || s.fph.size ? `<button class="secondary small" data-r="clear">Сбросить поиск и фильтры</button>`
-          : s.scope === 'mine' && canAll && items.length ? `<button class="secondary small" data-r="scope" data-v="all">Показать все заявки дня · ${items.length}</button>` : '';
-        body = `<div class="empty">${why}${act ? '<br><br>' + act : ''}</div>`;
+        const act = s.q || s.fp.size || s.fu.size || s.fph.size ? `<button class="secondary small" data-r="clear">Сбросить поиск и фильтры</button>` : '';
+        // «Показать все заявки дня» — внизу экрана, под большим пальцем
+        const all = !act && s.scope === 'mine' && canAll && items.length ? `<div class="report-space"></div><div class="all-bar"><button class="secondary" data-r="scope" data-v="all">Показать все заявки дня · ${items.length}</button></div>` : '';
+        body = `<div class="empty">${why}${act ? '<br><br>' + act : ''}</div>${all}`;
       } else {
         // линия «сейчас» (только для сегодняшнего дня): выше — предстоящие, ниже — время подачи уже прошло
         let nowPlaced = !isToday, html = '';
@@ -2372,7 +2386,7 @@ details summary::-webkit-details-marker{display:none}
       const PHF = { none:'Без фото', partial:'Частично', full:'Фото есть' };
       const filt = [...s.fp].map(v => `<button data-r="unfp" data-v="${esc(v)}">${esc(v)} ✕</button>`).concat([...s.fu].map(v => `<button data-r="unfu" data-v="${esc(v)}">${esc(v)} ✕</button>`)).concat([...s.fph].map(v => `<button data-r="unfph" data-v="${v}">${PHF[v]} ✕</button>`)).join('');
       setApp(this.head() + this.strip()
-        + (canAll ? `<div class="seg"><button class="${s.scope === 'mine' ? 'on' : ''}" data-r="scope" data-v="mine">Мои${data ? ` <span class="n">${nMine}</span>` : ''}</button><button class="${s.scope === 'all' ? 'on' : ''}" data-r="scope" data-v="all">Все${data ? ` · ${items.length}` : ''}</button></div>` : '')
+        + (canAll ? `<div class="seg slide ${s.scope === 'all' ? 'right' : ''}"><i class="knob"></i><button class="${s.scope === 'mine' ? 'on' : ''}" data-r="scope" data-v="mine">Мои${data ? ` <span class="n">${nMine}</span>` : ''}</button><button class="${s.scope === 'all' ? 'on' : ''}" data-r="scope" data-v="all">Все${data ? ` · ${items.length}` : ''}</button></div>` : '')
         + `<div class="tools"><div class="search compact">${ICON.search}<input class="input" id="rq" placeholder="Номер, адрес, машина" value="${esc(s.q)}"></div>
            <button class="round" data-r="filters" aria-label="Фильтры">${ICON.filter}${s.fp.size + s.fu.size + s.fph.size ? `<span class="dot">${s.fp.size + s.fu.size + s.fph.size}</span>` : ''}</button></div>`
         + (filt ? `<div class="active-filters">${filt}</div>` : '')
@@ -2464,7 +2478,7 @@ details summary::-webkit-details-marker{display:none}
       // role — подпись под именем: кто этот человек в заявке
       const contactRows = (text, role) => parseContacts(text).map(c => `<div class="contact"><span class="who"><b>${esc(c.name || 'Без имени')}</b>${role ? `<small>${role}</small>` : ''}</span>${c.href ? `<a class="call" href="${c.href}">${ICON.call}${esc(c.phone)}</a>` : ''}</div>`).join('');
       const stop = (k, addr, contact, end, role) => addr || contact ? `<div class="stop ${end ? 'end' : ''}"><div class="k">${k}</div><div class="addr">${esc(addr || 'Адрес не указан')}</div>${contact ? `<div class="contacts">${contactRows(contact, role)}</div>` : ''}</div>` : '';
-      const loadingLine = loader(22, '', 'margin:4px 0');
+      const loadingLine = `<div class="stop-load">${loader(22)}</div>`;
       app.innerHTML = `<div class="topbar"><button class="round" data-r="back" aria-label="Назад">${ICON.back}</button>
           <div class="grow"><h2>${it.no ? 'Заявка ' + esc(it.no) : 'Заявка без номера'}</h2><small>${shortDate(it.day)}${it.time ? ', ' + esc(it.time) : ''}</small></div></div>
         <div class="card glass hero">
@@ -2479,8 +2493,8 @@ details summary::-webkit-details-marker{display:none}
             ${stop(it.to ? 'Подача' : 'Место работы', it.from, full ? it.fromContact : '', !it.to, it.to ? 'встречает на подаче' : 'встречает на месте работы')}
             ${full ? stop('Промежуточный адрес', it.mid, it.midContact, false, 'встречает на промежуточном адресе') : ''}
             ${it.to ? stop('Конечный адрес', it.to, full ? it.toContact : '', true, 'встречает на конечном адресе') : ''}
+            ${full ? '' : loadingLine}
           </div>
-          ${full ? '' : loadingLine}
           ${it.from ? `<div class="map-btns"><button class="secondary small" data-r="map">${ICON.map}Маршрут</button><button class="secondary small" data-r="copy">${ICON.copy}Адрес</button></div>` : ''}
         </div>
         <p class="sect">Машина и водитель</p>
@@ -2510,32 +2524,33 @@ details summary::-webkit-details-marker{display:none}
       const q = $('rq'); if (q) q.oninput = e => { s.q = e.target.value; this.render(); };
       const pd = $('pickDate'); if (pd) pd.onchange = e => { if (e.target.value) this.setDay(e.target.value); };
       if (s.sheet) this.wireSheet();
-      // лента дней тянется пальцем: на сколько дней сдвинули — столько и перелистнули (до недели за раз)
-      const days = document.querySelector('.days');
-      if (days) hSwipe(days, {
-        move: dx => { days.querySelectorAll('.day').forEach(d => { d.style.transform = `translateX(${dx}px)`; }); },
-        end: (dx, v) => {
-          const cell = (days.querySelector('.day') || {}).offsetWidth || 44;
-          let n = Math.round(-dx / (cell + 6));
-          if (!n && Math.abs(v) > 0.4) n = v < 0 ? 1 : -1;
-          n = Math.max(-7, Math.min(7, n));
-          days.querySelectorAll('.day').forEach(d => { d.style.transition = 'transform .18s'; d.style.transform = ''; });
-          if (n) this.setDay(shiftDay(s.day, n));
-        },
-      });
-      // «Мои / Все» — переключается и смахиванием
-      const seg = document.querySelector('.seg [data-r="scope"]') && document.querySelector('.seg');
-      if (seg) hSwipe(seg, {
-        move: () => {},
-        end: (dx, v) => { const want = dx < -24 || v < -0.4 ? 'all' : dx > 24 || v > 0.4 ? 'mine' : ''; if (want && want !== s.scope) this.act('scope', want); },
-      });
+      // «Мои / Все»: ползунок едет за пальцем, отпустили — переключилось
+      const seg = document.querySelector('.seg.slide');
+      if (seg) {
+        const knob = seg.querySelector('.knob');
+        hSwipe(seg, {
+          move: dx => { const w = knob.offsetWidth; const base = s.scope === 'all' ? w : 0; knob.style.transition = 'none'; knob.style.transform = `translateX(${Math.max(0, Math.min(w, base + dx))}px)`; },
+          end: (dx, v) => {
+            knob.style.transition = ''; knob.style.transform = '';
+            const want = dx < -30 || v < -0.4 ? 'mine' : dx > 30 || v > 0.4 ? 'all' : s.scope;
+            this.act('scope', want);
+          },
+        });
+      }
     },
 
     act(a, v, e) {
       const s = this.st;
       switch (a) {
         case 'day': return this.setDay(v);
-        case 'scope': if (s.scope !== v) haptic('select'); s.scope = v; store.set('t26-scope', v); return this.render();
+        case 'scope': {
+          if (s.scope === v) return this.render();
+          haptic('select'); s.scope = v; store.set('t26-scope', v);
+          // сначала ползунок плавно доезжает, потом меняется список
+          const seg = document.querySelector('.seg.slide');
+          if (seg) { seg.classList.toggle('right', v === 'all'); seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.v === v)); clearTimeout(this.segT); this.segT = setTimeout(() => this.render(), 200); return; }
+          return this.render();
+        }
         case 'open': return this.openDetail(v);
         case 'sendNow':
           if (navigator.onLine === false) return toast('Нет интернета — отчёт уйдёт сам, когда появится связь');
