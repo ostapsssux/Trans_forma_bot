@@ -430,8 +430,8 @@ details summary::-webkit-details-marker{display:none}
   display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 12px 12px 20px;border-radius:999px;background:var(--panel);box-shadow:var(--raised-lg)}
 .report-space{height:96px}
 body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клавиатура открыта — нижняя кнопка не перекрывает поле */
-.logist-btn{margin:-6px 0 22px;display:flex;align-items:center;justify-content:center;gap:10px}
-.logist-btn svg,.logist svg{width:18px;height:18px}
+.logist-btn{margin:18px 0 0;width:100%;display:flex;align-items:center;justify-content:center} /* внутри карточки заявки */
+.logist svg{width:18px;height:18px}
 .logists{padding:6px 16px}
 .logist{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 0}
 .logist + .logist{border-top:1px solid var(--hair)}
@@ -1944,7 +1944,7 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
       return 'Заявка ' + (it.no ? '№ ' + it.no : '') + ' (' + shortDate(it.day) + (it.time ? ', ' + it.time : '') + (it.vehicle ? ', ' + it.vehicle : '') + '): ';
     },
     write(i) {
-      const x = ((this.st.data || {}).items || [])[+i]; if (!x) return;
+      const x = ((this.st.data || {}).items || []).filter(y => y.inApp)[+i]; if (!x) return;
       const text = this.text();
       const open = url => { try { tg.openTelegramLink(url); } catch (e) { window.open(url, '_blank'); } };
       haptic('success');
@@ -1964,18 +1964,14 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
           ${x.inApp && (x.username || x.phone) ? `<button class="${x.onShift ? 'primary' : 'secondary'} small" data-l="write" data-v="${i}">${ICON.chat}Написать</button>`
             : '<span class="na">нет в Telegram-боте</span>'}</div>`;
       };
-      const items = d && d.items || [];
-      const on = items.map((x, i) => [x, i]).filter(([x]) => x.onShift), off = items.map((x, i) => [x, i]).filter(([x]) => !x.onShift);
+      const items = (d && d.items || []).filter(x => x.inApp); // сначала те, кто в смене — сервер уже отсортировал
       let body;
       if (!d && s.err) body = `<div class="empty">${esc(s.err.message)}<br><br><button class="secondary small" data-l="reload">Повторить</button></div>`;
       else if (!d) body = `<div class="mid-load">${loader(40)}</div>`;
-      else body = (on.length ? `<p class="sect">Сейчас в смене<small>${on.length}</small></p><div class="card glass logists">${on.map(([x, i]) => card(x, i)).join('')}</div>`
-          : `<div class="card glass"><div class="flag">Сейчас в смене никого нет по табелю — можно написать любому логисту.</div></div>`)
-        + (off.length ? `<p class="sect">Не в смене<small>${off.length}</small></p><div class="card glass logists">${off.map(([x, i]) => card(x, i)).join('')}</div>` : '')
-        + (d.error ? `<p class="note">${esc(d.error)} — статус смены может быть неточным</p>` : '');
+      else body = items.length ? `<div class="card glass logists">${items.map(card).join('')}</div>`
+        : `<div class="empty">Логисты пока не зарегистрированы в приложении</div>`;
       setApp(`<div class="topbar"><button class="round" data-l="back" aria-label="Назад">${ICON.back}</button>
           <div class="grow"><h2>Логисты</h2><small>${it.no ? 'по заявке ' + esc(it.no) : ''}${s.stale ? ' · обновляем…' : d && d.at ? ' · на ' + esc(d.at) : ''}</small></div></div>
-        <p class="note" style="margin:0 8px 18px;text-align:left">Сообщение откроется в Telegram и уже будет начинаться с номера заявки — допишите вопрос и отправьте.</p>
         ${body}`);
       app.onclick = e => { const b = e.target.closest('[data-l]'); if (!b) return;
         if (b.dataset.l === 'back') return this.close();
@@ -2692,8 +2688,8 @@ body.kb .send-bar,body.kb .report-bar,body.kb .all-bar{display:none} /* клав
           <div class="big">${esc(it.vehicle || 'Транспорт не указан')}</div>
           <div class="sub">${esc([it.project, it.purpose].filter(Boolean).join(' — '))}${it.cargo ? `<br>${/работа по месту/i.test(it.cargo) ? 'Работа по месту' : 'Что везём: ' + esc(it.cargo)}` : ''}</div>
           ${it.roles && it.roles.length ? `<div class="tags">${it.roles.map(r => `<i class="me">вы ${esc(r.replace(/^указан/, 'указаны'))}</i>`).join('')}</div>` : ''}
+          <button class="secondary logist-btn" data-r="logists">Связаться с логистом</button>
         </div>
-        <button class="secondary logist-btn" data-r="logists">${ICON.chat}Связаться с логистом</button>
         ${full && it.reports && it.reports.length ? `<p class="sect">Фотоотчёты<small>${it.reports.length}</small></p><div class="card glass"><div class="rep-list">${it.reports.map(r => `<div class="rep-item"><span><b>${esc(r.stage)}${r.time ? ' в ' + esc(r.time) : ''} · ${r.photos ? r.photos + ' фото' : 'без фото'}</b><small>${esc(r.fio)}</small></span><span>${fmtDate(r.at)}</span></div>`).join('')}</div></div>` : ''}
         <p class="sect">Маршрут</p>
         <div class="card glass">
